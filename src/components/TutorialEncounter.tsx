@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { VNScene } from './VNScene';
 import { VNChoiceScene } from './VNChoiceScene';
 import { EnhancedCombatV3 } from './EnhancedCombatV3';
+import { PostCombatScene } from './PostCombatScene';
 import { HowlerAudioManager } from './HowlerAudioManager';
 import { MusicToggle } from './MusicToggle';
 
@@ -18,7 +19,9 @@ type Phase =
   | 'combat_phase_2'
   | 'victory_vn'
   | 'power_reveal'
-  | 'archivist_final';
+  | 'archivist_final'
+  | 'post_combat'
+  | 'game_end';
 
 interface TutorialState {
   phase: Phase;
@@ -30,7 +33,12 @@ interface TutorialState {
   enemyHealth: number;
 }
 
-const ARCHIVIST_IMAGE = 'https://act-webstatic.hoyoverse.com/upload/contentweb/2022/06/29/ac3c01655e5dd24fbaad117c72d48417_3671756749679510795.png';
+// Archivist VN portraits - rotate between these during dialogue
+const ARCHIVIST_PORTRAITS = [
+  'https://64.media.tumblr.com/6ac9c73c28d6ce9ab4e74e7202871951/3f2885bda6ac220c-1d/s1280x1920/5400143058374ff9dad6debaf0434fbc7dc4caaf.png',
+  'https://aniyuki.com/wp-content/uploads/2022/06/aniyuki-xiao-png-16.png',
+  'https://www.pngall.com/wp-content/uploads/15/Xiao-PNG-Images.png'
+];
 const VN_BACKGROUND = 'https://64.media.tumblr.com/4cef6a87f522f8f2ca9e9aafd84fbaca/b38864c912b46d59-00/s1280x1920/e0a2f6bb50cb530ee6235c1fc75f8d86477c4120.jpg';
 const ENEMY_IMAGE = 'https://64.media.tumblr.com/tumblr_mcchojgkjR1rreqgwo1_500.gif';
 
@@ -219,7 +227,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         return (
           <VNScene
             backgroundImage={VN_BACKGROUND}
-            characterImage={ARCHIVIST_IMAGE}
+            characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
             text="You carry the Ache, traveler — yet you've no name for it. Tell me — when did it first answer your body's call?"
             onContinue={() => advancePhase('first_question')}
@@ -230,7 +238,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         return (
           <VNChoiceScene
             backgroundImage={VN_BACKGROUND}
-            characterImage={ARCHIVIST_IMAGE}
+            characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
             text="When did it first answer your body's call?"
             choices={[
@@ -247,7 +255,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         return (
           <VNScene
             backgroundImage={VN_BACKGROUND}
-            characterImage={ARCHIVIST_IMAGE}
+            characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
             text="The basin ripples beneath you, reflecting your words back in waves of deep violet and crimson. The patterns shift — steady pulses that match your heartbeat. The world is listening."
             onContinue={() => advancePhase('transition_to_combat')}
@@ -287,7 +295,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         return (
           <VNScene
             backgroundImage={VN_BACKGROUND}
-            characterImage={ARCHIVIST_IMAGE}
+            characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
             text="The shadow falters — it clutches itself, gasping in sync with you. You've seen this pattern before, haven't you? Tell me — what did the healers say, when you first spoke of this pain?"
             onContinue={() => advancePhase('healers_question')}
@@ -298,7 +306,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         return (
           <VNChoiceScene
             backgroundImage={VN_BACKGROUND}
-            characterImage={ARCHIVIST_IMAGE}
+            characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
             text="What did the healers say, when you first spoke of this pain?"
             choices={[
@@ -349,7 +357,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         return (
           <VNScene
             backgroundImage={VN_BACKGROUND}
-            characterImage={ARCHIVIST_IMAGE}
+            characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
             text="You have named the Ache. It was never weakness — it was the map. Now it listens when you do. You've unlocked Empathic Resonance: the ability to sense disturbances in the Fog."
             onContinue={() => advancePhase('archivist_final')}
@@ -360,11 +368,49 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         return (
           <VNScene
             backgroundImage={VN_BACKGROUND}
-            characterImage={ARCHIVIST_IMAGE}
+            characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
             text="This was only the first ache, traveler. Beyond this basin lie others — vines that bind, floods that drain, and nerves that burn. But now you have a name for your pain, and that is power."
-            onContinue={() => onComplete({ choices: state.playerChoices, finalState: state })}
+            onContinue={() => advancePhase('post_combat')}
           />
+        );
+
+      case 'post_combat':
+        return (
+          <PostCombatScene 
+            onContinue={() => advancePhase('game_end')}
+          />
+        );
+
+      case 'game_end':
+        return (
+          <motion.div
+            className="min-h-screen bg-gradient-to-b from-[#1a1625] to-[#0f0a1a] flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <div className="text-center px-4">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.8 }}
+              >
+                <h1 className="text-white text-4xl mb-6">To Be Continued...</h1>
+                <p className="text-white/70 text-lg mb-8 font-serif max-w-md mx-auto">
+                  The path to the Lumen Archives awaits. But that is a journey for another day.
+                </p>
+                <button
+                  onClick={() => onComplete({
+                    choices: state.playerChoices,
+                    finalState: state
+                  })}
+                  className="px-8 py-3 bg-[#c9a0dc] hover:bg-[#b88fcc] text-white rounded-xl transition-colors"
+                >
+                  Return to Start
+                </button>
+              </motion.div>
+            </div>
+          </motion.div>
         );
 
       default:
@@ -385,7 +431,11 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       combat_phase_2: 8,
       victory_vn: 9,
       power_reveal: 10,
+      post_combat: 11,
+      game_end: 12,
       archivist_final: 11,
+      post_combat: 12,
+      game_end: 13,
     };
     return phaseMap[state.phase] || 0;
   };

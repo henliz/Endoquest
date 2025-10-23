@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useSound } from './AudioManager';
+import { getCharacterImagePosition, getCharacterImageHeight, getCharacterImageFit, getCharacterImageWidth, getCharacterImageClipPath, getCharacterImageTransform } from './imageUtils';
 
 interface Choice {
   id: string;
@@ -11,6 +12,7 @@ interface Choice {
 interface VNChoiceSceneProps {
   backgroundImage?: string;
   characterImage?: string;
+  characterImages?: string[]; // NEW: Support multiple portraits
   characterName: string;
   text: string;
   choices: Choice[];
@@ -20,11 +22,16 @@ interface VNChoiceSceneProps {
 export function VNChoiceScene({ 
   backgroundImage, 
   characterImage,
+  characterImages, // NEW
   characterName, 
   text,
   choices,
   onChoiceSelect
 }: VNChoiceSceneProps) {
+  // Select portrait image (prefer array if provided)
+  const displayImage = characterImages 
+    ? characterImages[Math.floor(Math.random() * characterImages.length)]
+    : characterImage;
   // Uncomment to add click sound effect:
   // const playClick = useSound('YOUR_CLICK_SOUND_URL_HERE');
   
@@ -41,34 +48,43 @@ export function VNChoiceScene({
             src={backgroundImage}
             alt="Background"
             className="w-full h-full object-cover opacity-40"
+            style={{ objectPosition: '60% center' }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#1a1625]/60 via-[#1a1625]/40 to-[#1a1625]/90" />
         </div>
       )}
 
       {/* Character portrait - VN style centered HUGE */}
-      {characterImage && (
+      {displayImage && (
         <motion.div
-          className="absolute left-1/2 -translate-x-1/2 bottom-0 z-10 flex items-end justify-center"
-          style={{ height: '90vh', width: '100vw' }}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 flex items-end justify-center"
+          style={{ 
+            height: '90vh', 
+            width: '100vw'
+          }}
           animate={{ 
             y: [0, -8, 0],
           }}
           transition={{ 
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
+            y: {
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }
           }}
         >
           <img
-            src={characterImage}
+            src={displayImage}
             alt={characterName}
-            className="object-contain object-bottom drop-shadow-2xl"
+            className={`object-${getCharacterImageFit(displayImage)} object-bottom drop-shadow-2xl`}
             style={{ 
               filter: 'drop-shadow(0 0 60px rgba(201, 160, 220, 0.4))',
-              height: '88vh',
-              width: 'auto',
-              maxWidth: 'none'
+              height: getCharacterImageHeight(displayImage, '88vh', '78vh'),
+              width: getCharacterImageWidth(displayImage),
+              maxWidth: 'none',
+              objectPosition: getCharacterImagePosition(displayImage),
+              clipPath: getCharacterImageClipPath(displayImage),
+              transform: getCharacterImageTransform(displayImage)
             }}
           />
         </motion.div>

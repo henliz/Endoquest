@@ -1,20 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { getCharacterImagePosition, getCharacterImageHeight, getCharacterImageFit, getCharacterImageWidth, getCharacterImageClipPath, getCharacterImageTransform } from './imageUtils';
 
 interface VNSceneProps {
   backgroundImage?: string;
   characterImage?: string;
+  characterImages?: string[]; // NEW: Support multiple portraits that rotate
   characterName: string;
   text: string;
   onContinue?: () => void;
   showContinue?: boolean;
 }
 
+// Counter to track portrait rotation across component instances
+let portraitRotationIndex = 0;
+
 export function VNScene({ 
   backgroundImage, 
   characterImage,
+  characterImages, // NEW
   characterName, 
   text, 
   onContinue,
@@ -23,6 +29,22 @@ export function VNScene({
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [canContinue, setCanContinue] = useState(false);
+  
+  // NEW: Select which portrait to show
+  const [currentCharacterImage, setCurrentCharacterImage] = useState<string>('');
+
+  useEffect(() => {
+    // Determine which image to use
+    if (characterImages && characterImages.length > 0) {
+      // Rotate through images sequentially (change every 2 dialogue boxes)
+      const dialogueCounter = Math.floor(portraitRotationIndex / 2);
+      const imageIndex = dialogueCounter % characterImages.length;
+      setCurrentCharacterImage(characterImages[imageIndex]);
+      portraitRotationIndex++;
+    } else if (characterImage) {
+      setCurrentCharacterImage(characterImage);
+    }
+  }, [text, characterImage, characterImages]);
 
   useEffect(() => {
     // Text reveal animation
@@ -67,34 +89,43 @@ export function VNScene({
             src={backgroundImage}
             alt="Background"
             className="w-full h-full object-cover opacity-40"
+            style={{ objectPosition: '60% center' }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#1a1625]/60 via-[#1a1625]/40 to-[#1a1625]/90" />
         </div>
       )}
 
       {/* Character portrait - VN style centered HUGE */}
-      {characterImage && (
+      {currentCharacterImage && (
         <motion.div
-          className="absolute left-1/2 -translate-x-1/2 bottom-0 z-10 flex items-end justify-center"
-          style={{ height: '100vh', width: '100vw' }}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 flex items-end justify-center"
+          style={{ 
+            height: '100vh', 
+            width: '100vw'
+          }}
           animate={{ 
             y: [0, -8, 0],
           }}
           transition={{ 
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
+            y: {
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }
           }}
         >
           <img
-            src={characterImage}
+            src={currentCharacterImage}
             alt={characterName}
-            className="object-contain object-bottom drop-shadow-2xl"
+            className={`object-${getCharacterImageFit(currentCharacterImage)} object-bottom drop-shadow-2xl`}
             style={{ 
               filter: 'drop-shadow(0 0 60px rgba(201, 160, 220, 0.4))',
-              height: '95vh',
-              width: 'auto',
-              maxWidth: 'none'
+              height: getCharacterImageHeight(currentCharacterImage, '95vh', '85vh'),
+              width: getCharacterImageWidth(currentCharacterImage),
+              maxWidth: 'none',
+              objectPosition: getCharacterImagePosition(currentCharacterImage),
+              clipPath: getCharacterImageClipPath(currentCharacterImage),
+              transform: getCharacterImageTransform(currentCharacterImage)
             }}
           />
         </motion.div>

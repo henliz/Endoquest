@@ -1,58 +1,24 @@
 import { useState } from 'react';
 import { StartScreen } from './components/StartScreen';
 import { TutorialEncounter } from './components/TutorialEncounter';
-import { VictoryScreen } from './components/VictoryScreen';
 import { TutorialOverlay } from './components/TutorialOverlay';
 import { AudioManager } from './components/AudioManager';
 import { HelpCircle } from 'lucide-react';
 
-type Screen = 'start' | 'tutorial' | 'victory';
+type Screen = 'start' | 'tutorial';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('start');
   const [showTutorial, setShowTutorial] = useState(false);
-  const [encounterData, setEncounterData] = useState<any>(null);
 
   const handleTutorialComplete = (data: any) => {
     console.log('Tutorial complete with data:', data);
-    setEncounterData(data);
-    setCurrentScreen('victory');
-  };
-
-  const handleVictoryContinue = () => {
-    // Return to start for demo
+    // Return to start menu
     setCurrentScreen('start');
-    setEncounterData(null);
   };
 
   const handleStart = () => {
     setCurrentScreen('tutorial');
-  };
-
-  // Generate victory text based on player choices
-  const getVictoryText = () => {
-    if (!encounterData) {
-      return "The body remembers what the mind tries to forget. To name the ache is to begin the journey of understanding.";
-    }
-    
-    const choices = encounterData.choices;
-    let text = "Pattern recognized: ";
-    
-    if (choices.includes('early_onset')) {
-      text += "Early and severe cyclical pain, resistant to first-line management. ";
-    } else if (choices.includes('progressive')) {
-      text += "Progressive symptom development over time. ";
-    } else if (choices.includes('chronic')) {
-      text += "Chronic baseline pain with consistent presentation. ";
-    }
-    
-    if (choices.includes('dismissed') || choices.includes('unheard')) {
-      text += "Emotional markers: Repeated dismissal, self-suppression under distress. ";
-    }
-    
-    text += "Recommendation: Gynecological evaluation for possible endometriosis per SOGC guidelines.";
-    
-    return text;
   };
 
   return (
@@ -83,14 +49,6 @@ export default function App() {
 
         {currentScreen === 'tutorial' && (
           <TutorialEncounter onComplete={handleTutorialComplete} />
-        )}
-
-        {currentScreen === 'victory' && (
-          <VictoryScreen
-            title="Doctor Scroll Fragment"
-            fragmentText={getVictoryText()}
-            onContinue={handleVictoryContinue}
-          />
         )}
 
         {/* Tutorial overlay */}

@@ -63,6 +63,8 @@ interface CombatState {
   lastEnemyMove: EnemyMove | null;
   pendingAction: ActionType | null;
   dialogueSource: 'probe' | 'enemy' | null;
+  isPlayerTurn: boolean; // TRUE = player's turn, FALSE = enemy's turn
+  waitingForEnemyTurn: boolean; // Player action complete, waiting to transition to enemy
 }
 
 // Fireball for Flare Storm
@@ -99,8 +101,21 @@ export function EnhancedCombatV3({
     hasSeenTutorial: phase2,
     lastEnemyMove: null,
     pendingAction: null,
-    dialogueSource: null,
+    isPlayerTurn: true, // Start with player turn
+    waitingForEnemyTurn: false,
   });
+  
+  // Phase 2 Boss Mechanics - Track Flare Storm milestones
+  const [flareStormMilestones, setFlareStormMilestones] = useState({
+    at75: false,
+    at50: false,
+    at25: false,
+  });
+  
+  // Debug logging for milestones
+  useEffect(() => {
+    console.log('🎯 Flare Storm Milestones:', flareStormMilestones, 'Current HP:', enemyHealth, 'Phase2:', phase2);
+  }, [flareStormMilestones, enemyHealth, phase2]);
 
   // Breathing minigame state
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'exhale' | 'hold'>('inhale');
@@ -140,19 +155,13 @@ export function EnhancedCombatV3({
       return;
     }
 
-    if (phase2 && enemyHealth <= 0 && battlePhase !== 'victory') {
-      console.log('🏆 VICTORY - Phase 2 complete');
+    if (enemyHealth <= 0 && battlePhase !== 'victory') {
+      console.log('🏆 VICTORY - Combat complete');
       setBattlePhase('victory');
-      setBattleMessage({ text: `${enemyName} has been understood...`, type: 'victory' });
+      setBattleMessage({ text: 'The Ache feels... known.', type: 'victory' });
       setTimeout(() => onCombatEnd?.(), 2500);
     }
-
-    if (!phase2 && enemyHealth <= 0 && battlePhase !== 'victory') {
-      setBattlePhase('victory');
-      setBattleMessage({ text: 'The Ache wavers...', type: 'victory' });
-      setTimeout(() => onCombatEnd?.(), 2500);
-    }
-  }, [enemyHealth, battlePhase, phase2, onCombatEnd, enemyName]);
+  }, [enemyHealth, battlePhase, phase2, onCombatEnd]);
 
   // Flare crisis check
   useEffect(() => {
@@ -190,6 +199,65 @@ export function EnhancedCombatV3({
     }
   }, [playerClarity, battlePhase]);
 
+  // Phase 2 Boss Mechanics - Force Flare Storm at HP milestones
+  // This triggers INSTEAD of a normal enemy turn when HP crosses thresholds
+  useEffect(() => {
+    console.log('🔍 Flare Storm check - phase2:', phase2, 'enemyHealth:', enemyHealth, 'battlePhase:', battlePhase, 
+                'waitingForEnemyTurn:', combatState.waitingForEnemyTurn, 'isPlayerTurn:', combatState.isPlayerTurn,
+                'milestones:', flareStormMilestones);
+    
+    if (!phase2) {
+      console.log('→ Not phase 2, skipping');
+      return;
+    }
+    if (battlePhase === 'victory' || battlePhase === 'flare_storm') {
+      console.log('→ Already in victory/flare_storm, skipping');
+      return;
+    }
+    
+    // Only check when waiting for enemy turn (right after player action)
+    if (!combatState.waitingForEnemyTurn) {
+      console.log('→ Not waiting for enemy turn, skipping');
+      return;
+    }
+    
+    // enemyHealth is the CURRENT health
+    // When player deals damage, we check if we crossed a milestone
+    
+    // 75 HP threshold - First Flare Storm
+    if (enemyHealth <= 75 && enemyHealth > 50 && !flareStormMilestones.at75) {
+      console.log('🔥🔥🔥 BOSS PHASE: 75 HP - FLARE STORM TRIGGERED!', enemyHealth);
+      setFlareStormMilestones(prev => ({ ...prev, at75: true }));
+      setBattleMessage({ text: '⚠️ The Ache\'s form IGNITES! A storm of flames approaches!', type: 'warning' });
+      setTimeout(() => {
+        initFlareStorm();
+      }, 2000);
+      return;
+    }
+    
+    // 50 HP threshold - Second Flare Storm
+    if (enemyHealth <= 50 && enemyHealth > 25 && !flareStormMilestones.at50 && flareStormMilestones.at75) {
+      console.log('🔥🔥🔥 BOSS PHASE: 50 HP - FLARE STORM TRIGGERED!', enemyHealth);
+      setFlareStormMilestones(prev => ({ ...prev, at50: true }));
+      setBattleMessage({ text: '⚠️ The Ache doubles in intensity! Another storm rises!', type: 'warning' });
+      setTimeout(() => {
+        initFlareStorm();
+      }, 2000);
+      return;
+    }
+    
+    // 25 HP threshold - Final Flare Storm
+    if (enemyHealth <= 25 && enemyHealth > 0 && !flareStormMilestones.at25 && flareStormMilestones.at50) {
+      console.log('🔥🔥🔥 BOSS PHASE: 25 HP - FINAL FLARE STORM TRIGGERED!', enemyHealth);
+      setFlareStormMilestones(prev => ({ ...prev, at25: true }));
+      setBattleMessage({ text: '⚠️ The Ache unleashes everything! The final storm!', type: 'critical' });
+      setTimeout(() => {
+        initFlareStorm();
+      }, 2000);
+      return;
+    }
+  }, [enemyHealth, phase2, battlePhase, flareStormMilestones, combatState.waitingForEnemyTurn]);
+
   // Initialize minigames
   const initBreathing = () => {
     setBattlePhase('breathing_minigame');
@@ -207,20 +275,26 @@ export function EnhancedCombatV3({
   };
 
   const initFlareStorm = () => {
-    setBattlePhase('flare_storm');
+    // Reset everything FIRST to prevent stale state issues
+    setFireballs([]);
     setFireballsClicked(0);
     setFireballsMissed(0);
-    // Spawn fireballs for MINIGAME (more fireballs)
-    const newFireballs: Fireball[] = [];
-    for (let i = 0; i < 10; i++) {
-      newFireballs.push({
-        id: i,
-        x: 10 + Math.random() * 80, // Keep within screen bounds
-        y: -10 - (i * 10),
-        speed: 0.8 + Math.random() * 0.7 // Slower
-      });
-    }
-    setFireballs(newFireballs);
+    
+    // Small delay to ensure state is cleared before starting new storm
+    setTimeout(() => {
+      setBattlePhase('flare_storm');
+      // Spawn fireballs for MINIGAME (more fireballs)
+      const newFireballs: Fireball[] = [];
+      for (let i = 0; i < 10; i++) {
+        newFireballs.push({
+          id: i,
+          x: 10 + Math.random() * 80, // Keep within screen bounds
+          y: -10 - (i * 10),
+          speed: 0.8 + Math.random() * 0.7 // Slower
+        });
+      }
+      setFireballs(newFireballs);
+    }, 50);
   };
 
   const initFireballAttack = () => {
@@ -327,17 +401,28 @@ export function EnhancedCombatV3({
     if (battlePhase === 'flare_storm' || battlePhase === 'fireball_attack') {
       const interval = setInterval(() => {
         setFireballs(prev => {
-          const updated = prev.map(fb => ({ ...fb, y: fb.y + fb.speed }));
-          // Remove fireballs that went off screen and count as missed
+          if (prev.length === 0) return prev;
+          
+          const updated = prev.map(fb => ({ 
+            ...fb, 
+            y: fb.y + fb.speed,
+            // Clamp x position to prevent off-screen issues
+            x: Math.max(5, Math.min(95, fb.x))
+          }));
+          
+          // Remove fireballs that went off screen (bottom) and count as missed
           const onScreen = updated.filter(fb => fb.y < 100);
-          const missed = updated.length - onScreen.length;
-          if (missed > 0) {
-            setFireballsMissed(m => m + missed);
+          const offScreen = updated.filter(fb => fb.y >= 100);
+          
+          if (offScreen.length > 0) {
+            // Batch update missed count
+            setFireballsMissed(m => m + offScreen.length);
             if (battlePhase === 'fireball_attack') {
               // Each missed fireball = damage
-              setFireballAttackDamage(d => d + (missed * 5));
+              setFireballAttackDamage(d => d + (offScreen.length * 5));
             }
           }
+          
           return onScreen;
         });
       }, 50);
@@ -349,41 +434,68 @@ export function EnhancedCombatV3({
   // Check flare storm/fireball attack completion
   useEffect(() => {
     if (battlePhase === 'flare_storm') {
-      if (fireballs.length === 0 || fireballsClicked + fireballsMissed >= 10) {
-        // Minigame over
-        const successRate = fireballsClicked / 10;
-        if (successRate >= 0.6) {
-          // Success
-          onActionSelect(`FLARE_STORM_SUCCESS:${-40}:0`);
-          setBattleMessage({ text: "You weathered the storm! Resilient buff gained.", type: 'heal' });
-        } else {
-          // Failure
-          onActionSelect(`FLARE_STORM_FAIL:${-20}:0`);
-          setBattleMessage({ text: "The flames overwhelmed you...", type: 'warning' });
-        }
-        setTimeout(() => {
-          setBattlePhase('player_turn');
-          setBattleMessage(null);
-        }, 2000);
+      const totalProcessed = fireballsClicked + fireballsMissed;
+      // IMPORTANT: Don't check completion until fireballs have actually spawned!
+      // This prevents stale state from the previous storm from triggering completion
+      if (fireballs.length === 0 && totalProcessed === 0) {
+        // Storm hasn't started yet, wait for fireballs to spawn
+        return;
+      }
+      
+      // ONLY complete when ALL 10 fireballs have been processed (tapped or left screen)
+      // Do NOT exit early even if no fireballs are visible - wait for full count
+      if (totalProcessed >= 10) {
+        // Minigame over - use a small timeout to ensure state is settled
+        const timeout = setTimeout(() => {
+          const successRate = fireballsClicked / Math.max(totalProcessed, 1);
+          if (successRate >= 0.6) {
+            // Success
+            onActionSelect(`FLARE_STORM_SUCCESS:${-40}:0`);
+            setBattleMessage({ text: "You weathered the storm! Resilient buff gained.", type: 'heal' });
+          } else {
+            // Failure
+            onActionSelect(`FLARE_STORM_FAIL:${-20}:0`);
+            setBattleMessage({ text: "The flames overwhelmed you...", type: 'warning' });
+          }
+          setTimeout(() => {
+            // Flare Storm counts as the enemy's turn! Return to player turn
+            setCombatState(prev => ({ ...prev, isPlayerTurn: true, waitingForEnemyTurn: false }));
+            setBattlePhase('player_turn');
+            setBattleMessage(null);
+          }, 2000);
+        }, 100);
+        return () => clearTimeout(timeout);
       }
     } else if (battlePhase === 'fireball_attack') {
-      if (fireballs.length === 0 || fireballsClicked + fireballsMissed >= 6) {
+      const totalProcessed = fireballsClicked + fireballsMissed;
+      // Same guard for fireball attack
+      if (fireballs.length === 0 && totalProcessed === 0) {
+        return;
+      }
+      
+      // ONLY complete when ALL 6 fireballs have been processed
+      if (totalProcessed >= 6) {
         // Attack over
-        const totalDamage = fireballAttackDamage;
-        onActionSelect(`ENEMY_fireball_barrage:${totalDamage}:0`);
-        setBattleMessage({ 
-          text: `The Ache unleashed fireballs! You took ${totalDamage} damage!`, 
-          type: fireballsClicked >= 4 ? 'action' : 'critical' 
-        });
-        setBattlePhase('attack_result');
+        const timeout = setTimeout(() => {
+          const totalDamage = fireballAttackDamage;
+          onActionSelect(`ENEMY_fireball_barrage:${totalDamage}:0`);
+          setBattleMessage({ 
+            text: `The Ache unleashed fireballs! You took ${totalDamage} damage!`, 
+            type: fireballsClicked >= 4 ? 'action' : 'critical' 
+          });
+          // Enemy attack complete, mark for player turn transition
+          setCombatState(prev => ({ ...prev, isPlayerTurn: false }));
+          setBattlePhase('attack_result');
+        }, 100);
+        return () => clearTimeout(timeout);
       }
     }
-  }, [fireballs, fireballsClicked, fireballsMissed, battlePhase, fireballAttackDamage]);
+  }, [fireballs.length, fireballsClicked, fireballsMissed, battlePhase, fireballAttackDamage]);
 
   // Tutorial
   const advanceTutorial = () => {
     if (combatState.tutorialStep === 4) {
-      setCombatState(prev => ({ ...prev, tutorialStep: 0, hasSeenTutorial: true }));
+      setCombatState(prev => ({ ...prev, tutorialStep: 0, hasSeenTutorial: true, isPlayerTurn: true }));
       setBattlePhase('player_turn');
     } else {
       setCombatState(prev => ({ ...prev, tutorialStep: prev.tutorialStep + 1 }));
@@ -470,8 +582,38 @@ export function EnhancedCombatV3({
 
   // Handle dialogue choice
   const handleDialogueChoice = (choice: DialogueChoice) => {
-    setCombatState(prev => ({ ...prev, pendingAction: choice.action }));
-    handlePlayerAction(choice.action, choice.text);
+    console.log('💬 handleDialogueChoice - source:', combatState.dialogueSource, 'choice:', choice.action);
+    
+    // If this is a response to enemy attack, don't count as player's turn
+    // Just transition back to player turn menu
+    if (combatState.dialogueSource === 'enemy') {
+      console.log('→ Enemy dialogue response - showing player turn menu');
+      // Apply small effects from the emotional response
+      let clarityChange = 0;
+      let flareChange = 0;
+      
+      // Different responses have different effects
+      if (choice.emotion === '😤') {
+        clarityChange = 5; // Standing firm increases clarity
+      } else if (choice.emotion === '😔') {
+        clarityChange = -5; // Doubting yourself decreases clarity
+      } else if (choice.emotion === '🌊') {
+        flareChange = -3; // Soothing reduces flare
+      } else if (choice.emotion === '💪') {
+        clarityChange = 3; // Resisting maintains clarity
+      }
+      
+      onActionSelect(`DIALOGUE_RESPONSE:${flareChange}:${clarityChange}`);
+      
+      // Just go back to player turn - they haven't taken their action yet
+      setCombatState(prev => ({ ...prev, isPlayerTurn: true, waitingForEnemyTurn: false, dialogueSource: undefined }));
+      setBattlePhase('player_turn');
+    } else {
+      // This is a probe dialogue - this IS their action
+      console.log('→ Probe dialogue - this IS the player action');
+      setCombatState(prev => ({ ...prev, pendingAction: choice.action }));
+      handlePlayerAction(choice.action, choice.text);
+    }
   };
 
   // Execute enemy attack
@@ -529,9 +671,9 @@ export function EnhancedCombatV3({
     onActionSelect(`ENEMY_${move}:${flareIncrease}:${clarityChange}`);
 
     if (applyNumb) {
-      setCombatState(prev => ({ ...prev, isNumbed: true, lastEnemyMove: move }));
+      setCombatState(prev => ({ ...prev, isNumbed: true, lastEnemyMove: move, isPlayerTurn: false }));
     } else {
-      setCombatState(prev => ({ ...prev, lastEnemyMove: move }));
+      setCombatState(prev => ({ ...prev, lastEnemyMove: move, isPlayerTurn: false }));
     }
 
     setBattlePhase('attack_result');
@@ -539,18 +681,34 @@ export function EnhancedCombatV3({
 
   // Continue from attack result
   const continueFromAttackResult = () => {
-    // Check if this attack triggers dialogue
-    const triggersDialogue = combatState.lastEnemyMove === 'gaslighting_whisper' || combatState.lastEnemyMove === 'flare_spike';
+    console.log('📍 continueFromAttackResult - isPlayerTurn:', combatState.isPlayerTurn, 'waitingForEnemyTurn:', combatState.waitingForEnemyTurn);
+    setBattleMessage(null);
     
-    if (triggersDialogue && Math.random() > 0.3) {
-      // Show enemy response dialogue
-      setCombatState(prev => ({ ...prev, dialogueSource: 'enemy' }));
-      setBattlePhase('enemy_response_dialogue');
-      setBattleMessage(null);
+    // If it was enemy's turn that just finished, go back to player
+    if (!combatState.isPlayerTurn) {
+      console.log('→ Enemy turn just finished, returning to player');
+      const triggersDialogue = combatState.lastEnemyMove === 'gaslighting_whisper' || combatState.lastEnemyMove === 'flare_spike';
+      
+      if (triggersDialogue && Math.random() > 0.3) {
+        // Show enemy response dialogue, then player turn
+        setCombatState(prev => ({ ...prev, dialogueSource: 'enemy' }));
+        setBattlePhase('enemy_response_dialogue');
+      } else {
+        // Go to player turn
+        setCombatState(prev => ({ ...prev, isPlayerTurn: true, waitingForEnemyTurn: false }));
+        setBattlePhase('player_turn');
+      }
+    }
+    // If it was player's turn, transition to enemy turn
+    else if (combatState.waitingForEnemyTurn) {
+      console.log('→ Player turn just finished, starting enemy turn');
+      setCombatState(prev => ({ ...prev, isPlayerTurn: false, waitingForEnemyTurn: false }));
+      startEnemyTurn();
     } else {
-      // Go to player turn
+      // RECOVERY MECHANISM: If we're in an unexpected state, safely recover to player turn
+      console.log('⚠️ Unexpected state - recovering to player turn');
+      setCombatState(prev => ({ ...prev, isPlayerTurn: true, waitingForEnemyTurn: false }));
       setBattlePhase('player_turn');
-      setBattleMessage(null);
     }
   };
 
@@ -561,11 +719,8 @@ export function EnhancedCombatV3({
         text: "You try to focus, but the Numbing Fog blocks your thoughts...", 
         type: 'ineffective' 
       });
+      setCombatState(prev => ({ ...prev, isNumbed: false, waitingForEnemyTurn: true }));
       setBattlePhase('attack_result');
-      setTimeout(() => {
-        setCombatState(prev => ({ ...prev, isNumbed: false }));
-        startEnemyTurn();
-      }, 2000);
       return;
     }
 
@@ -670,13 +825,17 @@ export function EnhancedCombatV3({
     }
 
     setBattleMessage(message);
+    
+    // Mark that player action is complete and we'll need to go to enemy turn
+    setCombatState(prev => ({ ...prev, waitingForEnemyTurn: true }));
     setBattlePhase('attack_result');
 
     onActionSelect(`${actionId}:${damage}:${flareChange}:${clarityChange}`);
+    console.log('💥 Action complete - new enemyHealth will be:', enemyHealth - damage);
 
     console.log(`💥 ${actionId}: ${damage} dmg, ${flareChange} Flare, ${clarityChange} Clarity, ${effectiveness}`);
 
-    // Show effectiveness, then mini-decision for Probe
+    // Show effectiveness, then ALWAYS wait for player to continue to enemy turn
     setTimeout(() => {
       if (effectiveness === 'super_effective') {
         setBattleMessage({ text: "It's super effective!", type: 'super_effective' });
@@ -684,12 +843,13 @@ export function EnhancedCombatV3({
         setBattleMessage({ text: "It's not very effective...", type: 'not_effective' });
       }
 
+      // For Probe, show mini-decision before enemy turn
       setTimeout(() => {
         if (actionId === 'probe') {
           setBattlePhase('mini_decision');
-        } else {
-          startEnemyTurn();
         }
+        // For all other actions, player clicks through attack_result to go to enemy turn
+        // This is handled by continueFromAttackResult
       }, 1500);
     }, 1500);
 
@@ -700,6 +860,42 @@ export function EnhancedCombatV3({
   // Start enemy turn
   const startEnemyTurn = () => {
     if (enemyHealth <= 0) return;
+    
+    // In Phase 2, check if we should force a Flare Storm instead - DIRECT TRIGGER
+    if (phase2) {
+      // Check 75 HP threshold
+      if (enemyHealth <= 75 && enemyHealth > 50 && !flareStormMilestones.at75) {
+        console.log('🔥🔥🔥 FORCING FLARE STORM AT 75 HP!', enemyHealth);
+        setFlareStormMilestones(prev => ({ ...prev, at75: true }));
+        setBattleMessage({ text: '⚠️ The Ache\'s form IGNITES! A storm of flames approaches!', type: 'warning' });
+        setTimeout(() => {
+          initFlareStorm();
+        }, 2000);
+        return;
+      }
+      
+      // Check 50 HP threshold
+      if (enemyHealth <= 50 && enemyHealth > 25 && !flareStormMilestones.at50 && flareStormMilestones.at75) {
+        console.log('🔥🔥🔥 FORCING FLARE STORM AT 50 HP!', enemyHealth);
+        setFlareStormMilestones(prev => ({ ...prev, at50: true }));
+        setBattleMessage({ text: '⚠️ The Ache doubles in intensity! Another storm rises!', type: 'warning' });
+        setTimeout(() => {
+          initFlareStorm();
+        }, 2000);
+        return;
+      }
+      
+      // Check 25 HP threshold
+      if (enemyHealth <= 25 && enemyHealth > 0 && !flareStormMilestones.at25 && flareStormMilestones.at50) {
+        console.log('🔥🔥🔥 FORCING FLARE STORM AT 25 HP!', enemyHealth);
+        setFlareStormMilestones(prev => ({ ...prev, at25: true }));
+        setBattleMessage({ text: '⚠️ The Ache unleashes everything! The final storm!', type: 'critical' });
+        setTimeout(() => {
+          initFlareStorm();
+        }, 2000);
+        return;
+      }
+    }
 
     const move = selectEnemyMove();
     const telegraph = getTelegraph(move);
@@ -738,6 +934,8 @@ export function EnhancedCombatV3({
 
     onActionSelect(`MINI_${choice}:${flareIncrease}:${clarityIncrease}`);
 
+    // After mini-decision, go to enemy turn
+    setCombatState(prev => ({ ...prev, isPlayerTurn: false, waitingForEnemyTurn: false }));
     startEnemyTurn();
   };
 
@@ -794,10 +992,25 @@ export function EnhancedCombatV3({
   };
 
   // Fireball click
-  const handleFireballClick = (id: number, event: React.MouseEvent) => {
+  const handleFireballClick = (id: number, event: React.MouseEvent | React.TouchEvent) => {
     event.stopPropagation();
-    setFireballs(prev => prev.filter(fb => fb.id !== id));
-    setFireballsClicked(prev => prev + 1);
+    event.preventDefault();
+    
+    // Safety check - only process clicks during active minigame phases
+    if (battlePhase !== 'flare_storm' && battlePhase !== 'fireball_attack') {
+      console.log('⚠️ Ignoring click - not in active minigame phase');
+      return;
+    }
+    
+    // Use callback form to ensure we only increment if we actually removed a fireball
+    setFireballs(prev => {
+      const exists = prev.some(fb => fb.id === id);
+      if (exists) {
+        setFireballsClicked(c => c + 1);
+        return prev.filter(fb => fb.id !== id);
+      }
+      return prev;
+    });
   };
 
   // Memory fragment
@@ -1154,28 +1367,41 @@ export function EnhancedCombatV3({
               </div>
             </div>
 
-            {/* Fireballs */}
-            {fireballs.map(fb => (
+            {/* Fireballs - only render if they exist */}
+            {fireballs.length > 0 && fireballs.map(fb => (
               <div
                 key={fb.id}
-                className="absolute pointer-events-auto cursor-pointer"
+                className="absolute pointer-events-auto cursor-pointer touch-none"
                 style={{ 
                   left: `${fb.x}%`, 
                   top: `${fb.y}%`,
                   transform: 'translate(-50%, -50%)',
                   zIndex: 100
                 }}
-                onClick={(e) => handleFireballClick(fb.id, e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFireballClick(fb.id, e);
+                }}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleFireballClick(fb.id, e);
+                }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleFireballClick(fb.id, e);
+                }}
               >
                 <motion.div
                   whileHover={{ scale: 1.3 }}
                   whileTap={{ scale: 0.8 }}
-                  className="w-16 h-16 relative"
+                  className="w-16 h-16 relative select-none"
                 >
                   <ImageWithFallback
                     src="https://i.pinimg.com/originals/1b/34/df/1b34dfc0a9bf5563e0f960a24b6862db.gif"
                     alt="Fireball"
-                    className="w-full h-full object-contain drop-shadow-[0_0_16px_rgba(255,100,0,0.9)]"
+                    className="w-full h-full object-contain drop-shadow-[0_0_16px_rgba(255,100,0,0.9)] pointer-events-none"
                   />
                 </motion.div>
               </div>
@@ -1205,28 +1431,41 @@ export function EnhancedCombatV3({
               </div>
             </div>
 
-            {/* Fireballs */}
-            {fireballs.map(fb => (
+            {/* Fireballs - only render if they exist */}
+            {fireballs.length > 0 && fireballs.map(fb => (
               <div
                 key={fb.id}
-                className="absolute pointer-events-auto cursor-pointer"
+                className="absolute pointer-events-auto cursor-pointer touch-none"
                 style={{ 
                   left: `${fb.x}%`, 
                   top: `${fb.y}%`,
                   transform: 'translate(-50%, -50%)',
                   zIndex: 100
                 }}
-                onClick={(e) => handleFireballClick(fb.id, e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFireballClick(fb.id, e);
+                }}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleFireballClick(fb.id, e);
+                }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleFireballClick(fb.id, e);
+                }}
               >
                 <motion.div
                   whileHover={{ scale: 1.3 }}
                   whileTap={{ scale: 0.8 }}
-                  className="w-16 h-16 relative"
+                  className="w-16 h-16 relative select-none"
                 >
                   <ImageWithFallback
                     src="https://i.pinimg.com/originals/1b/34/df/1b34dfc0a9bf5563e0f960a24b6862db.gif"
                     alt="Fireball"
-                    className="w-full h-full object-contain drop-shadow-[0_0_16px_rgba(255,100,0,0.9)]"
+                    className="w-full h-full object-contain drop-shadow-[0_0_16px_rgba(255,100,0,0.9)] pointer-events-none"
                   />
                 </motion.div>
               </div>
@@ -1584,7 +1823,7 @@ export function EnhancedCombatV3({
         )}
       </AnimatePresence>
 
-      {/* Mini-decision */}
+      {/* Mini-decision (after Probe action) */}
       <AnimatePresence>
         {battlePhase === 'mini_decision' && (
           <motion.div
