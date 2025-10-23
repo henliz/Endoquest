@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { VNScene } from './VNScene';
 import { VNChoiceScene } from './VNChoiceScene';
-import { PokemonStyleCombat } from './PokemonStyleCombat';
+import { EnhancedCombat } from './EnhancedCombat';
 import { HowlerAudioManager } from './HowlerAudioManager';
 import { MusicToggle } from './MusicToggle';
 
@@ -72,35 +72,59 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
     }
   };
 
-  const handleBattleAction = (actionId: string) => {
+  const handleMiniChoice = (choice: string) => {
+    // Track diagnostic data from mini-choices
+    setState(prev => ({
+      ...prev,
+      playerChoices: [...prev.playerChoices, `pain_location_${choice}`],
+    }));
+  };
+
+  const handleBattleAction = (actionString: string) => {
+    // New format: "action:damage:flareChange:clarityChange" or "ENEMY_move:flare:clarity" or "MINI_choice:flare:clarity"
+    const parts = actionString.split(':');
+    const action = parts[0];
+    
     let newFlare = state.flare;
     let newClarity = state.clarity;
     let newEnemyHealth = state.enemyHealth;
-    
-    // Action effects
-    switch (actionId) {
-      case 'observe':
-        newClarity = Math.min(100, state.clarity + 20);
-        break;
-      case 'soothe':
-        newFlare = Math.max(0, state.flare - 25);
-        newClarity = Math.min(100, state.clarity + 5);
-        break;
-      case 'probe':
-        newClarity = Math.min(100, state.clarity + 15);
-        newFlare = Math.min(100, state.flare + 5);
-        newEnemyHealth = Math.max(0, state.enemyHealth - 30); // Damage!
-        break;
-      case 'resist':
-        newFlare = Math.max(0, state.flare - 15);
-        newClarity = Math.max(0, state.clarity - 10);
-        newEnemyHealth = Math.max(0, state.enemyHealth - 10);
-        break;
-    }
 
-    // Enemy attack (adds flare)
-    const enemyDamage = Math.floor(Math.random() * 15) + 10;
-    newFlare = Math.min(100, newFlare + enemyDamage);
+    if (action.startsWith('ENEMY_')) {
+      // Enemy attack
+      const flareIncrease = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareIncrease));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('⚔️ Enemy attack:', action, `+${flareIncrease} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('MINI_')) {
+      // Mini-decision
+      const flareIncrease = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareIncrease));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('💭 Mini-decision:', action, `+${flareIncrease} Flare, ${clarityChange} Clarity`);
+    } else {
+      // Player action
+      const damage = parseInt(parts[1]) || 0;
+      const flareChange = parseInt(parts[2]) || 0;
+      const clarityChange = parseInt(parts[3]) || 0;
+      
+      newEnemyHealth = Math.max(0, state.enemyHealth - damage);
+      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('🎮 Player action:', action, `${damage} dmg, ${flareChange} Flare, ${clarityChange} Clarity`);
+      
+      // Track player choice
+      setState(prev => ({
+        ...prev,
+        playerChoices: [...prev.playerChoices, action],
+      }));
+    }
 
     const newCombatTurns = state.combatTurns + 1;
 
@@ -110,7 +134,6 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       clarity: newClarity,
       enemyHealth: newEnemyHealth,
       combatTurns: newCombatTurns,
-      playerChoices: [...prev.playerChoices, actionId],
     }));
   };
 
@@ -192,13 +215,14 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       case 'combat_phase_1':
         console.log('📍 Rendering COMBAT PHASE 1, enemyHealth:', state.enemyHealth);
         return (
-          <PokemonStyleCombat
+          <EnhancedCombat
             enemyName="The Ache Beneath"
             enemyImage={ENEMY_IMAGE}
             playerFlare={state.flare}
             playerClarity={state.clarity}
             enemyHealth={state.enemyHealth}
             onActionSelect={handleBattleAction}
+            onMiniChoice={handleMiniChoice}
             onCombatEnd={handleCombatEnd}
             phase2={false}
           />
@@ -243,13 +267,14 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       case 'combat_phase_2':
         console.log('📍 Rendering COMBAT PHASE 2, enemyHealth:', state.enemyHealth);
         return (
-          <PokemonStyleCombat
+          <EnhancedCombat
             enemyName="The Ache Beneath"
             enemyImage={ENEMY_IMAGE}
             playerFlare={state.flare}
             playerClarity={state.clarity}
             enemyHealth={state.enemyHealth}
             onActionSelect={handleBattleAction}
+            onMiniChoice={handleMiniChoice}
             onCombatEnd={handleCombatEnd}
             phase2={true}
           />
@@ -327,19 +352,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       {/* Music toggle */}
       <MusicToggle onToggle={setMusicEnabled} />
       
-      {/* User interaction prompt */}
-      {!userInteracted && (
-        <motion.div
-          className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <div className="backdrop-blur-xl bg-[#f4a261]/30 border border-[#f4a261]/50 rounded-xl p-3 text-center">
-            <p className="text-xs text-white">🔊 Tap anywhere to enable sound</p>
-          </div>
-        </motion.div>
-      )}
+
 
       {/* Phase content */}
       {renderPhase()}

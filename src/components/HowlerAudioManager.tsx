@@ -7,16 +7,22 @@ interface HowlerAudioManagerProps {
   enabled?: boolean;
 }
 
-// Audio file paths - ADD YOUR MP3 FILES TO /public/audio/
+// 🎵 TEMPORARY: Using placeholder URLs until you add real MP3 files
+// To use your own files: Upload to /public/audio/ and it will work automatically!
 const AUDIO_TRACKS = {
-  vn: '/audio/vn-ambient.mp3',        // Gothic ambient for VN scenes
-  combat: '/audio/combat-theme.mp3',   // Epic battle music
+  vn: 'https://cdn.pixabay.com/audio/2022/03/15/audio_d1718372d8.mp3',        // Gothic ambient placeholder
+  combat: 'https://cdn.pixabay.com/audio/2022/03/10/audio_4e1b364fe8.mp3',   // Battle music placeholder
 };
 
-// Global Howl instances (persist across re-renders)
-let howlInstances: Record<string, Howl> = {};
+// When you add YOUR files to /public/audio/, uncomment these and comment out the placeholders:
+// const AUDIO_TRACKS = {
+//   vn: '/audio/vn-ambient.mp3',
+//   combat: '/audio/combat-theme.mp3',
+// };
+
+// Store Howl instances globally to persist across renders
+const howlInstances: Record<string, Howl> = {};
 let currentlyPlaying: string | null = null;
-let audioUnlocked = false;
 
 // Initialize Howl instances once
 const initializeAudio = () => {
@@ -29,11 +35,14 @@ const initializeAudio = () => {
         preload: true,
         html5: true, // Better for mobile
         onloaderror: (id, error) => {
-          console.warn(`⚠️ Failed to load ${key}:`, error);
-          console.log(`Make sure ${src} exists!`);
+          // Silently handle - audio is optional
+          if (!src.startsWith('http')) {
+            console.log(`ℹ️ Audio file not found: ${src}`);
+            console.log(`   To add music: Upload MP3 to /public/audio/`);
+          }
         },
         onload: () => {
-          console.log(`✅ Loaded: ${key}`);
+          console.log(`🎵 Audio loaded: ${key}`);
         }
       });
     });
@@ -41,74 +50,52 @@ const initializeAudio = () => {
   return howlInstances;
 };
 
-export function HowlerAudioManager({ track, volume = 0.4, enabled = true }: HowlerAudioManagerProps) {
-  const hasInteracted = useRef(false);
-
+export function HowlerAudioManager({ track, volume = 0.3, enabled = true }: HowlerAudioManagerProps) {
   useEffect(() => {
-    // Initialize audio on mount
-    const sounds = initializeAudio();
-
-    // Unlock audio on first user interaction
-    const unlockAudio = () => {
-      if (!audioUnlocked && !hasInteracted.current) {
-        console.log('🔊 Audio unlocked by user interaction');
-        audioUnlocked = true;
-        hasInteracted.current = true;
-
-        // Resume AudioContext (required by some browsers)
-        const ctx = Howler.ctx;
-        if (ctx && ctx.state === 'suspended') {
-          ctx.resume();
-        }
-      }
-    };
-
-    // Add interaction listener
-    document.addEventListener('click', unlockAudio, { once: true });
-    document.addEventListener('touchstart', unlockAudio, { once: true });
-
-    return () => {
-      document.removeEventListener('click', unlockAudio);
-      document.removeEventListener('touchstart', unlockAudio);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!enabled || !audioUnlocked) return;
+    if (!enabled) return;
 
     const sounds = initializeAudio();
     const targetSound = sounds[track];
 
     if (!targetSound) {
-      console.warn(`⚠️ Track "${track}" not found`);
-      return;
+      return; // Silently skip if audio not available
     }
 
     // If this track is already playing, just adjust volume
     if (currentlyPlaying === track) {
-      targetSound.volume(volume);
+      try {
+        targetSound.volume(volume);
+      } catch (e) {
+        // Audio may not be ready yet
+      }
       return;
     }
 
     // Crossfade from current track to new track
     const fadeTime = 1500; // 1.5 seconds
 
-    console.log(`🎵 Switching to: ${track}`);
-
     // Fade out current track
     if (currentlyPlaying && sounds[currentlyPlaying]) {
       const oldSound = sounds[currentlyPlaying];
-      oldSound.fade(oldSound.volume(), 0, fadeTime);
-      setTimeout(() => {
+      try {
+        oldSound.fade(oldSound.volume(), 0, fadeTime);
+        setTimeout(() => {
+          oldSound.stop();
+        }, fadeTime);
+      } catch (e) {
         oldSound.stop();
-      }, fadeTime);
+      }
     }
 
     // Fade in new track
-    targetSound.volume(0);
-    targetSound.play();
-    targetSound.fade(0, volume, fadeTime);
-    currentlyPlaying = track;
+    try {
+      targetSound.volume(0);
+      targetSound.play();
+      targetSound.fade(0, volume, fadeTime);
+      currentlyPlaying = track;
+    } catch (e) {
+      console.log('ℹ️ Audio autoplay blocked by browser - user interaction needed');
+    }
 
   }, [track, volume, enabled]);
 
@@ -129,25 +116,5 @@ export function HowlerAudioManager({ track, volume = 0.4, enabled = true }: Howl
     };
   }, [enabled]);
 
-  // This component doesn't render anything
-  return null;
+  return null; // This component doesn't render anything
 }
-
-// Helper function to stop all audio (useful for game over, etc.)
-export const stopAllAudio = () => {
-  Object.values(howlInstances).forEach(sound => {
-    sound.fade(sound.volume(), 0, 500);
-    setTimeout(() => sound.stop(), 500);
-  });
-  currentlyPlaying = null;
-};
-
-// Helper to play a one-off sound effect (not looping)
-export const playSoundEffect = (src: string, volume = 0.5) => {
-  const sfx = new Howl({
-    src: [src],
-    volume,
-    html5: false, // Use Web Audio for SFX (better performance)
-  });
-  sfx.play();
-};
