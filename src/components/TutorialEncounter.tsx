@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { VNScene } from './VNScene';
 import { VNChoiceScene } from './VNChoiceScene';
-import { EnhancedCombat } from './EnhancedCombat';
+import { EnhancedCombatV3 } from './EnhancedCombatV3';
 import { HowlerAudioManager } from './HowlerAudioManager';
 import { MusicToggle } from './MusicToggle';
 
@@ -81,7 +81,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
   };
 
   const handleBattleAction = (actionString: string) => {
-    // New format: "action:damage:flareChange:clarityChange" or "ENEMY_move:flare:clarity" or "MINI_choice:flare:clarity"
+    // Format: "action:damage:flareChange:clarityChange" or special minigame results
     const parts = actionString.split(':');
     const action = parts[0];
     
@@ -107,6 +107,61 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
       
       console.log('💭 Mini-decision:', action, `+${flareIncrease} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('BREATHING_')) {
+      // Breathing minigame result
+      const flareChange = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('🌬️ Breathing minigame:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('PAIN_MAPPING')) {
+      // Pain mapping minigame
+      const flareChange = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      const regions = parts[3] || '';
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('🗺️ Pain mapping:', regions, `${flareChange} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('FLARE_STORM')) {
+      // Flare storm minigame
+      const flareChange = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('🔥 Flare storm:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('MEMORY_')) {
+      // Memory fragment minigame
+      const flareChange = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('🧠 Memory fragment:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('REASSEMBLY_')) {
+      // Reassembly puzzle
+      const flareChange = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('🧩 Reassembly:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('AFFIRMATION_')) {
+      // Affirmation sequence
+      const flareChange = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      
+      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
+      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
+      
+      console.log('✨ Affirmation:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
     } else {
       // Player action
       const damage = parseInt(parts[1]) || 0;
@@ -215,7 +270,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       case 'combat_phase_1':
         console.log('📍 Rendering COMBAT PHASE 1, enemyHealth:', state.enemyHealth);
         return (
-          <EnhancedCombat
+          <EnhancedCombatV3
             enemyName="The Ache Beneath"
             enemyImage={ENEMY_IMAGE}
             playerFlare={state.flare}
@@ -267,7 +322,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       case 'combat_phase_2':
         console.log('📍 Rendering COMBAT PHASE 2, enemyHealth:', state.enemyHealth);
         return (
-          <EnhancedCombat
+          <EnhancedCombatV3
             enemyName="The Ache Beneath"
             enemyImage={ENEMY_IMAGE}
             playerFlare={state.flare}
