@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { VNScene } from './VNScene';
 import { VNChoiceScene } from './VNChoiceScene';
 import { PokemonStyleCombat } from './PokemonStyleCombat';
-import { SoundCloudPlayer } from './SoundCloudPlayer';
+import { HowlerAudioManager } from './HowlerAudioManager';
 import { MusicToggle } from './MusicToggle';
 
 type Phase = 
@@ -34,9 +34,9 @@ const ARCHIVIST_IMAGE = 'https://act-webstatic.hoyoverse.com/upload/contentweb/2
 const VN_BACKGROUND = 'https://64.media.tumblr.com/4cef6a87f522f8f2ca9e9aafd84fbaca/b38864c912b46d59-00/s1280x1920/e0a2f6bb50cb530ee6235c1fc75f8d86477c4120.jpg';
 const ENEMY_IMAGE = 'https://64.media.tumblr.com/tumblr_mcchojgkjR1rreqgwo1_500.gif';
 
-// 🎵 SOUNDCLOUD TRACKS
-const VN_MUSIC_SOUNDCLOUD = 'https://api.soundcloud.com/tracks/1127100127'; // Curse of Strahd - Introduction
-const COMBAT_MUSIC_SOUNDCLOUD = 'https://api.soundcloud.com/tracks/1127100127'; // Same for now - replace with battle track
+// 🎵 AUDIO SYSTEM
+// Music files should be placed in /public/audio/
+// See /AUDIO_SETUP.md for instructions
 
 interface TutorialEncounterProps {
   onComplete: (data: { choices: string[], finalState: TutorialState }) => void;
@@ -312,26 +312,17 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
 
   const isCombatPhase = state.phase === 'combat_phase_1' || state.phase === 'combat_phase_2';
   
-  // Determine which music to play
-  const currentMusicTrack = isCombatPhase ? COMBAT_MUSIC_SOUNDCLOUD : VN_MUSIC_SOUNDCLOUD;
-
-  // Enable music on any interaction
-  const handleInteraction = () => {
-    if (!userInteracted) {
-      setUserInteracted(true);
-    }
-  };
+  // Determine which music track to play
+  const currentTrack = isCombatPhase ? 'combat' : 'vn';
 
   return (
-    <div onClick={handleInteraction} onTouchStart={handleInteraction}>
-      {/* SoundCloud music player */}
-      {musicEnabled && userInteracted && (
-        <SoundCloudPlayer 
-          trackUrl={currentMusicTrack} 
-          volume={40} 
-          autoPlay={true}
-        />
-      )}
+    <div>
+      {/* Howler.js Audio Manager - auto-detects user interaction */}
+      <HowlerAudioManager 
+        track={currentTrack}
+        volume={0.4}
+        enabled={musicEnabled}
+      />
       
       {/* Music toggle */}
       <MusicToggle onToggle={setMusicEnabled} />
