@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { VNScene } from './VNScene';
 import { VNChoiceScene } from './VNChoiceScene';
+import { AITextInputScene } from './AITextInputScene';
 import { EnhancedCombatV3 } from './EnhancedCombatV3';
 import { PostCombatScene } from './PostCombatScene';
 import { HowlerAudioManager } from './HowlerAudioManager';
@@ -11,11 +12,9 @@ type Phase =
   | 'awakening'
   | 'archivist_intro'
   | 'first_question'
-  | 'basin_response'
   | 'transition_to_combat'
   | 'combat_phase_1'
   | 'mid_battle_vn'
-  | 'healers_question'
   | 'combat_phase_2'
   | 'victory_vn'
   | 'power_reveal'
@@ -29,6 +28,11 @@ interface TutorialState {
   clarity: number;
   turnCount: number;
   playerChoices: string[];
+  aiResponses: Array<{
+    sceneId: string;
+    userInput: string;
+    aiResponse: string;
+  }>;
   combatTurns: number;
   enemyHealth: number;
 }
@@ -57,6 +61,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
     clarity: 50,
     turnCount: 0,
     playerChoices: [],
+    aiResponses: [],
     combatTurns: 0,
     enemyHealth: 100,
   });
@@ -236,29 +241,23 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
 
       case 'first_question':
         return (
-          <VNChoiceScene
+          <AITextInputScene
             backgroundImage={VN_BACKGROUND}
             characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
-            text="When did it first answer your body's call?"
-            choices={[
-              { id: 'early_onset', text: "When I first bled — it was never mild.", emotion: 'Honest' },
-              { id: 'progressive', text: "It crept in later — a curse that grew with the years.", emotion: 'Reflective' },
-              { id: 'cyclical', text: "It only visits me when the moon calls, then leaves.", emotion: 'Observant' },
-              { id: 'chronic', text: "I can't even tell anymore — it's constant.", emotion: 'Weary' },
-            ]}
-            onChoiceSelect={handleChoice}
-          />
-        );
-
-      case 'basin_response':
-        return (
-          <VNScene
-            backgroundImage={VN_BACKGROUND}
-            characterImages={ARCHIVIST_PORTRAITS}
-            characterName="The Archivist"
-            text="The basin ripples beneath you, reflecting your words back in waves of deep violet and crimson. The patterns shift — steady pulses that match your heartbeat. The world is listening."
-            onContinue={() => advancePhase('transition_to_combat')}
+            promptText="Tell me — when did it first answer your body's call?"
+            placeholder="Describe when your pain began..."
+            sceneId="tutorial_intro"
+            onAdvance={(userInput, aiResponse) => {
+              setState(prev => ({
+                ...prev,
+                aiResponses: [
+                  ...prev.aiResponses,
+                  { sceneId: 'tutorial_intro', userInput, aiResponse }
+                ]
+              }));
+              advancePhase('transition_to_combat');
+            }}
           />
         );
 
@@ -293,34 +292,30 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
 
       case 'mid_battle_vn':
         return (
-          <VNScene
+          <AITextInputScene
             backgroundImage={VN_BACKGROUND}
             characterImages={ARCHIVIST_PORTRAITS}
             characterName="The Archivist"
-            text="The shadow falters — it clutches itself, gasping in sync with you. You've seen this pattern before, haven't you? Tell me — what did the healers say, when you first spoke of this pain?"
-            onContinue={() => advancePhase('healers_question')}
-          />
-        );
-
-      case 'healers_question':
-        return (
-          <VNChoiceScene
-            backgroundImage={VN_BACKGROUND}
-            characterImages={ARCHIVIST_PORTRAITS}
-            characterName="The Archivist"
-            text="What did the healers say, when you first spoke of this pain?"
-            choices={[
-              { id: 'dismissed', text: "They said it was normal.", emotion: 'Resigned' },
-              { id: 'wait', text: "They said to rest and wait.", emotion: 'Frustrated' },
-              { id: 'pills', text: "They gave me pills, said it'd help.", emotion: 'Skeptical' },
-              { id: 'unheard', text: "No one listened long enough to say.", emotion: 'Bitter' },
-            ]}
-            onChoiceSelect={(choiceId) => {
-              handleChoice(choiceId);
-              setState(prev => ({ 
-                ...prev, 
+            promptText="The shadow falters — it clutches itself, gasping in sync with you. You've seen this pattern before, haven't you? Tell me — what did the healers say, when you first spoke of this pain?"
+            placeholder="Describe your experience with doctors..."
+            sceneId="mid_battle_vn"
+            playerData={{
+              combatActions: state.playerChoices.filter(c => 
+                ['Soothe', 'Observe', 'Probe', 'Resist'].includes(c)
+              ),
+              flare: state.flare,
+              clarity: state.clarity,
+              turnCount: state.combatTurns
+            }}
+            onAdvance={(userInput, aiResponse) => {
+              setState(prev => ({
+                ...prev,
+                aiResponses: [
+                  ...prev.aiResponses,
+                  { sceneId: 'mid_battle_vn', userInput, aiResponse }
+                ],
                 combatTurns: 0,
-                enemyHealth: 80 // Phase 2: slightly wounded but dangerous
+                enemyHealth: 80
               }));
               advancePhase('combat_phase_2');
             }}

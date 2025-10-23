@@ -1,0 +1,36 @@
+EndoQuest AI System - Setup Checklist
+======================================
+
+✅ All code is written and ready
+✅ TutorialEncounter.tsx updated with AI components
+✅ Backend routes configured
+✅ Scene structures defined
+
+NOW YOU JUST NEED TO:
+
+□ Step 1: cd server && npm install
+□ Step 2: Create /server/.env with your OpenAI API key
+□ Step 3: cd server && npm run dev
+□ Step 4: Test at http://localhost:3001/health
+
+THAT'S IT!
+
+Your .env file should look like:
+---------------------------------
+OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE
+PORT=3001
+FRONTEND_URL=http://localhost:5173
+
+Get API key at: https://platform.openai.com/api-keys
+
+Once backend is running, just start your game normally:
+npm run dev
+
+The tutorial will automatically use AI text input!
+
+Cost: ~$0.01 per playthrough (using gpt-4o-mini)
+
+Troubleshooting:
+- Backend won't start? Check you ran npm install in /server
+- Invalid API key? Check .env file exists and key is correct
+- Can't connect? Visit http://localhost:3001/health to verify backend
