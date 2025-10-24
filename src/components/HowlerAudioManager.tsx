@@ -1,120 +1,170 @@
+// src/components/HowlerAudioManager.tsx
 import { useEffect, useRef } from 'react';
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
 
-interface HowlerAudioManagerProps {
-  track: 'vn' | 'combat';
-  volume?: number; // 0-1
-  enabled?: boolean;
+type TrackKey = 'title' | 'vn' | 'combat';
+
+// Map tracks to /public files
+const AUDIO_TRACKS: Record<TrackKey, string> = {
+  title:  '/sounds/TheOuterWorldsHope_JustinEBell.mp3', // will start at 20s
+  vn:     '/audio/bgm/vn-ambient.mp3',
+  combat: '/audio/bgm/combat-theme.mp3',
+};
+
+// Per-track start offsets (seconds)
+const START_AT: Partial<Record<TrackKey, number>> = {
+  title: 20,
+};
+
+// Cache per track (one Howl each)
+const howls: Partial<Record<TrackKey, Howl>> = {};
+let currentKey: TrackKey | null = null;
+let currentId: number | null = null;
+
+function onFirstGesture(cb: () => void) {
+  const handler = () => {
+    try { cb(); } finally {
+      window.removeEventListener('pointerdown', handler);
+      window.removeEventListener('keydown', handler);
+      window.removeEventListener('touchstart', handler);
+    }
+  };
+  window.addEventListener('pointerdown', handler, { once: true });
+  window.addEventListener('keydown', handler, { once: true });
+  window.addEventListener('touchstart', handler, { once: true, passive: true });
 }
 
-// 🎵 TEMPORARY: Using placeholder URLs until you add real MP3 files
-// To use your own files: Upload to /public/audio/ and it will work automatically!
-const AUDIO_TRACKS = {
-  vn: 'https://cdn.pixabay.com/audio/2022/03/15/audio_d1718372d8.mp3',        // Gothic ambient placeholder
-  combat: 'https://cdn.pixabay.com/audio/2022/03/10/audio_4e1b364fe8.mp3',   // Battle music placeholder
-};
-
-// When you add YOUR files to /public/audio/, uncomment these and comment out the placeholders:
-// const AUDIO_TRACKS = {
-//   vn: '/audio/vn-ambient.mp3',
-//   combat: '/audio/combat-theme.mp3',
-// };
-
-// Store Howl instances globally to persist across renders
-const howlInstances: Record<string, Howl> = {};
-let currentlyPlaying: string | null = null;
-
-// Initialize Howl instances once
-const initializeAudio = () => {
-  if (Object.keys(howlInstances).length === 0) {
-    Object.entries(AUDIO_TRACKS).forEach(([key, src]) => {
-      howlInstances[key] = new Howl({
-        src: [src],
-        loop: true,
-        volume: 0,
-        preload: true,
-        html5: true, // Better for mobile
-        onloaderror: (id, error) => {
-          // Silently handle - audio is optional
-          if (!src.startsWith('http')) {
-            console.log(`ℹ️ Audio file not found: ${src}`);
-            console.log(`   To add music: Upload MP3 to /public/audio/`);
-          }
-        },
-        onload: () => {
-          console.log(`🎵 Audio loaded: ${key}`);
-        }
-      });
+// IMPORTANT: use WebAudio (html5: false) for precise seeks; we’ll still handle autoplay blocks.
+function getOrCreateHowl(key: TrackKey) {
+  if (!howls[key]) {
+    const h = new Howl({
+      src: [AUDIO_TRACKS[key]],
+      loop: true,
+      html5: false,   // WebAudio = smoother seeking; set true only if iOS long-MP3 issues
+      preload: true,
+      volume: 0,      // we’ll fade up after starting
+      autoplay: false // we control play timing
     });
+
+    h.on('load', () => console.log(`[audio] '${key}' loaded (${AUDIO_TRACKS[key]})`));
+    h.on('play', id => console.log(`[audio] '${key}' playing (id ${id})`));
+    h.on('playerror', (_id, err) => {
+      console.warn(`[audio] '${key}' playerror`, err);
+      // Fallback: gesture will try again
+      onFirstGesture(() => tryStartHowl(h, key, 0.35, START_AT[key]));
+    });
+
+    howls[key] = h;
   }
-  return howlInstances;
-};
+  return howls[key]!;
+}
 
-export function HowlerAudioManager({ track, volume = 0.3, enabled = true }: HowlerAudioManagerProps) {
-  useEffect(() => {
-    if (!enabled) return;
-
-    const sounds = initializeAudio();
-    const targetSound = sounds[track];
-
-    if (!targetSound) {
-      return; // Silently skip if audio not available
-    }
-
-    // If this track is already playing, just adjust volume
-    if (currentlyPlaying === track) {
-      try {
-        targetSound.volume(volume);
-      } catch (e) {
-        // Audio may not be ready yet
+// Start logic that avoids the “blip then jump”
+function tryStartHowl(h: Howl, key: TrackKey, vol: number, startAt?: number, allowMutedAutoplay = true) {
+  // 1) If allowed, attempt muted autoplay (works on many browsers):
+  //    - mute globally, prepare seek, play, then unmute+fade
+  // 2) If it fails, playerror handler will install the gesture fallback.
+  const actuallyStart = () => {
+    const doPlay = () => {
+      const id = h.play();
+      // we seek BEFORE any audible audio by doing it right after play; with WebAudio + not started yet, this is frame-accurate
+      if (typeof startAt === 'number') {
+        if (h.state() === 'loaded') h.seek(startAt, id);
+        else h.once('load', () => h.seek(startAt, id));
       }
-      return;
+      // fade to target
+      h.fade(0, vol, 800, id);
+      return id;
+    };
+
+    if (allowMutedAutoplay) {
+      // Globally mute, start, then unmute to fade in
+      const wasMuted = (Howler as any)._muted || false;
+      Howler.mute(true);
+      const id = doPlay();
+      // Unmute on next tick so the first audible frame is already at the target seek
+      setTimeout(() => {
+        // If site policy still forbids, playerror will have run and we’ll rely on gesture.
+        Howler.mute(wasMuted); // restore previous mute state (usually false)
+      }, 60);
+      return id;
+    } else {
+      return doPlay();
     }
+  };
 
-    // Crossfade from current track to new track
-    const fadeTime = 1500; // 1.5 seconds
+  // If already loaded, start immediately; otherwise start when loaded
+  if (h.state() === 'loaded') {
+    return actuallyStart();
+  } else {
+    h.once('load', () => actuallyStart());
+    // In case load has already fired but state not updated yet, also try a short later tick
+    setTimeout(() => {
+      if (!h.playing()) actuallyStart();
+    }, 120);
+  }
+}
 
-    // Fade out current track
-    if (currentlyPlaying && sounds[currentlyPlaying]) {
-      const oldSound = sounds[currentlyPlaying];
-      try {
-        oldSound.fade(oldSound.volume(), 0, fadeTime);
-        setTimeout(() => {
-          oldSound.stop();
-        }, fadeTime);
-      } catch (e) {
-        oldSound.stop();
-      }
+function crossfade(toKey: TrackKey, toVol: number, ms = 1200) {
+  const to = getOrCreateHowl(toKey);
+
+  // Start target (muted autoplay attempt); remember id
+  let toId = currentId;
+  if (!to.playing()) {
+    toId = tryStartHowl(to, toKey, toVol, START_AT[toKey], /*allowMutedAutoplay*/ true) ?? null;
+    currentId = toId;
+  } else if (toId == null) {
+    toId = to.play();
+    currentId = toId;
+  }
+
+  // Crossfade out previous
+  if (currentKey && currentKey !== toKey) {
+    const from = howls[currentKey];
+    if (from) {
+      from.fade(from.volume(), 0, ms);
+      setTimeout(() => from.stop(), ms + 60);
     }
+  }
 
-    // Fade in new track
-    try {
-      targetSound.volume(0);
-      targetSound.play();
-      targetSound.fade(0, volume, fadeTime);
-      currentlyPlaying = track;
-    } catch (e) {
-      console.log('ℹ️ Audio autoplay blocked by browser - user interaction needed');
-    }
+  currentKey = toKey;
+  return to;
+}
 
-  }, [track, volume, enabled]);
+export function HowlerAudioManager({
+  track,
+  enabled = true,
+  volume = 0.35,
+  fadeMs = 1200,
+}: {
+  track: TrackKey;
+  enabled?: boolean;
+  volume?: number;
+  fadeMs?: number;
+}) {
+  const mountedRef = useRef(false);
 
-  // Stop music when component unmounts or disabled
   useEffect(() => {
+    console.log(`[audio] manager mount -> track='${track}', enabled=${enabled}, vol=${volume}`);
+
+    if (!enabled) { Howler.mute(true); return; }
+    Howler.mute(false);
+
+    // Attempt start; if browser still blocks, playerror installs a gesture fallback.
+    crossfade(track, volume, fadeMs);
+
+    mountedRef.current = true;
     return () => {
-      if (!enabled && currentlyPlaying) {
-        const sounds = initializeAudio();
-        const currentSound = sounds[currentlyPlaying];
-        if (currentSound) {
-          currentSound.fade(currentSound.volume(), 0, 500);
-          setTimeout(() => {
-            currentSound.stop();
-            currentlyPlaying = null;
-          }, 500);
+      if (mountedRef.current && currentKey) {
+        const active = howls[currentKey];
+        if (active) {
+          active.fade(active.volume(), 0, 500);
+          setTimeout(() => active.stop(), 560);
         }
       }
+      mountedRef.current = false;
     };
-  }, [enabled]);
+  }, [track, enabled, volume, fadeMs]);
 
-  return null; // This component doesn't render anything
+  return null;
 }

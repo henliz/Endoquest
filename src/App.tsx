@@ -1,9 +1,11 @@
+// src/App.tsx
 import { useState } from 'react';
 import { StartScreen } from './components/StartScreen';
 import { TutorialEncounter } from './components/TutorialEncounter';
 import { TutorialOverlay } from './components/TutorialOverlay';
-import { AudioManager } from './components/AudioManager';
+// import { AudioManager } from './components/AudioManager'; // not needed with Howler manager
 import { HelpCircle } from 'lucide-react';
+import { AudioGate } from '@/audio/AudioGate';
 
 type Screen = 'start' | 'tutorial';
 
@@ -13,7 +15,6 @@ export default function App() {
 
   const handleTutorialComplete = (data: any) => {
     console.log('Tutorial complete with data:', data);
-    // Return to start menu
     setCurrentScreen('start');
   };
 
@@ -23,16 +24,14 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#1a1625] overflow-hidden">
-      {/* Background music - add your audio URL here */}
-      {/* <AudioManager bgmUrl="YOUR_AUDIO_URL_HERE" volume={0.3} /> */}
-      
-      {/* Mobile viewport container */}
+      {/* One-time, invisible: unlocks audio globally after first gesture */}
+      <AudioGate />
+
       <div className="mx-auto max-w-[375px] min-h-screen relative">
-        {/* Vignette effect */}
-        <div className="fixed inset-0 pointer-events-none z-30" style={{
-          background: 'radial-gradient(circle at center, transparent 40%, rgba(26, 22, 37, 0.6) 100%)'
-        }} />
-        {/* Help button - show during tutorial on combat screens */}
+        <div
+          className="fixed inset-0 pointer-events-none z-30"
+          style={{ background: 'radial-gradient(circle at center, transparent 40%, rgba(26, 22, 37, 0.6) 100%)' }}
+        />
         {currentScreen === 'tutorial' && (
           <button
             onClick={() => setShowTutorial(true)}
@@ -42,16 +41,9 @@ export default function App() {
           </button>
         )}
 
-        {/* Render current screen */}
-        {currentScreen === 'start' && (
-          <StartScreen onStart={handleStart} />
-        )}
+        {currentScreen === 'start' && <StartScreen onStart={handleStart} />}
+        {currentScreen === 'tutorial' && <TutorialEncounter onComplete={handleTutorialComplete} />}
 
-        {currentScreen === 'tutorial' && (
-          <TutorialEncounter onComplete={handleTutorialComplete} />
-        )}
-
-        {/* Tutorial overlay */}
         <TutorialOverlay isVisible={showTutorial} onClose={() => setShowTutorial(false)} />
       </div>
     </div>
