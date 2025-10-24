@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { StartScreen } from './components/StartScreen';
 import { TutorialEncounter } from './components/TutorialEncounter';
 import { TutorialOverlay } from './components/TutorialOverlay';
-// import { AudioManager } from './components/AudioManager'; // not needed with Howler manager
 import { HelpCircle } from 'lucide-react';
 import { AudioGate } from '@/audio/AudioGate';
+import { WebAudioManager } from '@/audio/WebAudioManager';
 
 type Screen = 'start' | 'tutorial';
 
@@ -32,6 +32,7 @@ export default function App() {
           className="fixed inset-0 pointer-events-none z-30"
           style={{ background: 'radial-gradient(circle at center, transparent 40%, rgba(26, 22, 37, 0.6) 100%)' }}
         />
+
         {currentScreen === 'tutorial' && (
           <button
             onClick={() => setShowTutorial(true)}
@@ -41,8 +42,19 @@ export default function App() {
           </button>
         )}
 
-        {currentScreen === 'start' && <StartScreen onStart={handleStart} />}
-        {currentScreen === 'tutorial' && <TutorialEncounter onComplete={handleTutorialComplete} />}
+        {currentScreen === 'start' && (
+          <>
+            {/* Title music (starts at 20s via manager map) */}
+            <WebAudioManager track="title" volume={0.3} />
+            <StartScreen onStart={handleStart} />
+          </>
+        )}
+
+        {currentScreen === 'tutorial' && (
+          <>
+            <TutorialEncounter onComplete={handleTutorialComplete} />
+          </>
+        )}
 
         <TutorialOverlay isVisible={showTutorial} onClose={() => setShowTutorial(false)} />
       </div>

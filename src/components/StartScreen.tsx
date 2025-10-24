@@ -11,7 +11,6 @@ export function StartScreen({ onStart }: StartScreenProps) {
   return (
     <div className="min-h-screen bg-[#1a1625] flex items-center justify-center relative overflow-hidden">
       {/* Title music: pure Web Audio (20s offset baked in) */}
-      <WebAudioManager track="title" volume={0.3} />
 
       <BackgroundParticles />
 

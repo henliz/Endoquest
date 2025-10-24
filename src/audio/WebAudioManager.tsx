@@ -1,34 +1,62 @@
 // src/audio/WebAudioManager.tsx
 import { useEffect, useRef } from 'react';
 
-type TrackKey = 'title' | 'vn' | 'combat';
+type TrackKey = 'title' | 'vn' | 'combat' | 'ache';
 
 const AUDIO_TRACKS: Record<TrackKey, string> = {
-  title:  '/sounds/TheOuterWorldsHope_JustinEBell.mp3', // starts at 20s
-  vn:     '/audio/bgm/vn-ambient.mp3',
-  combat: '/audio/bgm/combat-theme.mp3',
+  title:  '/sounds/TheOuterWorldsHope_JustinEBell.mp3',       // starts at 20s
+  vn:     '/sounds/Introduction(Reworked)CoS_TravisSavoie.mp3',// <-- ensure this exists in /public/sounds
+  combat: '/sounds/DeathByGlamour_TobyFox.mp3',
+  ache:   '/sounds/EndlessStruggle_MysMes.mp3',
 };
 
 // Per-track offsets (seconds)
 const START_AT: Partial<Record<TrackKey, number>> = { title: 20 };
 
-// ---- helpers ----
-function getCtx(): AudioContext | null {
-  return (window as any).__ENDO_AUDIO_CTX__ ?? null;
+// ---- GLOBAL MIXER (singleton on window) ----
+declare global {
+  interface Window {
+    __ENDO_AUDIO_CTX__?: AudioContext;
+    __ENDO_AUDIO_MIXER__?: {
+      owner?: object;
+      key?: TrackKey;
+      src?: AudioBufferSourceNode;
+      gain?: GainNode;
+      fadeMs?: number;
+      playing?: boolean;
+      bufferCache: Map<string, AudioBuffer>;
+    };
+  }
 }
 
-const bufferCache = new Map<string, AudioBuffer>();
+function getCtx(): AudioContext | null {
+  return window.__ENDO_AUDIO_CTX__ ?? null;
+}
+
+function getMixer() {
+  if (!window.__ENDO_AUDIO_MIXER__) {
+    window.__ENDO_AUDIO_MIXER__ = { bufferCache: new Map<string, AudioBuffer>() };
+  }
+  return window.__ENDO_AUDIO_MIXER__!;
+}
+
 async function fetchBuffer(ctx: AudioContext, url: string): Promise<AudioBuffer> {
-  const cached = bufferCache.get(url);
+  const mixer = getMixer();
+  const cache = mixer.bufferCache;
+  const cached = cache.get(url);
   if (cached) return cached;
+
   const res = await fetch(url);
+  if (!res.ok) {
+    console.error('[audio] HTTP error', res.status, url);
+    throw new Error(`HTTP ${res.status} for ${url}`);
+  }
   const arr = await res.arrayBuffer();
   const buf = await ctx.decodeAudioData(arr);
-  bufferCache.set(url, buf);
+  cache.set(url, buf);
   return buf;
 }
 
-// ---- component ----
 export function WebAudioManager({
   track,
   volume = 0.35,
@@ -40,8 +68,9 @@ export function WebAudioManager({
   fadeMs?: number;
   enabled?: boolean;
 }) {
-  const currentSrcRef = useRef<AudioBufferSourceNode | null>(null);
-  const currentGainRef = useRef<GainNode | null>(null);
+  const ownerRef = useRef<object>({});      // unique identity for this instance
+  const mySrcRef = useRef<AudioBufferSourceNode | null>(null);
+  const myGainRef = useRef<GainNode | null>(null);
 
   useEffect(() => {
     let destroyed = false;
@@ -52,74 +81,112 @@ export function WebAudioManager({
       try { await ctx.resume(); } catch {}
 
       const url = AUDIO_TRACKS[track];
-      const buf = await fetchBuffer(ctx, url);
+      console.log('[audio] switching to', track, '→', url);
+
+      let buf: AudioBuffer;
+      try {
+        buf = await fetchBuffer(ctx, url);
+      } catch (err) {
+        console.error('[audio] failed to fetch/decode', url, err);
+        return;
+      }
       if (destroyed) return;
 
-      // build nodes
-      const src = ctx.createBufferSource();
-      src.buffer = buf;
-      src.loop = true;
-
-      const gain = ctx.createGain();
+      const mixer = getMixer();
       const t = ctx.currentTime;
       const fadeSec = Math.max(0, fadeMs) / 1000;
 
-      gain.gain.setValueAtTime(0, t);
-      src.connect(gain).connect(ctx.destination);
+      // Build NEW nodes
+      const newSrc = ctx.createBufferSource();
+      newSrc.buffer = buf;
+      newSrc.loop = true;
 
-      // crossfade out previous
-      if (currentSrcRef.current && currentGainRef.current) {
-        const prevSrc = currentSrcRef.current;
-        const prevGain = currentGainRef.current;
+      const newGain = ctx.createGain();
+      newGain.gain.setValueAtTime(0, t); // start silent
+      newSrc.connect(newGain).connect(ctx.destination);
+
+      // Capture PREVIOUS nodes BEFORE we touch the mixer
+      const prevSrc = mixer.src;
+      const prevGain = mixer.gain;
+
+      // ---- ATOMIC HANDOFF: claim the mixer first ----
+      mixer.owner   = ownerRef.current;
+      mixer.key     = track;
+      mixer.src     = newSrc;
+      mixer.gain    = newGain;
+      mixer.fadeMs  = fadeMs;
+      mixer.playing = true;
+
+      // Keep refs so our cleanup knows which nodes are ours
+      mySrcRef.current  = newSrc;
+      myGainRef.current = newGain;
+
+      // Start new first (avoid dead air)
+      const offset = Math.max(0, Math.min(START_AT[track] ?? 0, buf.duration));
+      try {
+        newSrc.start(t, offset);
+      } catch (err) {
+        console.error('[audio] start() failed', url, err);
+        // If start fails, roll back ownership so we don't leave the mixer in a broken state
+        if (mixer.owner === ownerRef.current && mixer.src === newSrc) {
+          mixer.owner = undefined; mixer.src = undefined; mixer.gain = undefined; mixer.playing = false;
+        }
+        return;
+      }
+
+      // Fade in new
+      newGain.gain.cancelScheduledValues(t);
+      newGain.gain.setValueAtTime(0, t);
+      newGain.gain.linearRampToValueAtTime(Math.max(0, Math.min(1, volume)), t + fadeSec);
+
+      // Now fade out & stop the PREVIOUS nodes (not whatever the mixer points at now)
+      if (prevSrc && prevGain) {
         prevGain.gain.cancelScheduledValues(t);
         prevGain.gain.setValueAtTime(prevGain.gain.value, t);
         prevGain.gain.linearRampToValueAtTime(0, t + fadeSec);
         setTimeout(() => { try { prevSrc.stop(); } catch {} }, fadeMs + 50);
       }
-
-      // start at offset (no blip)
-      const offset = Math.max(0, Math.min(START_AT[track] ?? 0, buf.duration));
-      src.start(t, offset);
-
-      // fade in
-      gain.gain.cancelScheduledValues(t);
-      gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(Math.max(0, Math.min(1, volume)), t + fadeSec);
-
-      currentSrcRef.current = src;
-      currentGainRef.current = gain;
     };
 
-    // if AudioContext already exists, go now; else wait for AudioGate
-    const existing = getCtx();
-    if (existing) {
-      startWhenReady(existing);
+    const ctx = getCtx();
+    if (ctx) {
+      startWhenReady(ctx);
     } else {
       const onReady = (e: Event) => {
-        const ctx = (e as CustomEvent<AudioContext>).detail ?? getCtx();
-        if (ctx) startWhenReady(ctx);
+        const c = (e as CustomEvent<AudioContext>).detail ?? getCtx();
+        if (c) startWhenReady(c);
       };
       window.addEventListener('audioready', onReady, { once: true });
       return () => window.removeEventListener('audioready', onReady);
     }
 
+    // Cleanup: only stop if we STILL own the mixer and nodes match ours
     return () => {
       destroyed = true;
-      const ctx = getCtx();
-      const src = currentSrcRef.current;
-      const g = currentGainRef.current;
-      if (src && g && ctx) {
-        const t = ctx.currentTime;
-        const fadeSec = Math.max(0, fadeMs) / 1000;
-        g.gain.cancelScheduledValues(t);
-        g.gain.setValueAtTime(g.gain.value, t);
-        g.gain.linearRampToValueAtTime(0, t + fadeSec);
-        setTimeout(() => { try { src.stop(); } catch {} }, fadeMs + 50);
+      const mixer = getMixer();
+      const c = getCtx();
+      const mySrc = mySrcRef.current;
+      const myGain = myGainRef.current;
+
+      if (mixer.owner === ownerRef.current && mixer.src === mySrc && mixer.gain === myGain && mySrc && myGain && c) {
+        const t = c.currentTime;
+        const fadeSec = Math.max(0, (mixer.fadeMs ?? fadeMs)) / 1000;
+        myGain.gain.cancelScheduledValues(t);
+        myGain.gain.setValueAtTime(myGain.gain.value, t);
+        myGain.gain.linearRampToValueAtTime(0, t + fadeSec);
+        setTimeout(() => { try { mySrc.stop(); } catch {} }, (mixer.fadeMs ?? fadeMs) + 50);
+        mixer.owner = undefined;
+        mixer.src = undefined;
+        mixer.gain = undefined;
+        mixer.key = undefined;
+        mixer.playing = false;
       }
-      currentSrcRef.current = null;
-      currentGainRef.current = null;
+
+      mySrcRef.current = null;
+      myGainRef.current = null;
     };
   }, [track, volume, fadeMs, enabled]);
 
   return null;
 }
+
