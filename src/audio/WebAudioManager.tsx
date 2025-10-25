@@ -4,10 +4,10 @@ import { useEffect, useRef } from 'react';
 type TrackKey = 'title' | 'vn' | 'combat' | 'ache';
 
 const AUDIO_TRACKS: Record<TrackKey, string> = {
-  title:  '/sounds/TheOuterWorldsHope_JustinEBell.mp3',       // starts at 20s
-  vn:     '/sounds/Introduction(Reworked)CoS_TravisSavoie.mp3',// <-- ensure this exists in /public/sounds
-  combat: '/sounds/DeathByGlamour_TobyFox.mp3',
-  ache:   '/sounds/EndlessStruggle_MysMes.mp3',
+  title:  '/sounds/FreeDarkMenuTheme',       // starts at 20s
+  vn:     '/sounds/IntroductionSpookyFree.mp3',// <-- ensure this exists in /public/sounds
+  combat: '/sounds/UndertaleInspiredFree.mp3',
+  ache:   '/sounds/EndlessSadnessFreeAcheTheme.mp3',
 };
 
 // Per-track offsets (seconds)

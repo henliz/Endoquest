@@ -6,7 +6,7 @@ type TrackKey = 'title' | 'vn' | 'combat';
 
 // Map tracks to /public files
 const AUDIO_TRACKS: Record<TrackKey, string> = {
-  title:  '/sounds/TheOuterWorldsHope_JustinEBell.mp3', // will start at 20s
+  title:  '/sounds/FreeDarkMenuTheme.mp3', // will start at 20s
   vn:     '/audio/bgm/vn-ambient.mp3',
   combat: '/audio/bgm/combat-theme.mp3',
 };

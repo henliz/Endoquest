@@ -54,7 +54,7 @@ export function AITextInputScene({
       setUserInput(input);
       setIsLoading(true);
       setError(null);
-    
+
       try {
         const res = await fetch(`${apiUrl}/ai/scene-response`, {
           method: 'POST',
