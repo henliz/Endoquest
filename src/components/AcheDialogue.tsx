@@ -6,7 +6,7 @@ import { VNChoiceScene } from './VNChoiceScene';
 import { WebAudioManager } from '@/audio/WebAudioManager';
 
 const ACHE_SPRITE =
-  'https://64.media.tumblr.com/fc625f90f9b7b9e44ceeaac71d2a47e4/fa9909d69395c71f-fc/s1280x1920/9a9766b6dc616f22000a8f4f85f35f2f6d7c4d3e.png';
+  '/assets/TheAche.png'
 const CAMPFIRE_BG =
   'https://i.pinimg.com/736x/60/fe/74/60fe7447268dda76b8202f15b70f9f2b.jpg';
 

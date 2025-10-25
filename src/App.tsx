@@ -6,8 +6,10 @@ import { TutorialOverlay } from './components/TutorialOverlay';
 import { HelpCircle } from 'lucide-react';
 import { AudioGate } from '@/audio/AudioGate';
 import { WebAudioManager } from '@/audio/WebAudioManager';
+import { ChapterOneCover } from './components/ChapterOneCover';
+import { ChapterOneEncounter } from './components/ChapterOneEncounter';
 
-type Screen = 'start' | 'tutorial';
+type Screen = 'start' | 'tutorial' | 'chapter1_cover' | 'chapter1_play';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('start');
@@ -15,7 +17,8 @@ export default function App() {
 
   const handleTutorialComplete = (data: any) => {
     console.log('Tutorial complete with data:', data);
-    setCurrentScreen('start');
+    //After the tutorial, go to the Chapter 1 "cover" screen
+    setCurrentScreen('chapter1_cover');
   };
 
   const handleStart = () => {
@@ -54,6 +57,14 @@ export default function App() {
           <>
             <TutorialEncounter onComplete={handleTutorialComplete} />
           </>
+        )}
+
+        {currentScreen === 'chapter1_cover' && (
+          <ChapterOneCover onEnter={() => setCurrentScreen('chapter1_play')} />
+        )}
+
+        {currentScreen === 'chapter1_play' && (
+          <ChapterOneEncounter onComplete={() => setCurrentScreen('start')} />
         )}
 
         <TutorialOverlay isVisible={showTutorial} onClose={() => setShowTutorial(false)} />

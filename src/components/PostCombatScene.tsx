@@ -10,9 +10,7 @@ const CAMPFIRE_BG = 'https://i.pinimg.com/736x/60/fe/74/60fe7447268dda76b8202f15
 
 // Archivist VN portraits - rotate between these during dialogue
 const ARCHIVIST_PORTRAITS = [
-  'https://64.media.tumblr.com/6ac9c73c28d6ce9ab4e74e7202871951/3f2885bda6ac220c-1d/s1280x1920/5400143058374ff9dad6debaf0434fbc7dc4caaf.png',
-  'https://aniyuki.com/wp-content/uploads/2022/06/aniyuki-xiao-png-16.png',
-  'https://www.pngall.com/wp-content/uploads/15/Xiao-PNG-Images.png'
+  '/assets/Archivist_Sprite1.png',
 ];
 
 // Campfire scene sprite - smaller chibi style

@@ -40,9 +40,7 @@ interface TutorialState {
 
 // Archivist VN portraits - rotate between these during dialogue
 const ARCHIVIST_PORTRAITS = [
-  'https://64.media.tumblr.com/6ac9c73c28d6ce9ab4e74e7202871951/3f2885bda6ac220c-1d/s1280x1920/5400143058374ff9dad6debaf0434fbc7dc4caaf.png',
-  'https://aniyuki.com/wp-content/uploads/2022/06/aniyuki-xiao-png-16.png',
-  'https://www.pngall.com/wp-content/uploads/15/Xiao-PNG-Images.png'
+  '/assets/Archivist_Sprite1.png',
 ];
 const VN_BACKGROUND =
   'https://64.media.tumblr.com/4cef6a87f522f8f2ca9e9aafd84fbaca/b38864c912b46d59-00/s1280x1920/e0a2f6bb50cb530ee6235c1fc75f8d86477c4120.jpg';
@@ -355,7 +353,13 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         );
 
       case 'post_combat':
-        return <PostCombatScene onContinue={() => advancePhase('game_end')} />;
+       return (
+         <PostCombatScene
+           onContinue={() =>
+             onComplete({ choices: state.playerChoices, finalState: state })
+           }
+         />
+       );
 
       case 'game_end':
         return (
