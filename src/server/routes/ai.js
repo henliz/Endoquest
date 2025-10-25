@@ -1,5 +1,5 @@
-// src/server/routes/ai.ts
-import express, { Request, Response } from 'express';
+// src/server/routes/ai.js
+import express from 'express';
 import OpenAI from 'openai';
 
 const router = express.Router();
@@ -15,9 +15,13 @@ const openai = new OpenAI({
    In-memory conversation state
    (kept here so this file is self-contained)
    ========================= */
-type Msg = { role: 'user' | 'assistant' | 'system'; content: string };
-const campfireConversations = new Map<string, Msg[]>();
-const conversationMetadata = new Map<string, { messageCount: number; startedAt?: string }>();
+
+/** @typedef {{ role: 'user' | 'assistant' | 'system', content: string }} Msg */
+
+/** @type {Map<string, Msg[]>} */
+const campfireConversations = new Map();
+/** @type {Map<string, { messageCount: number, startedAt?: string }>} */
+const conversationMetadata = new Map();
 
 /* =========================
    Minimal fallbacks for project utilities
@@ -28,7 +32,7 @@ const conversationMetadata = new Map<string, { messageCount: number; startedAt?:
 const SYSTEM_PROMPT_BASE = `You are the Archivist in a VN/RPG about endometriosis. Keep responses concise and emotionally safe.`;
 
 // TODO: replace with your real scene config loader
-function getSceneConfig(sceneId: string): any {
+function getSceneConfig(sceneId) {
   // Minimal default shape so the routes don't explode
   return {
     responseStructure: { length: 'short', maxQuestions: 1 },
@@ -43,17 +47,16 @@ function getSceneConfig(sceneId: string): any {
 }
 
 // TODO: replace with your real prompt builder
-function buildScenePrompt(sceneId: string, playerData: any, base: string): string {
+function buildScenePrompt(sceneId, playerData, base) {
   const pd = playerData ? `\n\n[PlayerData]: ${JSON.stringify(playerData).slice(0, 500)}` : '';
   return `${base}\n\n[Scene]: ${sceneId}${pd}`;
 }
 
 // Snowflake data fetchers (safe fallbacks)
-async function fetchSnippets(_topic: string, _n: number): Promise<any[]> {
+async function fetchSnippets(_topic, _n) {
   return []; // plug your real Snowflake query here
 }
-
-async function fetchResources(_region: string, _n: number): Promise<any[]> {
+async function fetchResources(_region, _n) {
   return []; // plug your real Snowflake query here
 }
 
@@ -62,18 +65,17 @@ async function fetchResources(_region: string, _n: number): Promise<any[]> {
    (Your project likely has real versions; these keep this file working)
    ========================= */
 
-type BenefitsTools = Record<string, unknown>;
-async function initBenefitsTools(): Promise<BenefitsTools> {
-  // Initialize clients / indexes here. This fallback does nothing but keeps runtime happy.
+/** @returns {Promise<Record<string, unknown>>} */
+async function initBenefitsTools() {
   return {};
 }
 
-// Shape expected by OpenAI tools param; leave empty in the fallback
-const BENEFITS_TOOLS: any[] = [];
+/** @type {any[]} */
+const BENEFITS_TOOLS = [];
 
 // When the model asks to call a tool, you’d dispatch here.
 // This fallback just echoes back that the tool ran.
-async function executeToolCall(toolCall: any, _tools: BenefitsTools) {
+async function executeToolCall(toolCall, _tools) {
   return {
     role: 'tool',
     tool_call_id: toolCall.id,
@@ -192,12 +194,12 @@ Create 3-5 prioritized recommendations in this exact structure:
 /**
  * POST /api/ai/campfire-chat
  * Free-form conversation (bounded) with Archivist.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
-router.post('/campfire-chat', async (req: Request, res: Response) => {
+router.post('/campfire-chat', async (req, res) => {
   try {
-    const { playerId, message, conversationHistory } = req.body as {
-      playerId?: string; message?: string; conversationHistory?: Msg[];
-    };
+    const { playerId, message, conversationHistory } = /** @type {{playerId?: string, message?: string, conversationHistory?: Msg[]}} */ (req.body || {});
 
     if (!message || !message.trim()) {
       return res.status(400).json({ error: 'Message is required' });
@@ -213,7 +215,7 @@ router.post('/campfire-chat', async (req: Request, res: Response) => {
 
     const sceneConfig = getSceneConfig('campfire_conversation');
 
-    let arcStage: 'opening' | 'exploration' | 'closure' = 'exploration';
+    let arcStage = /** @type {'opening'|'exploration'|'closure'} */ ('exploration');
     if (meta.messageCount <= 3) arcStage = 'opening';
     else if (meta.messageCount >= 13) arcStage = 'closure';
 
@@ -222,10 +224,11 @@ router.post('/campfire-chat', async (req: Request, res: Response) => {
     // Build prompt
     let scenePrompt = buildScenePrompt('campfire_conversation', {}, SYSTEM_PROMPT_BASE);
     scenePrompt += `\n**Current Arc Stage:** ${arcStage.toUpperCase()} (message ${meta.messageCount})\n`;
-    scenePrompt += `**Objectives:**\n${currentArc.objectives.map((o: string) => `- ${o}`).join('\n')}\n\n`;
+    scenePrompt += `**Objectives:**\n${currentArc.objectives.map((o) => `- ${o}`).join('\n')}\n\n`;
     scenePrompt += `**Remember:**\n- Respond with a SINGLE VN dialogue box\n- Keep it ${sceneConfig.responseStructure.length}\n- Max ${sceneConfig.responseStructure.maxQuestions} question(s)\n- Guide toward the three knowledge types\n`;
 
-    const messages: Msg[] = [
+    /** @type {Msg[]} */
+    const messages = [
       { role: 'system', content: scenePrompt },
       ...(Array.isArray(conversationHistory) ? conversationHistory : []),
       { role: 'user', content: message }
@@ -238,7 +241,7 @@ router.post('/campfire-chat', async (req: Request, res: Response) => {
       max_tokens: 150,
       presence_penalty: 0.3,
       frequency_penalty: 0.3
-    } as any);
+    });
 
     const archivistResponse = completion.choices?.[0]?.message?.content ?? '';
     const wordCount = archivistResponse.split(/\s+/).filter(Boolean).length;
@@ -264,7 +267,7 @@ router.post('/campfire-chat', async (req: Request, res: Response) => {
         shouldPromptClosure: meta.messageCount >= 15
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('OpenAI API Error:', error);
     if (error?.status === 401) {
       return res.status(500).json({
@@ -282,12 +285,12 @@ router.post('/campfire-chat', async (req: Request, res: Response) => {
 /**
  * POST /api/ai/scene-response
  * Scene-constrained response that must hit a plot beat.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
-router.post('/scene-response', async (req: Request, res: Response) => {
+router.post('/scene-response', async (req, res) => {
   try {
-    const { sceneId, userInput, playerData } = req.body as {
-      sceneId?: string; userInput?: string; playerData?: any;
-    };
+    const { sceneId, userInput, playerData } = /** @type {{sceneId?: string, userInput?: string, playerData?: any}} */ (req.body || {});
 
     if (!sceneId) return res.status(400).json({ error: 'sceneId is required' });
     if (!userInput || !userInput.trim()) return res.status(400).json({ error: 'userInput is required' });
@@ -317,7 +320,8 @@ router.post('/scene-response', async (req: Request, res: Response) => {
     scenePrompt += `\n\n**Player's Response:**\n"${userInput}"\n\n`;
     scenePrompt += `Generate the Archivist's response that incorporates what they said while hitting the mandatory plot beat for this scene.`;
 
-    const messages: Msg[] = [
+    /** @type {Msg[]} */
+    const messages = [
       { role: 'system', content: scenePrompt },
       { role: 'user', content: userInput }
     ];
@@ -327,7 +331,7 @@ router.post('/scene-response', async (req: Request, res: Response) => {
       messages,
       temperature: 0.8,
       max_tokens: 150
-    } as any);
+    });
 
     const responseText = completion.choices?.[0]?.message?.content ?? '';
     const wordCount = responseText.split(/\s+/).filter(Boolean).length;
@@ -339,7 +343,7 @@ router.post('/scene-response', async (req: Request, res: Response) => {
       wordCount,
       generatedAt: new Date().toISOString()
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Scene Response Error:', error);
     if (error?.status === 401) {
       return res.status(500).json({
@@ -357,10 +361,12 @@ router.post('/scene-response', async (req: Request, res: Response) => {
 /**
  * POST /api/ai/generate-vn-sequence
  * Generates a 6-box VN dialogue sequence.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
-router.post('/generate-vn-sequence', async (req: Request, res: Response) => {
+router.post('/generate-vn-sequence', async (req, res) => {
   try {
-    const { sceneId, playerData } = req.body as { sceneId?: string; playerData?: any };
+    const { sceneId, playerData } = /** @type {{sceneId?: string, playerData?: any}} */ (req.body || {});
     if (!sceneId) return res.status(400).json({ error: 'sceneId is required' });
 
     const sceneConfig = getSceneConfig(sceneId);
@@ -377,7 +383,8 @@ router.post('/generate-vn-sequence', async (req: Request, res: Response) => {
 
     scenePrompt += `\n\nGenerate the dialogue sequence for this scene. Return the 6 dialogue boxes as a JSON array of strings.`;
 
-    const messages: Msg[] = [
+    /** @type {Msg[]} */
+    const messages = [
       { role: 'system', content: scenePrompt },
       { role: 'user', content: 'Generate the VN dialogue sequence for this scene as a JSON array.' }
     ];
@@ -387,7 +394,7 @@ router.post('/generate-vn-sequence', async (req: Request, res: Response) => {
       messages,
       temperature: 0.7,
       max_tokens: 600
-    } as any);
+    });
 
     const dialogue = completion.choices?.[0]?.message?.content ?? '[]';
 
@@ -397,7 +404,7 @@ router.post('/generate-vn-sequence', async (req: Request, res: Response) => {
       outputFormat: sceneConfig.outputFormat,
       generatedAt: new Date().toISOString()
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('VN Sequence Generation Error:', error);
     return res.status(500).json({
       error: 'Failed to generate VN sequence',
@@ -409,8 +416,10 @@ router.post('/generate-vn-sequence', async (req: Request, res: Response) => {
 /**
  * POST /api/ai/generate-report
  * Produces a clinician- or patient-facing JSON report.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
-router.post('/generate-report', async (req: Request, res: Response) => {
+router.post('/generate-report', async (req, res) => {
   const t0 = Date.now();
   const debugOn = req.query.debug === '1' || req.headers['x-debug'] === '1';
 
@@ -420,11 +429,11 @@ router.post('/generate-report', async (req: Request, res: Response) => {
       conversationHistory = [],
       combatData = {},
       region = 'Ontario',
-      audience = 'physician' // 'physician' | 'home'
-    } = req.body as any;
+      audience = 'physician'
+    } = /** @type {any} */ (req.body || {});
 
-    let evidence: any[] = [];
-    let localResources: any[] = [];
+    let evidence = [];
+    let localResources = [];
     const tSnow0 = Date.now();
     try {
       [evidence, localResources] = await Promise.all([
@@ -469,8 +478,8 @@ ${isPhysician ? `- Professional, concise, clinically useful.
 
     if (evidence?.length) {
       reportPrompt += `\nTrusted Knowledge:\n`;
-      for (const e of evidence) {
-        reportPrompt += `- ${e.SUBTOPIC}: ${e.TEXT} (source: ${e.SOURCE})\n`;
+      for (const ev of evidence) {
+        reportPrompt += `- ${ev.SUBTOPIC}: ${ev.TEXT} (source: ${ev.SOURCE})\n`;
       }
     }
     if (localResources?.length) {
@@ -480,7 +489,8 @@ ${isPhysician ? `- Professional, concise, clinically useful.
       }
     }
 
-    const convoSlice = (conversationHistory as Msg[]).slice(-8);
+    /** @type {Msg[]} */
+    const convoSlice = Array.isArray(conversationHistory) ? conversationHistory.slice(-8) : [];
     if (convoSlice.length) {
       reportPrompt += `\nConversation Highlights:\n`;
       for (const msg of convoSlice) {
@@ -514,18 +524,18 @@ ${isPhysician ? `- Professional, concise, clinically useful.
         ],
         temperature: 0.4,
         max_tokens: 900
-      } as any,
-      // @ts-ignore openai sdk supports signal internally
+      },
+      // Some OpenAI SDKs accept { signal } in options; safe to leave in JS:
       { signal: controller.signal }
     );
     clearTimeout(timer);
 
     const raw = completion.choices?.[0]?.message?.content ?? '{}';
-    const usage = (completion as any).usage || null;
-    const model = (completion as any).model || 'unknown';
+    const usage = completion.usage || null;
+    const model = completion.model || 'unknown';
 
     // Parse forgivingly
-    let reportJson: any;
+    let reportJson;
     try {
       reportJson = JSON.parse(raw);
     } catch {
@@ -545,18 +555,18 @@ ${isPhysician ? `- Professional, concise, clinically useful.
     }
 
     // Dedup resources (name|url|phone)
-    const norm = (s: any) => (typeof s === 'string' ? s.trim() : s || null);
-    const toKey = (r: any) =>
+    const norm = (s) => (typeof s === 'string' ? s.trim() : s || null);
+    const toKey = (r) =>
       `${(r.name || '').toLowerCase().trim()}|${(r.url || '').toLowerCase().trim()}|${(r.phone || '').trim()}`;
 
-    reportJson.resources = (reportJson.resources as any[])
+    reportJson.resources = (reportJson.resources || [])
       .filter(Boolean)
-      .map((r: any) => ({ name: norm(r.name), url: norm(r.url), phone: norm(r.phone), tags: norm(r.tags) }))
-      .filter((r: any) => r.name);
+      .map((r) => ({ name: norm(r.name), url: norm(r.url), phone: norm(r.phone), tags: norm(r.tags) }))
+      .filter((r) => r.name);
 
     {
-      const seen = new Set<string>();
-      reportJson.resources = reportJson.resources.filter((r: any) => {
+      const seen = new Set();
+      reportJson.resources = reportJson.resources.filter((r) => {
         const k = toKey(r);
         if (seen.has(k)) return false;
         seen.add(k);
@@ -565,10 +575,10 @@ ${isPhysician ? `- Professional, concise, clinically useful.
     }
 
     // Dedup string arrays, cap lengths
-    const dedupeStrings = (arr: any) => {
+    const dedupeStrings = (arr) => {
       if (!Array.isArray(arr)) return [];
-      const seen = new Set<string>();
-      const out: string[] = [];
+      const seen = new Set();
+      const out = [];
       for (const s of arr) {
         const t = String(s || '').trim();
         const k = t.toLowerCase();
@@ -578,7 +588,7 @@ ${isPhysician ? `- Professional, concise, clinically useful.
       }
       return out;
     };
-    const cap = (arr: any, n = 5) => Array.isArray(arr) ? arr.slice(0, n) : [];
+    const cap = (arr, n = 5) => Array.isArray(arr) ? arr.slice(0, n) : [];
 
     reportJson.findings              = cap(dedupeStrings(reportJson.findings), 5);
     reportJson.red_flags             = cap(dedupeStrings(reportJson.red_flags), 3);
@@ -587,9 +597,9 @@ ${isPhysician ? `- Professional, concise, clinically useful.
     reportJson.self_management_tips  = cap(dedupeStrings(reportJson.self_management_tips), 5);
 
     const totalMs = Date.now() - t0;
-    console.log(`[generate-report] ok type=${reportType} evid=${evidence?.length||0} res=${localResources?.length||0} convo=${(conversationHistory as Msg[]).slice(-8).length} turns=${combatData?.turnCount ?? '-'} ms=${totalMs} (snowflake ${tSnow}ms)`);
+    console.log(`[generate-report] ok type=${reportType} evid=${evidence?.length||0} res=${localResources?.length||0} convo=${(Array.isArray(conversationHistory) ? conversationHistory.slice(-8) : []).length} turns=${combatData?.turnCount ?? '-'} ms=${totalMs} (snowflake ${tSnow}ms)`);
 
-    const payload: any = {
+    const payload = {
       ok: true,
       reportType,
       region,
@@ -606,7 +616,7 @@ ${isPhysician ? `- Professional, concise, clinically useful.
         prompt: reportPrompt,
         audience,
         used: {
-          conversationHistory: (conversationHistory as Msg[]).slice(-8),
+          conversationHistory: Array.isArray(conversationHistory) ? conversationHistory.slice(-8) : [],
           combatData,
           evidenceCount: evidence?.length || 0,
           resourcesCount: localResources?.length || 0,
@@ -618,7 +628,7 @@ ${isPhysician ? `- Professional, concise, clinically useful.
     }
 
     return res.json(payload);
-  } catch (err: any) {
+  } catch (err) {
     const isAbort = err?.name === 'AbortError';
     console.error('Generate Report Error:', err);
     return res.status(isAbort ? 504 : 500).json({
@@ -632,9 +642,11 @@ ${isPhysician ? `- Professional, concise, clinically useful.
 /**
  * GET /api/ai/campfire-conversation/:playerId
  * Returns stored conversation for a player.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
-router.get('/campfire-conversation/:playerId', (req: Request, res: Response) => {
-  const { playerId } = req.params as { playerId: string };
+router.get('/campfire-conversation/:playerId', (req, res) => {
+  const { playerId } = /** @type {{playerId: string}} */ (req.params);
   const history = campfireConversations.get(playerId) || [];
   const metadata = conversationMetadata.get(playerId) || { messageCount: 0 };
   return res.json({ conversationHistory: history, messageCount: metadata.messageCount });
@@ -643,9 +655,11 @@ router.get('/campfire-conversation/:playerId', (req: Request, res: Response) => 
 /**
  * DELETE /api/ai/campfire-conversation/:playerId
  * Clears stored conversation for a player.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
-router.delete('/campfire-conversation/:playerId', (req: Request, res: Response) => {
-  const { playerId } = req.params as { playerId: string };
+router.delete('/campfire-conversation/:playerId', (req, res) => {
+  const { playerId } = /** @type {{playerId: string}} */ (req.params);
   campfireConversations.delete(playerId);
   conversationMetadata.delete(playerId);
   return res.json({ message: 'Campfire conversation cleared' });
@@ -653,9 +667,8 @@ router.delete('/campfire-conversation/:playerId', (req: Request, res: Response) 
 
 /**
  * GET /api/ai/test-snowflake
- * Quick connectivity check for evidence/resources (kept from other branch)
  */
-router.get('/test-snowflake', async (_req: Request, res: Response) => {
+router.get('/test-snowflake', async (_req, res) => {
   try {
     const evidence = await fetchSnippets('endometriosis', 3);
     const resources = await fetchResources('Ontario', 3);
@@ -670,11 +683,15 @@ router.get('/test-snowflake', async (_req: Request, res: Response) => {
  * POST /api/ai/benefits/guide
  * Generates Guild of Restoration benefits JSON by analyzing conversation.
  * Keeps tool-call loop but gracefully falls back if parsing fails.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
-router.post('/benefits/guide', async (req: Request, res: Response) => {
+router.post('/benefits/guide', async (req, res) => {
   try {
-    const { playerId } = req.body as { playerId?: string };
-    const conversationHistory: Msg[] = playerId ? (campfireConversations.get(playerId) || []) : [];
+    /** @type {{ playerId?: string }} */
+    const { playerId } = req.body || {};
+    /** @type {Msg[]} */
+    const conversationHistory = playerId ? (campfireConversations.get(playerId) || []) : [];
 
     // Empty conversation → friendly fallback
     if (conversationHistory.length === 0) {
@@ -733,7 +750,8 @@ ${transcript}
 
 Return ONLY the JSON object, no additional text.`;
 
-    const messages: Msg[] = [
+    /** @type {Msg[]} */
+    const messages = [
       { role: 'system', content: GUILD_SYSTEM_PROMPT },
       { role: 'user', content: userPrompt }
     ];
@@ -750,13 +768,13 @@ Return ONLY the JSON object, no additional text.`;
         messages,
         tools: BENEFITS_TOOLS,
         tool_choice: 'auto'
-      } as any);
+      });
 
-      const choice: any = completion.choices?.[0];
+      const choice = completion.choices?.[0];
       const msg = choice?.message;
 
       // Push assistant/tool messages into the running transcript
-      if (msg) messages.push(msg as Msg);
+      if (msg) messages.push(/** @type {Msg} */(msg));
 
       // If the model is done or didn't request any tools, try to parse
       if (choice?.finish_reason === 'stop' || !msg?.tool_calls) {
@@ -786,7 +804,7 @@ Return ONLY the JSON object, no additional text.`;
       if (Array.isArray(msg.tool_calls) && msg.tool_calls.length) {
         for (const tc of msg.tool_calls) {
           const toolResult = await executeToolCall(tc, tools);
-          messages.push(toolResult as any);
+          messages.push(/** @type {any} */(toolResult));
         }
       }
     }

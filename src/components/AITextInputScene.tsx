@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TextInputVNScene } from './TextInputVNScene';
 import { VNScene } from './VNScene';
-import { AnimatePresence } from 'motion/react';
 import { sceneResponse } from '../api';
 import { AnimatePresence, motion } from 'motion/react';
 
