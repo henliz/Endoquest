@@ -1,7 +1,7 @@
 {
   "rewrites": [
     { "source": "/", "destination": "https://endoquest.onrender.com/" },
-    { "source": "//(.*)", "destination": "https://endoquest.onrender.com/" },
+    { "source": "/(.*)", "destination": "https://endoquest.onrender.com/" },
   ]
 }
 
