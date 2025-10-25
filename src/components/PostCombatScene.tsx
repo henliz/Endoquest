@@ -5,6 +5,8 @@ import { VNScene } from './VNScene';
 import { YourAcheMenu } from './YourAcheMenu';
 import { BackgroundParticles } from './BackgroundParticles';
 import { Scroll, Sparkles } from 'lucide-react';
+import type { ReportJSON } from '../api';
+
 
 const CAMPFIRE_BG = 'https://i.pinimg.com/736x/60/fe/74/60fe7447268dda76b8202f15b70f9f2b.jpg';
 
@@ -19,6 +21,11 @@ const ACHE_ICON = 'https://64.media.tumblr.com/tumblr_mcchojgkjR1rreqgwo1_500.gi
 
 interface PostCombatSceneProps {
   onContinue: () => void;
+  reportPhysician?: ReportJSON | null;
+  reportHome?: ReportJSON | null;
+  requestReport?: (audience?: 'physician' | 'home') => Promise<void>;
+  reportLoading?: boolean;
+  reportError?: string | null;
 }
 
 type ScenePhase = 
@@ -31,7 +38,7 @@ type ScenePhase =
   | 'dialogue_6'
   | 'free_explore';
 
-export function PostCombatScene({ onContinue }: PostCombatSceneProps) {
+export function PostCombatScene({ onContinue, reportPhysician, reportHome, requestReport, reportLoading, reportError }: PostCombatSceneProps) {
   const [phase, setPhase] = useState<ScenePhase>('scroll_obtained');
   const [showMenu, setShowMenu] = useState(false);
 
@@ -397,7 +404,15 @@ export function PostCombatScene({ onContinue }: PostCombatSceneProps) {
             {/* Your Ache Menu */}
             <AnimatePresence>
               {showMenu && (
-                <YourAcheMenu onClose={() => setShowMenu(false)} />
+                <YourAcheMenu
+                  onClose={() => setShowMenu(false)}
+                  reportPhysician={reportPhysician ?? null}
+                  reportHome={reportHome ?? null}
+                  requestReport={requestReport}
+                  reportLoading={reportLoading}
+                  reportError={reportError}
+                />
+
               )}
             </AnimatePresence>
           </div>
