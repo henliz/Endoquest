@@ -17,19 +17,19 @@ interface VNSceneProps {
 // Counter to track portrait rotation across component instances
 let portraitRotationIndex = 0;
 
-export function VNScene({ 
-  backgroundImage, 
+export function VNScene({
+  backgroundImage,
   characterImage,
   characterImages, // NEW
-  characterName, 
-  text, 
+  characterName,
+  text,
   onContinue,
   showContinue = true
 }: VNSceneProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [canContinue, setCanContinue] = useState(false);
-  
+
   // NEW: Select which portrait to show
   const [currentCharacterImage, setCurrentCharacterImage] = useState<string>('');
 
@@ -60,7 +60,7 @@ export function VNScene({
       } else {
         clearInterval(interval);
         setIsComplete(true);
-        
+
         setTimeout(() => {
           setCanContinue(true);
         }, 300);
@@ -99,14 +99,14 @@ export function VNScene({
       {currentCharacterImage && (
         <motion.div
           className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 flex items-end justify-center"
-          style={{ 
-            height: '100vh', 
+          style={{
+            height: '100vh',
             width: '100vw'
           }}
-          animate={{ 
+          animate={{
             y: [0, -8, 0],
           }}
-          transition={{ 
+          transition={{
             y: {
               duration: 3,
               repeat: Infinity,
@@ -118,7 +118,7 @@ export function VNScene({
             src={currentCharacterImage}
             alt={characterName}
             className={`object-${getCharacterImageFit(currentCharacterImage)} object-bottom drop-shadow-2xl`}
-            style={{ 
+            style={{
               filter: 'drop-shadow(0 0 60px rgba(201, 160, 220, 0.4))',
               height: getCharacterImageHeight(currentCharacterImage, '95vh', '85vh'),
               width: getCharacterImageWidth(currentCharacterImage),
@@ -184,7 +184,7 @@ export function VNScene({
               <motion.div
                 className="absolute bottom-3 right-4 text-[#c9a0dc]"
                 initial={{ opacity: 0 }}
-                animate={{ 
+                animate={{
                   opacity: 1,
                   y: [0, 4, 0]
                 }}

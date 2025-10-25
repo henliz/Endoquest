@@ -1,0 +1,1897 @@
+{
+  "name": "General Provisions",
+  "provisions": [
+    {
+      "heading": "Preamble",
+      "breadcrumb_heading": "Preamble",
+      "body": "Carrier 1 COMPANY 1 Division 1 - All Other Employees We are pleased to offer you our services. As we adhere to principles of inclusion, all genders are incorporated in the language used in our communications with you. BENEFIT DETAILS Carrier 1\u2122 is a leading Canadian life and health insurer. Carrier 1's financial security advisors work with our clients from coast to coast to help them secure their financial future. We provide a wide range of retirement savings and income plans; as well as life, disability and critical illness insurance for individuals and families. As a leading provider of employee benefits in Canada, we offer effective benefit solutions for large and small employee groups. ",
+      "summary": "Carrier 1 offers inclusive employee benefits, including retirement plans and insurance, for individuals and groups across Canada.",
+      "classification": "Benefit Provisions",
+      "key_entities": [
+        "Carrier 1",
+        "COMPANY 1",
+        "retirement savings",
+        "income plans",
+        "life insurance",
+        "disability insurance",
+        "critical illness insurance",
+        "employee benefits",
+        "Canada"
+      ],
+      "page": 1,
+      "sequence": 0,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "regular",
+        "indentation": 0,
+        "page": 1,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Carrier 1 Online",
+      "breadcrumb_heading": "Carrier 1 Online",
+      "body": "Visit our website at XXXXXXXXXX for: \u2022 information and details on Carrier 1's corporate profile and our products and services \u2022 investor information \u2022 news releases \u2022 contact information \u2022 online claims submission ",
+      "summary": "Visit Carrier 1's website for corporate profile, products, services, investor info, news, contact details, and online claims submission.",
+      "classification": "Contact Information",
+      "key_entities": [
+        "Carrier 1",
+        "corporate profile",
+        "products and services",
+        "investor information",
+        "news releases",
+        "contact information",
+        "online claims submission"
+      ],
+      "page": 2,
+      "sequence": 1,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "bold",
+        "indentation": 0,
+        "page": 2,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "My Carrier 1 at Work",
+      "breadcrumb_heading": "My Carrier 1 at Work",
+      "body": "As a Carrier 1 plan member, you can register for My Carrier 1 at Work\u2122 at XXXXXXXX . Make sure to have your plan and ID numbers available when registering. With My Carrier 1 at Work you can: \u2022 Submit claims quickly \u2022 Review your coverage and balances \u2022 Find healthcare providers like chiropractors and massage therapists near you \u2022 Save your benefits cards to your payment service application or program \u2022 Get notified when your claims have been processed ",
+      "summary": "Register for My Carrier 1 at Work to submit claims, review coverage, find providers, save benefits cards, and get claim notifications.",
+      "classification": "Procedural Information",
+      "key_entities": [
+        "Carrier 1",
+        "My Carrier 1 at Work",
+        "plan member",
+        "claims",
+        "coverage",
+        "healthcare providers",
+        "benefits cards"
+      ],
+      "page": 2,
+      "sequence": 2,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "bold",
+        "indentation": 0,
+        "page": 2,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Carrier 1\u2019s Toll-Free Number",
+      "breadcrumb_heading": "Carrier 1\u2019s Toll-Free Number",
+      "body": "To contact a customer service representative at Carrier 1 for assistance with your medical and dental coverage, please call  1-800-XXX-XXXX ",
+      "summary": "Call 1-800-XXX-XXXX for assistance with medical and dental coverage from Carrier 1.",
+      "classification": "Contact Information",
+      "key_entities": [
+        "Carrier 1",
+        "customer service representative",
+        "medical coverage",
+        "dental coverage",
+        "1-800-XXX-XXXX"
+      ],
+      "page": 3,
+      "sequence": 3,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "bold",
+        "indentation": 0,
+        "page": 3,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Customer Complaints",
+      "breadcrumb_heading": "Customer Complaints",
+      "body": "We are committed to addressing your concerns promptly, fairly and professionally. Here is how you may submit your complaint. \u2022 Toll-free: - Phone: 1-866-XXX-XXXX - Fax: 1-855-XXX-XXXX  \u2022  Email: XXXXXX \u2022 In writing: The Carrier 1 For additional information on how you may submit a complaint, please visit XXXXXX. The information provided in the booklet is intended to summarize the provisions of Group Policy Nos. 123456 and 134567. If there are variations between the information in the booklet and the provisions of the policies, the policies will prevail to the extent permitted by law. This booklet contains important information and should be kept in a safe place known to you and your family. The Plan is underwritten by and arranged by ",
+      "summary": "Submit complaints via phone, fax, email, or writing. Visit website for more details. Policies prevail over booklet information.",
+      "classification": "Contact Information",
+      "key_entities": [
+        "Toll-free",
+        "Phone",
+        "Fax",
+        "Email",
+        "The Carrier",
+        "Group Policy Nos. 123456 and 134567"
+      ],
+      "page": 3,
+      "sequence": 4,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "bold",
+        "indentation": 0,
+        "page": 3,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "This booklet was prepared on: March 14, 2022",
+      "breadcrumb_heading": "This booklet was prepared on: March 14, 2022",
+      "body": "",
+      "summary": "No text provided to summarize.",
+      "classification": "Other",
+      "key_entities": [],
+      "page": 3,
+      "sequence": 5,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "bold",
+        "indentation": 0,
+        "page": 3,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Access to Documents",
+      "breadcrumb_heading": "Access to Documents",
+      "body": "You have the right, upon request, to obtain a copy of the policy, your application and any written statements or other records you have provided to Carrier 1 as evidence of insurability, subject to certain limitations. ",
+      "summary": "Request copies of policy, application, and records from Carrier 1, subject to limitations.",
+      "classification": "Procedural Information",
+      "key_entities": [
+        "policy",
+        "application",
+        "Carrier 1",
+        "evidence of insurability"
+      ],
+      "page": 4,
+      "sequence": 6,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 4,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Legal Actions",
+      "breadcrumb_heading": "Legal Actions",
+      "body": "Every action or proceeding against an insurer for the recovery of insurance money payable under the contract is absolutely barred unless commenced within the time set out in the  Insurance Act  (for actions or proceedings governed by the laws of Alberta and British Columbia),  The Insurance Act  (for actions or proceedings governed by the laws of Manitoba), the  Limitations Act, 2002  (for actions or proceedings governed by the laws of Ontario), or other applicable legislation.  For those actions or proceedings governed by the laws of Quebec, the prescriptive period is set out in the Quebec Civil Code. ",
+      "summary": "Legal actions against insurers must start within time limits set by relevant provincial laws or Quebec Civil Code.",
+      "classification": "Contractual Obligations",
+      "key_entities": [
+        "Insurance Act",
+        "Limitations Act, 2002",
+        "Quebec Civil Code",
+        "Alberta",
+        "British Columbia",
+        "Manitoba",
+        "Ontario",
+        "Quebec"
+      ],
+      "page": 4,
+      "sequence": 7,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 4,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Appeals",
+      "breadcrumb_heading": "Appeals",
+      "body": "You have the right to appeal a denial of all or part of the insurance or benefits described in the contract as long as you do so within one year of the initial denial of the insurance or a benefit. An appeal must be in writing and must include your reasons for believing the denial to be incorrect. ",
+      "summary": "You can appeal a denial of insurance or benefits within one year, in writing, with reasons for believing the denial is incorrect.",
+      "classification": "Procedural Information",
+      "key_entities": [
+        "insurance",
+        "benefits",
+        "one year",
+        "appeal"
+      ],
+      "page": 4,
+      "sequence": 8,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 4,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Benefit Limitation for Overpayment",
+      "breadcrumb_heading": "Benefit Limitation for Overpayment",
+      "body": "If benefits are paid that were not payable under the policy, you are responsible for repayment within 30 days after Carrier 1 sends you a notice of the overpayment, or within a longer period if agreed to in writing by Carrier 1. If you fail to fulfil this responsibility, no further benefits are payable under the policy until the overpayment is recovered. This does not limit Carrier 1\u2019s right to use other legal means to recover the overpayment. ",
+      "summary": "Repay overpaid benefits within 30 days or agreed period; no further benefits until repayment. Carrier 1 may use legal means for recovery.",
+      "classification": "Contractual Obligations",
+      "key_entities": [
+        "Carrier 1",
+        "30 days"
+      ],
+      "page": 4,
+      "sequence": 9,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 4,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Quebec Time Limit for the Payment of Benefits",
+      "breadcrumb_heading": "Quebec Time Limit for the Payment of Benefits",
+      "body": "Where Quebec law applies, benefits will be paid in accordance with the terms of the plan within the following time period: \u2022 for death benefits, 30 days following receipt of the required proof of claim. \u2022 for disability income benefits for which there is no waiting period, 30 days following receipt of the required proof of claim. \u2022 for disability income benefits for which there is a waiting period, 30 days from the expiry of the waiting period provided the required proof of claim has been received. \u2022 for any other benefit, 60 days following receipt of the required proof of claim. ",
+      "summary": "Quebec law mandates benefit payments within 30-60 days after receiving proof of claim, depending on benefit type and waiting period.",
+      "classification": "Timeline Information",
+      "key_entities": [
+        "Quebec law",
+        "death benefits",
+        "disability income benefits",
+        "waiting period",
+        "30 days",
+        "60 days"
+      ],
+      "page": 4,
+      "sequence": 10,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 4,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Employer Role",
+      "breadcrumb_heading": "Employer Role",
+      "body": "The employer\u2019s role is limited to providing employees with information and not advice. ",
+      "summary": "The employer provides information to employees but does not offer advice.",
+      "classification": "Other",
+      "key_entities": [
+        "employer",
+        "employees"
+      ],
+      "page": 5,
+      "sequence": 11,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 5,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Protecting Your Personal Information",
+      "breadcrumb_heading": "Protecting Your Personal Information",
+      "body": "At Carrier 1, we recognize and respect the importance of privacy. Personal information about you is kept in a confidential file at the offices of Carrier 1 or the offices of an organization authorized by Carrier 1. Carrier 1 may use service providers located within or outside Canada. We limit access to personal information in your file to Carrier 1 staff or persons authorized by Carrier 1 who require it to perform their duties, to persons to whom you have granted access, and to persons authorized by law. Your personal information may be subject to disclosure to those authorized under applicable law within or outside Canada. We use the personal information to administer the group benefits plan under which you are covered. This includes many tasks, such as: \u2022 determining your eligibility for coverage under the plan \u2022 enrolling you for coverage \u2022 investigating and assessing your claims and providing you with payment \u2022 managing your claims \u2022 verifying and auditing eligibility and claims \u2022 creating and maintaining records concerning our relationship \u2022 underwriting activities, such as determining the cost of the plan, and analyzing the design options of the plan \u2022 Carrier 1\u2019s and its affiliates\u2019 internal data management and analytics \u2022 preparing regulatory reports, such as tax slips We may exchange personal information with your health care providers, your plan administrator, any insurance or reinsurance companies, administrators of government benefits or other benefit programs, other organizations, or service providers working with us or the above when relevant and necessary to administer the plan. As a plan member, you are responsible for the claims submitted. We may exchange personal information with you or a person acting on your behalf when relevant and necessary to confirm coverage and to manage the claims submitted. You may request access or correction of the personal information in your file. A request for access or correction should be made in writing and may be sent to any of Carrier 1\u2019s offices or to our head office. For a copy of our Privacy Guidelines, or if you have questions about our personal information policies and practices (including with respect to service providers), write to Carrier 1\u2019s Chief Compliance Officer or refer to XXXXXX. TABLE OF CONTENTS Page ",
+      "summary": "Carrier 1 safeguards personal information, using it to manage benefits, claims, and compliance, with limited access and potential disclosure under law.",
+      "classification": "Procedural Information",
+      "key_entities": [
+        "Carrier 1",
+        "Chief Compliance Officer",
+        "Privacy Guidelines",
+        "Canada"
+      ],
+      "page": 5,
+      "sequence": 12,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 5,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Benefit Summary",
+      "breadcrumb_heading": "Benefit Summary",
+      "body": "1 Commencement and Termination of Coverage 4 Dependent Coverage 7 Beneficiary Designation 7 Employee Basic Life Insurance 7 Dependent Basic Life Insurance 8 Optional Life Insurance 10 Accidental Death, Dismemberment and Specific Loss (AD&D) Insurance 11 Long Term Disability (LTD) Income Benefits 17 Healthcare 23 Virtual Health Services 40 Dentalcare 41 Coordination of Benefits 47 Diagnostic and Treatment Support Services (Teladoc 48 Medical Experts) ",
+      "summary": "Overview of employee benefits including life insurance, AD&D, LTD, healthcare, dentalcare, and virtual health services.",
+      "classification": "Benefit Provisions",
+      "key_entities": [
+        "Commencement and Termination of Coverage",
+        "Dependent Coverage",
+        "Beneficiary Designation",
+        "Employee Basic Life Insurance",
+        "Dependent Basic Life Insurance",
+        "Optional Life Insurance",
+        "Accidental Death, Dismemberment and Specific Loss (AD&D) Insurance",
+        "Long Term Disability (LTD) Income Benefits",
+        "Healthcare",
+        "Virtual Health Services",
+        "Dentalcare",
+        "Coordination of Benefits",
+        "Diagnostic and Treatment Support Services",
+        "Teladoc",
+        "Medical Experts"
+      ],
+      "page": 7,
+      "sequence": 13,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case",
+        "indentation": 0,
+        "page": 7,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Benefit Summary",
+      "breadcrumb_heading": "Benefit Summary",
+      "body": "This summary must be read together with the benefits described in this booklet. ",
+      "summary": "This summary should be read with the full benefits booklet for complete understanding.",
+      "classification": "Other",
+      "key_entities": [],
+      "page": 9,
+      "sequence": 14,
+      "attributes": {
+        "size": 17.04,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 9,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Healthcare",
+      "breadcrumb_heading": "Benefit Summary -> Healthcare",
+      "body": "",
+      "summary": "No text provided to summarize.",
+      "classification": "Other",
+      "key_entities": [],
+      "page": 10,
+      "sequence": 20,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 10,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Dental Care",
+      "breadcrumb_heading": "Benefit Summary -> Dental Care",
+      "body": "",
+      "summary": "No text provided to summarize.",
+      "classification": "Other",
+      "key_entities": [],
+      "page": 12,
+      "sequence": 22,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "Title Case, bold",
+        "indentation": 0,
+        "page": 12,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Covered expenses will not exceed customary charges",
+      "breadcrumb_heading": "Benefit Summary -> Covered expenses will not exceed customary charges",
+      "body": "Payment Basis The dental fee guide in effect in your province of residence on the date treatment is rendered Nil Deductible Reimbursement Levels 100% Basic Coverage 80% Accidental Dental Injury Coverage Plan Maximums Basic Treatment $1,000 each calendar year Accidental Dental Injury Treatment Unlimited COMMENCEMENT AND TERMINATION OF COVERAGE You are eligible to participate in the plan after 6 months of continuous employment. You are considered continuously employed only if you satisfy the actively at work requirement throughout the eligibility waiting period. \u2022 You and your dependents will be covered as soon as you become eligible. You may waive health and/or dental coverage if you are already covered for these benefits under your spouse's plan. If you lose spousal coverage you must apply for coverage under this plan. If you do not apply within 31 days of loss of such coverage, or you were previously declined for coverage by Carrier 1, you and your dependents may be required to provide evidence of insurability acceptable to Carrier 1 to be covered for health benefits, and may be declined for or offered limited dental benefits. \u2022 You must be actively at work when coverage takes effect, otherwise the coverage will not be effective until you return to work. Increases in your benefits while you are covered by this plan will not become effective unless you are actively at work. \u2022 Temporary and seasonal employees, and part-time employees who work less than 24 hours per week may not join the plan. Your coverage terminates when your employment ends, you are no longer eligible, or the policy terminates, whichever is earliest. \u2022 Your dependents' coverage terminates when your insurance terminates or your dependent no longer qualifies, whichever is earlier. \u2022 Your coverage may be extended if it would have terminated because you are not actively at work due to disease or injury, temporary lay- off or leave of absence. See your employer for details. \u2022 When your coverage terminates, you may be entitled to an extension of benefits under the plan. See your employer for details. ",
+      "summary": "Eligibility after 6 months employment; coverage details, termination conditions, and extension options for dental benefits.",
+      "classification": "Plan Membership Rules",
+      "key_entities": [
+        "Dental fee guide",
+        "Nil Deductible",
+        "100% Basic Coverage",
+        "80% Accidental Dental Injury Coverage",
+        "Basic Treatment $1,000",
+        "Accidental Dental Injury Treatment Unlimited",
+        "6 months",
+        "Carrier 1",
+        "Temporary and seasonal employees",
+        "24 hours per week"
+      ],
+      "page": 12,
+      "sequence": 23,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "bold",
+        "indentation": 0,
+        "page": 12,
+        "alignment": "left"
+      }
+    },
+    {
+      "heading": "Beneficiary Designation",
+      "breadcrumb_heading": "Benefit Summary -> Beneficiary Designation",
+      "body": "You may make, alter, or revoke a designation of beneficiary as permitted by law. Any designation of beneficiary you made under your employer\u2019s previous policy prior to the effective date of this policy applies to this policy until you make a change to that designation. You should review your beneficiary designation from time to time to ensure that it reflects your current intentions. You may change the designation by completing a form available from your employer. EMPLOYEE BASIC LIFE INSURANCE On your death, Carrier 1 will pay your life insurance benefits to your named beneficiary. If you have not named a beneficiary or there is no surviving beneficiary at the time of your death, payment will be made to your estate. Your employer will explain the claim requirements to your beneficiary. \u2022 Your life insurance will not continue past the end of the day before the date you reach age 70. \u2022 If you become disabled while insured, Carrier 1 may waive the premiums on your life insurance after the waiting period, throughout the benefit period. The waiting period is the same as the waiting period under the long term disability income benefit. A benefit period is the period of time after the waiting period during which you satisfy the disability definition under the long term disability income benefit. A benefit period will not continue past your 65 th  birthday. \u2022 Your life insurance will terminate if you are age 65 or over and you are not actively at work. However, if you are not actively at work because of disease or injury, your life insurance may be continued on a premium paying basis for up to 6 months following the date you ceased to be actively at work. \u2022 If any or all of your insurance terminates on or before your 65 th birthday, you may be eligible to apply for an individual conversion policy without providing proof of your insurability.  You must apply and pay the first premium no later than 31 days after your group insurance terminates. See your employer for details. DEPENDENT BASIC LIFE INSURANCE If one of your dependents dies, Carrier 1 will pay you the dependent life insurance benefit. Your employer will explain the claim requirements. \u2022 Your dependent life insurance will not continue past the end of the day before the date you reach age 70. \u2022 If you are disabled and the premiums for your employee life insurance are waived, your dependent life insurance will also continue without premium payment until your own coverage terminates or your dependents no longer qualify. \u2022 Your dependent life insurance will terminate if you are age 65 or over and you are not actively at work. However, if you are not actively at work because of disease or injury and your employee life insurance is continued, your dependent life insurance will be continued on the same basis. \u2022 If your spouse's insurance terminates on or before their 65 th birthday, your spouse may be eligible for an individual conversion policy without providing proof of insurability.  You or your spouse must apply and pay the first premium no later than 31 days after the group insurance terminates.  See your employer for details. ",
+      "summary": "Designate beneficiaries for life insurance; coverage ends at age 70 or 65 if not working. Conversion policy available post-termination.",
+      "classification": "Benefit Provisions",
+      "key_entities": [
+        "Carrier 1",
+        "Employee Basic Life Insurance",
+        "Dependent Basic Life Insurance",
+        "age 70",
+        "age 65",
+        "31 days",
+        "beneficiary",
+        "employer",
+        "estate",
+        "disability",
+        "conversion policy"
+      ],
+      "page": 15,
+      "sequence": 25,
+      "attributes": {
+        "size": 9.96,
+        "formatting": "ALL CAPS, bold",
+        "indentation": 115,
+        "page": 15,
+        "alignment": "left"
+      }
+    }
+  ],
+  "benefits": [
+    {
+      "name": "Employee Basic Life Insurance",
+      "provisions": [
+        {
+          "heading": "Employee Basic Life Insurance",
+          "breadcrumb_heading": "Benefit Summary -> Employee Basic Life Insurance",
+          "body": "$25,000, reducing by 50% at age 65 ",
+          "summary": "Basic Life Insurance of $25,000 reduces by 50% at age 65.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "$25,000",
+            "50%",
+            "age 65",
+            "Basic Life Insurance"
+          ],
+          "page": 9,
+          "sequence": 15,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 9,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [],
+      "justification": "Benefit Type: Lump Sum, Triggering Event: Death, Insured Person: Employee, Coverage Start: Employment, Coverage Stop: Age 65 or retirement",
+      "processed": false
+    },
+    {
+      "name": "Dependent Basic Life Insurance",
+      "provisions": [
+        {
+          "heading": "Dependent Basic Life Insurance",
+          "breadcrumb_heading": "Benefit Summary -> Dependent Basic Life Insurance",
+          "body": "$2,500 Spouse $5,000 Child ",
+          "summary": "Provides $2,500 coverage for spouse and $5,000 for child under Dependent Basic Life Insurance.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "$2,500",
+            "Spouse",
+            "$5,000",
+            "Child",
+            "Dependent Basic Life Insurance"
+          ],
+          "page": 9,
+          "sequence": 16,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 9,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [],
+      "justification": "Benefit Type: Lump Sum, Triggering Event: Death, Insured Person: Spouse and Child, Coverage Start: Employment, Coverage Stop: Termination of employment or retirement",
+      "processed": false
+    },
+    {
+      "name": "Optional Life Insurance",
+      "provisions": [
+        {
+          "heading": "Optional Life Insurance",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance",
+          "body": "Available in $10,000 units to a maximum of $500,000, for you or your spouse, subject to approval of evidence of insurability If you are covered under this plan as both an employee and a spouse, you are limited to the $500,000 maximum ",
+          "summary": "Optional Life Insurance available in $10,000 units up to $500,000, subject to insurability approval. Maximum applies if covered as both employee and spouse.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Optional Life Insurance",
+            "$10,000 units",
+            "$500,000",
+            "employee",
+            "spouse"
+          ],
+          "page": 9,
+          "sequence": 17,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 9,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Optional Life Insurance",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance",
+          "body": "Optional life insurance allows you to choose additional coverage for yourself and your spouse. Check the  Benefit Summary  for the amount of optional life insurance available. When you apply for optional life insurance, you must provide proof of insurability, and your application must be approved by Carrier 1. Carrier 1 may void the optional insurance if any statement or answer in your application misrepresents or fails to disclose any fact material to the insurance. On your death, Carrier 1 will pay your life insurance to your named beneficiary. If you have not named a beneficiary or there is no surviving beneficiary at the time of your death, payment will be made to your estate. Your employer will explain the claim requirements. If your spouse dies you will be paid the amount for which your spouse was insured. \u2022 If you are approved for waiver of premium on your basic life insurance, any optional life insurance for yourself or your spouse will also continue without premium payment as long as your basic life insurance continues but not beyond the date your optional insurance would otherwise terminate. \u2022 If your or your spouse's optional life insurance terminates, you or your spouse may be eligible for an individual conversion policy without providing proof of insurability. You must apply and pay the first premium no later than 31 days after the group insurance terminates. In the case of insurance for your spouse, you or your spouse may apply. See your employer for details. \u2022 Your optional life insurance will not continue past the end of the day before the date you reach age 65. Your spouse's coverage will not continue past the end of the day before the date you or your spouse reaches age 65, whichever comes first. ",
+          "summary": "Optional life insurance offers additional coverage, requires proof of insurability, and has age limits. Conversion policy available post-termination.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Optional life insurance",
+            "Carrier 1",
+            "Beneficiary",
+            "Estate",
+            "Waiver of premium",
+            "Individual conversion policy",
+            "Age 65"
+          ],
+          "page": 18,
+          "sequence": 26,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "ALL CAPS, bold",
+            "indentation": 115,
+            "page": 18,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Limitation",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitation",
+          "body": "No benefit is paid for suicide within the first two years of initial or increased optional life coverage. In such a situation, Carrier 1 refunds the premiums that have been received. ACCIDENTAL DEATH, DISMEMBERMENT AND   SPECIFIC LOSS (AD&D) INSURANCE If you suffer one of the losses listed below as the result of an accident which occurs while you are insured, you will be paid the factor or portion of the Principal Sum shown opposite the loss in the table below. The loss must occur no later than 365 days after the accident. For loss of use, the loss must be continuous for 365 days. If you suffer multiple losses to the same limb as the result of the same accident, only the loss providing the highest amount payable will be paid. If you die as a result of an accident, Carrier 1 will pay the Principal Sum to your named beneficiary. If you have not named a beneficiary or there is no surviving beneficiary at the time of your death, payment will be made to your estate. Your employer will explain the claim requirements to your beneficiary. The Principal Sum is the maximum amount that will be paid for all injuries resulting from the same accident. For paraplegia, hemiplegia, and quadriplegia, the maximum amount that will be paid for all injuries resulting from the same accident is two times the Principal Sum. ",
+          "summary": "No benefits for suicide within two years; AD&D insurance pays for specific losses from accidents.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "Principal Sum",
+            "AD&D Insurance",
+            "suicide",
+            "accident",
+            "paraplegia",
+            "hemiplegia",
+            "quadriplegia",
+            "beneficiary",
+            "estate"
+          ],
+          "page": 18,
+          "sequence": 27,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 18,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Loss",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Loss",
+          "body": "Amount Payable Life Principal Sum Both hands or both feet Principal Sum Sight of both eyes Principal Sum One hand and one foot Principal Sum One hand and sight of one eye Principal Sum One foot and sight of one eye Principal Sum Speech and Hearing in both ears Principal Sum One arm or one leg 3/4 Principal Sum One hand or one foot or sight of one eye 1/2 Principal Sum Speech 1/2 Principal Sum Hearing in both ears 1/2 Principal Sum Thumb and index finger or at least 4 fingers of one hand 1/4 Principal Sum All toes of one foot 1/8 Principal Sum  Loss of Use Both arms and both legs (quadriplegia) 2 X Principal Sum Both legs (paraplegia) 2 X Principal Sum One arm and one leg on the same side of the body (hemiplegia)  2 X Principal Sum One arm and one leg on different sides of the body Principal Sum Both arms or both hands  Principal Sum One hand and one leg Principal Sum One leg or one arm 3/4 Principal Sum One hand 1/2 Principal Sum Your AD&D insurance will not continue past the end of the day before the date you reach age 70. ",
+          "summary": "Details on compensation for loss of limbs, sight, speech, hearing, and use of limbs, with specific Principal Sum percentages.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Principal Sum",
+            "AD&D insurance",
+            "age 70"
+          ],
+          "page": 19,
+          "sequence": 28,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 19,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Surgical Reattachment",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Surgical Reattachment",
+          "body": "If you suffer the loss of a limb that is surgically reattached, Carrier 1 will pay 50% of the amount that would have been payable if the loss had been permanent, regardless of the amount of use regained. The balance of the benefit will be payable if the reattachment fails and the reattached part is removed within one year after the reattachment was performed. ",
+          "summary": "Carrier 1 pays 50% for surgically reattached limbs, full benefit if reattachment fails within a year.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "50%",
+            "one year"
+          ],
+          "page": 20,
+          "sequence": 29,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 20,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Limitation",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitation",
+          "body": "Meal expenses are not covered. ",
+          "summary": "Meal expenses are excluded from coverage.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Meal expenses"
+          ],
+          "page": 21,
+          "sequence": 34,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 21,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Limitations",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitations",
+          "body": "No benefits will be paid for expenses incurred more than 3 years after the accident causing your death, or room or board or other ordinary living, travelling, or clothing expenses. ",
+          "summary": "No benefits for expenses incurred over 3 years post-accident or for ordinary living, travel, or clothing expenses.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "3 years",
+            "accident",
+            "death",
+            "expenses"
+          ],
+          "page": 22,
+          "sequence": 36,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 22,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "General Limitations",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> General Limitations",
+          "body": "No benefits are paid for injury or death resulting from: \u2022 Intentionally self-inflicted injury or suicide, regardless of your state of mind and whether or not you were able to understand the nature and consequences of your actions \u2022 Viral or bacterial infections, except pyogenic infections occurring through the injury for which loss is being claimed \u2022 Any form of illness or physical or mental infirmity \u2022 Medical or surgical treatment, except surgical reattachment \u2022 War, insurrection or voluntary participation in a riot \u2022 Service in the armed forces of any country \u2022 Air travel serving as a crew member, or in aircraft owned, leased or rented by your employer, or air travel where the aircraft is not licensed or the pilot is not certified to operate the aircraft ",
+          "summary": "No benefits for self-inflicted injury, infections, illness, medical treatment, war, military service, or certain air travel.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Intentionally self-inflicted injury",
+            "suicide",
+            "Viral or bacterial infections",
+            "illness",
+            "physical or mental infirmity",
+            "Medical or surgical treatment",
+            "War",
+            "insurrection",
+            "riot",
+            "Service in the armed forces",
+            "Air travel"
+          ],
+          "page": 23,
+          "sequence": 41,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 23,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "How to Make a Claim",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> How to Make a Claim",
+          "body": "\u2022 To claim benefits for yourself, ask your employer for a claim form. Complete it and return it to your employer. \u2022 If you die accidentally, your employer will explain the claim requirements to your beneficiary. \u2022 Claims should be submitted as soon as possible, but no later than 15 months after the loss. LONG TERM DISABILITY (LTD) INCOME BENEFITS The plan provides you with regular income to replace income lost because of a lengthy disability due to disease or injury. Benefits begin after the waiting period is over and continue until you are no longer disabled  as defined by the policy  or you reach age 65, whichever comes first. Check the  Benefit Summary  for the benefit amount and waiting period. \u2022 If disability is not continuous, the days you are disabled can be accumulated to satisfy the waiting period as long as no interruption is longer than 2 weeks and the disabilities arise from the same disease or injury. \u2022 LTD benefits are payable for the first 24 months following the waiting period if disease or injury prevents you from performing the essential duties of your regular occupation,  and , except for any employment under an approved rehabilitation plan, you are  not employed in any occupation that is providing you with income equal to or greater than your amount of LTD insurance under this plan, as shown in the Benefit Summary. \u2022 After 24 months, LTD benefits will continue only if your disability prevents you from being gainfully employed in any job. Gainful employment is work you are medically able to perform, for which you have at least the minimum qualifications, and which provides you with an income of at least 50% of your indexed monthly earnings before you became disabled. \u2022 Loss of any license required for work will not be considered in assessing disability. \u2022 After the waiting period, separate periods of disability arising from the same disease or injury are considered to be one period of disability unless they are separated by at least 6 months. \u2022 Because you pay the entire cost of LTD coverage, benefits are not taxable. Your LTD insurance will not continue past the end of the day before the date you reach age 65. ",
+          "summary": "Claim benefits via employer form; LTD benefits replace income during disability, with conditions and timelines.",
+          "classification": "Procedural Information",
+          "key_entities": [
+            "claim form",
+            "employer",
+            "beneficiary",
+            "15 months",
+            "LONG TERM DISABILITY (LTD) INCOME BENEFITS",
+            "age 65",
+            "24 months",
+            "50%",
+            "indexed monthly earnings"
+          ],
+          "page": 24,
+          "sequence": 42,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 24,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Other Income",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Other Income",
+          "body": "Your LTD benefit is reduced by other income you are entitled to receive while you are disabled. Your benefit is first reduced by: \u2022 disability or retirement benefits you are entitled to on your own behalf under the Canada Pension Plan or Quebec Pension Plan \u2022 benefits under any Workers' Compensation Act or similar law \u2022 employer sponsored short term disability or sick leave benefits \u2022 loss of income benefits under an automobile insurance plan, to the extent permitted by law \u2022 50% of earnings received from an approved rehabilitation plan There is a further reduction of your LTD benefit if the total of the income listed below exceeds 85% of your indexed monthly take-home pay before you became disabled. If it does, your benefit is reduced by the excess amount. \u2022 your income under this plan \u2022 benefits another member of your family is entitled to on the basis of your disability under the Canada Pension Plan or Quebec Pension Plan that are paid directly to you \u2022 loss of income benefits available through legislation, except for Employment Insurance benefits and automobile insurance benefits, which you or another member of your family is entitled to on the basis of your disability \u2022 the wage loss portion of any criminal injury award disability benefits under a plan of insurance available through an association \u2022 employment income, disability benefits, or retirement benefits related to any employment except for income from an approved rehabilitation plan, or employer sponsored short term disability or sick leave benefits (termination pay, severance benefits, and any similar termination of employment benefits, including any salary paid in lieu of notice, are included as employment income under this provision) The balance of any earnings received from an approved rehabilitation plan is not used to further reduce your LTD benefit unless that balance, together with your income from this plan and the other income listed above, would exceed your indexed monthly take-home pay before you became disabled. If it does, your benefit is reduced by the excess amount. Cost-of-living increases in the other income listed above, that take effect after the benefit period starts, except for income from an approved rehabilitation plan, are not included. ",
+          "summary": "LTD benefits are reduced by other income sources, including Canada Pension Plan, Workers' Compensation, and rehabilitation earnings, if exceeding 85% of pre-disability income.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "LTD benefit",
+            "Canada Pension Plan",
+            "Quebec Pension Plan",
+            "Workers' Compensation Act",
+            "short term disability",
+            "sick leave benefits",
+            "automobile insurance plan",
+            "rehabilitation plan",
+            "Employment Insurance",
+            "criminal injury award",
+            "termination pay",
+            "severance benefits",
+            "85%",
+            "indexed monthly take-home pay"
+          ],
+          "page": 26,
+          "sequence": 43,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 26,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Vocational Rehabilitation",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Vocational Rehabilitation",
+          "body": "Vocational rehabilitation involves a work-related activity or training strategy that is designed to help you return to your own job or other gainful employment, and is recommended or approved by Carrier 1. In considering whether to recommend or approve a rehabilitation plan, Carrier 1 will assess such factors as the expected duration of disability, and the level of activity required to facilitate the earliest possible return to work. ",
+          "summary": "Vocational rehabilitation aids return to work through approved activities, considering disability duration and activity level.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Vocational rehabilitation",
+            "Carrier 1"
+          ],
+          "page": 27,
+          "sequence": 44,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 27,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Medical Coordination",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Medical Coordination",
+          "body": "Medical coordination is a program, recommended or approved by Carrier 1, that is designed to facilitate medical stability and provide you with cost effective, quality care. In considering whether to recommend or approve a medical coordination program, Carrier 1 will assess such factors as the expected duration of disability, and the level of activity required to facilitate medical stability. ",
+          "summary": "Carrier 1's medical coordination program ensures cost-effective, quality care by assessing disability duration and activity level for medical stability.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "medical coordination program"
+          ],
+          "page": 27,
+          "sequence": 45,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 27,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Survivor Benefit",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Survivor Benefit",
+          "body": "If you die while LTD income benefits are being paid, Carrier 1 will pay 3 times your monthly LTD benefit to your named beneficiary. If you have not named a beneficiary or there is no surviving beneficiary at the time of your death, payment will be made to your estate. Your employer will explain the claim requirements to your beneficiary. ",
+          "summary": "Carrier 1 pays 3 times monthly LTD benefit to beneficiary or estate if no beneficiary upon death during LTD income benefits.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "monthly LTD benefit",
+            "beneficiary",
+            "estate"
+          ],
+          "page": 28,
+          "sequence": 46,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 28,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Conversion Privilege",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Conversion Privilege",
+          "body": "If you change jobs, you may apply for an individual LTD conversion policy without medical evidence. You must apply and pay the first premium no later than 31 days after you start your new job, and you must start your new job no later than 6 months after you leave your present one. Your application must be acceptable according to Carrier 1\u2019s underwriting rules in effect for individual disability insurance conversion policies at the time of application. See your employer for details. ",
+          "summary": "Apply for LTD conversion policy within 31 days of new job, starting within 6 months, per Carrier 1\u2019s rules.",
+          "classification": "Timeline Information",
+          "key_entities": [
+            "individual LTD conversion policy",
+            "31 days",
+            "6 months",
+            "Carrier 1",
+            "employer"
+          ],
+          "page": 28,
+          "sequence": 47,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 28,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Limitations",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitations",
+          "body": "No benefits are paid for: \u2022 Disability arising from a disease or injury for which you received medical care before your insurance started. This limitation does not apply if your disability starts after you have been continuously insured for 1 year, or you have not had medical care for the disease or injury for a continuous period of 90 days ending on or after the date your insurance took effect. \u2022 Any period after you fail to participate or cooperate in a prescribed plan of medical treatment appropriate for your condition. Depending on the severity of the condition, you may be required to be under the care of a specialist. If substance abuse contributes to your disability, the treatment program must include participation in a recognized substance withdrawal program. \u2022 Any period after you fail to cooperate in applying for other disability benefits, reapplying for such benefits, or appealing decisions regarding such benefits, where considered appropriate by Canada Life. \u2022 Any period after you fail to participate or cooperate in an approved rehabilitation plan. \u2022 Any period after you fail to participate or cooperate in a recommended medical coordination program. \u2022 Any period after you fail to participate or cooperate in a required medical or vocational assessment. \u2022 The scheduled duration of a leave of absence. This does not apply to any portion of a period of maternity leave during which you are disabled due to pregnancy. \u2022 Any period in which you are outside Canada.  This exclusion does not apply during the first 30 days of an absence, or if Carrier 1 pre- authorized the absence prior to your departure. \u2022 Any period of incarceration, confinement, or imprisonment by authority of law. \u2022 Disability arising from war, insurrection, or voluntary participation in a riot. ",
+          "summary": "No benefits for pre-existing conditions, non-cooperation in treatment, absence from Canada, incarceration, or war-related disabilities.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Canada Life",
+            "Carrier 1",
+            "substance withdrawal program",
+            "maternity leave",
+            "war",
+            "insurrection",
+            "riot"
+          ],
+          "page": 28,
+          "sequence": 48,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 28,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "How to Make a Claim",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> How to Make a Claim",
+          "body": "\u2022 To submit claims online, go to XXXXXX \u2022 To submit paper claims, obtain an Employee Claim Submission Guide and follow the guide\u2019s instructions. You can get this form from your employer, or online from the Carrier 1 corporate website. To access the form online, go to XXXXXX Please ensure that your claim is submitted to Carrier 1 as soon as possible, but no later than 3 months after proof of your claim has been requested. HEALTHCARE A deductible may be applied before you are reimbursed. All expenses will be reimbursed at the level shown in the  Benefit Summary . Benefits may be subject to plan maximums and frequency limits. Check the Benefit Summary  for this information. The plan covers customary charges for the following services and supplies. All covered services and supplies must represent reasonable treatment. Treatment is considered reasonable if it is accepted by the Canadian medical profession, it is proven to be effective, and it is of a form, intensity, frequency and duration essential to diagnosis or management of the disease or injury. ",
+          "summary": "Submit claims online or via paper. Follow instructions and submit within 3 months. Check Benefit Summary for coverage details.",
+          "classification": "Procedural Information",
+          "key_entities": [
+            "Employee Claim Submission Guide",
+            "Carrier 1",
+            "Benefit Summary",
+            "Canadian medical profession"
+          ],
+          "page": 30,
+          "sequence": 49,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 30,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Covered Expenses",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Covered Expenses",
+          "body": "\u2022 Ambulance transportation to the nearest centre where adequate treatment is available - The plan covers home nursing services of a registered nurse, a registered practical nurse if the person is a resident of Ontario or a licensed practical nurse if the person is a resident of any other province, when services are provided in Canada. Nursing care is care that requires the skills and training of a professional nurse, and is provided by a professional nurse who is not a member of the patient's family. You should apply for a pre-care assessment before home nursing begins. \u2022 Chronic care, provided in a hospital, nursing home or for home nursing care in Canada, for a condition where improvement or deterioration is unlikely within the next 12 months Drugs and drug supplies described below when prescribed by a person entitled by law to prescribe them, dispensed by a person entitled by law to dispense them, and provided in Canada. Benefits for drugs and drug supplies provided outside Canada are payable only as provided under the out-of-country emergency care provision. - Drugs which require a written prescription according to the Food and Drugs Act, Canada or provincial legislation in effect where the drug is dispensed, including contraceptive drugs and products containing a contraceptive drug - Injectable drugs including vitamins, insulins and allergy extracts. Syringes for self-administered injections are also covered - Disposable needles for use with non-disposable insulin injection devices, lancets, test strips, and sensors for flash glucose monitoring machines - Extemporaneous preparations or compounds if one of the ingredients is a covered drug - Certain other drugs that do not require a prescription by law may be covered. If you have any questions, contact your plan administrator before incurring the expense. Unless medical evidence is provided to Carrier 1 that indicates why a drug is not to be substituted, Carrier 1 can limit the covered expense to the cost of the lowest priced interchangeable drug. For drugs eligible under a provincial drug plan, coverage is limited to the deductible amount and coinsurance you are required to pay under that plan. \u2022 Rental or, at Carrier 1's discretion, purchase of certain medical supplies, appliances and prosthetic devices prescribed by a physician \u2022 Custom-made foot orthotics and custom-fitted orthopedic shoes, including modifications to orthopedic footwear, when prescribed by a physician Hearing aids, including batteries, tubing and ear molds provided at the time of purchase, when prescribed by a physician \u2022 Speech aids, including Bliss boards and laryngeal speaking aids, prescribed by a physician when no alternative method of communication is possible \u2022 Diabetic supplies prescribed by a physician: Novolin-pens or similar insulin injection devices using a needle, blood-letting devices including platforms but not lancets. Lancets are covered under prescription drugs \u2022 Blood-glucose monitoring machines prescribed by a physician \u2022 Flash glucose monitoring machines prescribed by a physician \u2022 Continuous glucose monitoring machines prescribed by a physician, including sensors and transmitters \u2022 Diagnostic laboratory and imaging procedures performed in the person\u2019s province of residence are covered when that type of procedure is not listed as an insured procedure under their provincial government plan. For greater certainty, a procedure is not eligible for coverage if a person can choose to pay for it, in whole or in part, instead of having the procedure covered under their provincial government plan \u2022 Out-of-hospital treatment of muscle and bone disorders, including diagnostic x-rays, by a licensed chiropractor \u2022 Out-of-hospital treatment of nutritional disorders by a registered dietician Out-of-hospital treatment of movement disorders by a licensed physiotherapist \u2022 Out-of-hospital treatment of foot disorders, including diagnostic x- rays, by a licensed podiatrist \u2022 Out-of-hospital treatment by a registered psychologist, or a qualified psychotherapist or social worker \u2022 Out-of-hospital treatment of speech impairments by a qualified speech therapist \u2022 Out-of-hospital services of a qualified massage therapist \u2022 Out-of-hospital services of a qualified acupuncturist \u2022 Out-of-hospital services of a licensed osteopath, including diagnostic x-rays \u2022 Out-of-hospital services of a licensed naturopath ",
+          "summary": "Coverage includes ambulance, nursing, drugs, medical supplies, diabetic supplies, diagnostic procedures, and various out-of-hospital treatments in Canada.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Ambulance transportation",
+            "Home nursing services",
+            "Chronic care",
+            "Drugs and drug supplies",
+            "Medical supplies",
+            "Custom-made foot orthotics",
+            "Hearing aids",
+            "Speech aids",
+            "Diabetic supplies",
+            "Diagnostic laboratory and imaging procedures",
+            "Chiropractor",
+            "Dietician",
+            "Physiotherapist",
+            "Podiatrist",
+            "Psychologist",
+            "Psychotherapist",
+            "Social worker",
+            "Speech therapist",
+            "Massage therapist",
+            "Acupuncturist",
+            "Osteopath",
+            "Naturopath"
+          ],
+          "page": 31,
+          "sequence": 50,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 31,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Visioncare",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Visioncare",
+          "body": "\u2022 Eye examinations, including refractions, when they are performed by a licensed ophthalmologist or optometrist, and coverage is not available under your provincial government plan ",
+          "summary": "Coverage for eye exams by licensed ophthalmologists or optometrists if not covered by provincial plan.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Eye examinations",
+            "Licensed ophthalmologist",
+            "Optometrist",
+            "Provincial government plan"
+          ],
+          "page": 34,
+          "sequence": 51,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 34,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Global Medical Assistance Program",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Global Medical Assistance Program",
+          "body": "This program provides medical assistance through a worldwide communications network which operates 24 hours a day. The network locates medical services and obtains Carrier 1's approval of covered services, when required as a result of a medical emergency arising while you or your dependent is travelling for vacation, business or education. Coverage for travel within Canada is limited to emergencies arising more than 500 kilometres from home. You must be covered by the government health plan in your home province to be eligible for global medical assistance benefits. The following services are covered, subject to Carrier 1's prior approval: \u2022 On-site hospital payment when required for admission, to a maximum of $1,000 \u2022 If suitable local care is not available, medical evacuation to the nearest suitable hospital while travelling in Canada. If travel is outside Canada, transportation will be provided to a hospital in Canada or to the nearest hospital outside Canada equipped to provide treatment When services are covered under this provision, they are not covered under other provisions described in this booklet \u2022 Transportation and lodging for one family member joining a patient hospitalized for more than 7 days while travelling alone. Benefits will be paid for moderate quality lodgings up to $1,500 and for a round trip economy class ticket \u2022 If you or a dependent is hospitalized while travelling with a companion, extra costs for moderate quality lodgings for the companion when the return trip is delayed due to your or your dependent\u2019s medical condition, to a maximum of $1,500 The cost of comparable return transportation home for you or a dependent and one travelling companion if prearranged, prepaid return transportation is missed because you or your dependent is hospitalized. Coverage is provided only when the return fare is not refundable. A rental vehicle is not considered prearranged, prepaid return transportation \u2022 In case of death, preparation and transportation of the deceased home \u2022 Return transportation home for minor children travelling with you or a dependent who are left unaccompanied because of your or your dependent\u2019s hospitalization or death. Return or round trip transportation for an escort for the children is also covered when considered necessary \u2022 Costs of returning your or your dependent's vehicle home or to the nearest rental agency when illness or injury prevents you or your dependent from driving, to a maximum of $1,000. Limitation Benefits will not be paid for vehicle return if transportation reimbursement benefits are paid for the cost of comparable return transportation home Benefits payable for moderate quality accommodation include telephone expenses as well as taxicab and car rental charges. ",
+          "summary": "Provides 24/7 medical assistance for emergencies while traveling, covering hospital payments, transportation, lodging, and vehicle return, subject to Carrier 1's approval.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "medical assistance",
+            "hospital payment",
+            "medical evacuation",
+            "transportation",
+            "lodging",
+            "vehicle return",
+            "$1,000",
+            "$1,500"
+          ],
+          "page": 35,
+          "sequence": 52,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 35,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Limitation",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitation",
+          "body": "Meal expenses are not covered. ",
+          "summary": "Meal expenses are excluded from coverage.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Meal expenses"
+          ],
+          "page": 36,
+          "sequence": 53,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 36,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Out-Of-Country Emergency Care",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Out-Of-Country Emergency Care",
+          "body": "The plan covers medical expenses incurred as a result of a medical emergency arising while you or your dependent is outside Canada for vacation, business or education purposes. To qualify for benefits, you must be covered by the government health plan in your home province. A medical emergency is a sudden, unexpected injury or an acute episode of disease. \u2022 The following services and supplies are covered when related to the initial medical treatment: - treatment by a physician - diagnostic x-ray and laboratory services - hospital accommodation in a standard or semi-private ward or intensive care unit, if the confinement begins while you or your dependent is covered - medical supplies provided during a covered hospital confinement - paramedical services provided during a covered hospital confinement - hospital out-patient services and supplies - medical supplies provided out-of-hospital if they would have been covered in Canada - drugs - out-of-hospital services of a professional nurse - ambulance services by a licensed ambulance company to the nearest centre where essential treatment is available Limitation If your medical condition permits you to return to Canada, benefits will be limited to the amount payable under this plan for continued treatment outside Canada or the amount payable under this plan for comparable treatment in Canada, plus return transportation, whichever is less. ",
+          "summary": "Covers medical expenses for emergencies abroad if covered by provincial health plan; includes physician, hospital, drugs, ambulance services. Limitations apply if return to Canada is possible.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Canada",
+            "medical emergency",
+            "physician",
+            "hospital accommodation",
+            "medical supplies",
+            "paramedical services",
+            "drugs",
+            "ambulance services",
+            "government health plan"
+          ],
+          "page": 36,
+          "sequence": 54,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 36,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Other Services and Supplies",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Other Services and Supplies",
+          "body": "Carrier 1 can, on such terms as it determines, cover services or supplies under this plan where the service or supply represents reasonable treatment. ",
+          "summary": "Carrier 1 may cover services or supplies deemed reasonable treatment under this plan.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "services",
+            "supplies",
+            "reasonable treatment"
+          ],
+          "page": 38,
+          "sequence": 55,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 38,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Limitations",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitations",
+          "body": "Carrier 1 can decline a claim for services or supplies that were purchased from a provider that is not approved by Carrier 1. Carrier 1 can limit the covered expense for a service or supply to that of a lower cost alternative service or supply that represents reasonable treatment. Except to the extent otherwise required by law, no benefits are paid for: \u2022 Expenses private insurers are not permitted to cover by law \u2022 Services or supplies for which a charge is made only because you have insurance coverage \u2022 The portion of the expense for services or supplies that is payable by the government health plan in your home province, whether or not you are actually covered under the government health plan \u2022 Any portion of services or supplies which you are entitled to receive, or for which you are entitled to a benefit or reimbursement, by law or under a plan that is legislated, funded, or administered in whole or in part by a government (\u201cgovernment plan\u201d), without regard to whether coverage would have otherwise been available under this plan In this limitation, government plan does not include a group plan for government employees \u2022 \u2022 Services or supplies that do not represent reasonable treatment Services or supplies associated with: - treatment performed only for cosmetic purposes - recreation or sports rather than with other daily living activities - the diagnosis or treatment of infertility - contraception, other than contraceptive drugs and products containing a contraceptive drug \u2022 Services or supplies associated with a covered service or supply, unless specifically listed as a covered service or supply or determined by Carrier 1 to be a covered service or supply \u2022 Extra medical supplies that are spares or alternates \u2022 Services or supplies received outside Canada except as listed under Out-of-Country Emergency Care and Global Medical Assistance \u2022 Services or supplies received out-of-province in Canada unless you are covered by the government health plan in your home province and Carrier 1 would have paid benefits for the same services or supplies if they had been received in your home province This limitation does not apply to Global Medical Assistance \u2022 Expenses arising from war, insurrection, or voluntary participation in a riot \u2022 Podiatric treatments for which a portion of the cost is payable under the Ontario Health Insurance Plan (OHIP). Benefits for these services are payable only after the maximum annual OHIP benefit has been paid Visioncare services and supplies required by an employer as a condition of employment Services or supplies that Carrier 1 has determined are not proportionate to the disease or injury or, where applicable, the stage or progression of the disease or injury. In determining whether a service or supply is proportionate, Carrier 1 may take any factor into consideration including, but not limited to, the following: - clinical practice guidelines; - assessments of the clinical effectiveness of the service or supply, including by professional advisory bodies or government agencies; - information provided by a manufacturer or provider of the service or supply; and - assessments of the cost effectiveness of the service or supply, including by professional advisory bodies or government agencies. In addition and except to the extent otherwise required by law, under the prescription drug coverage, no benefits are paid for: \u2022 Drugs or drug supplies that appear on an exclusion list maintained by Carrier 1. Carrier 1 may exclude coverage for all expenses for a drug or drug supply, or only those expenses that relate to the treatment of specific diseases or injuries or the stages or progressions of specific diseases or injuries. Carrier 1 may add or remove a drug or drug supply from an exclusion list at any time. For greater certainty, a drug or drug supply may be added to an exclusion list for any reason including, but not limited to, the following: - Carrier 1 determining that further information from professional advisory bodies, government agencies or the manufacturer of the drug or drug supply is necessary to assess the drug or drug supply; or - Carrier 1 determining that the drug or drug supply is not proportionate to the disease or injury or, where applicable, the stage or progression of the disease or injury. Atomizers, appliances, prosthetic devices, colostomy supplies, first aid supplies, diagnostic supplies or testing equipment \u2022 Non-disposable insulin delivery devices or spring loaded devices used to hold blood letting devices \u2022 Delivery or extension devices for inhaled medications \u2022 Oral vitamins, minerals, dietary supplements, homeopathic preparations, infant formulas or injectable total parenteral nutrition solutions \u2022 Diaphragms, condoms, contraceptive jellies, foams, sponges, suppositories, contraceptive implants or appliances \u2022 Smoking cessation products \u2022 Fertility drugs \u2022 Any drug that does not have a drug identification number as defined by the Food and Drugs Act, Canada \u2022 Any single purchase of drugs which would not reasonably be used within 34 days. In the case of certain maintenance drugs, a 100-day supply will be covered \u2022 Drugs administered during treatment in an emergency room of a hospital, or as an in-patient in a hospital Non-injectable allergy extracts Drugs that are considered cosmetic, such as topical minoxidil or sunscreens, whether or not prescribed for a medical reason \u2022 Preventative immunization vaccines and toxoids Drugs used to treat erectile dysfunction ",
+          "summary": "Carrier 1 limits coverage for non-approved providers, non-reasonable treatments, government-covered expenses, and specific drugs or supplies.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "Ontario Health Insurance Plan (OHIP)",
+            "Food and Drugs Act, Canada",
+            "Global Medical Assistance"
+          ],
+          "page": 38,
+          "sequence": 56,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 38,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Prior Authorization",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Prior Authorization",
+          "body": "In order to determine whether coverage is provided for certain services or supplies, Carrier 1 maintains a limited list of services and supplies that require prior authorization. For services and supplies, including a listing of the prior authorization drugs, go to XXXXXX Prior authorization is intended to help ensure that a service or supply represents a reasonable treatment. If the use of a lower cost alternative service or supply represents reasonable treatment, Carrier 1 may require you or your dependent to provide medical evidence why the lower cost alternative service or supply cannot be used before coverage may be provided for the service or supply. ",
+          "summary": "Carrier 1 requires prior authorization for certain services to ensure reasonable treatment and may request evidence for not using lower-cost alternatives.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "prior authorization",
+            "services",
+            "supplies",
+            "lower cost alternative"
+          ],
+          "page": 43,
+          "sequence": 57,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 43,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Health Case Management",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Health Case Management",
+          "body": "Carrier 1 may contact you to participate in health case management. Health case management is a program recommended or approved by Carrier 1 that may include but is not limited to: \u2022 consultation with you or your dependent and the attending physician to gain understanding of the treatment plan recommended by the attending physician; \u2022 comparison with the attending physician, of the recommended treatment plan with alternatives, if any, that represent reasonable treatment; \u2022 identification to the attending physician of opportunities for education and support; and \u2022 monitoring your or your dependent\u2019s adherence to the treatment plan recommended by the attending physician. In determining whether to implement health case management, Carrier 1 may assess such factors as the service or supply, the medical condition, and the existence of generally accepted medical guidelines for objectively measuring medical effectiveness of the treatment plan recommended by the attending physician. ",
+          "summary": "Carrier 1 may involve you in health case management to review and monitor treatment plans with your physician.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "health case management",
+            "attending physician",
+            "treatment plan"
+          ],
+          "page": 43,
+          "sequence": 58,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 43,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Health Case Management Limitation",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Health Case Management Limitation",
+          "body": "Carrier 1 can, on such terms as it determines, limit the payment of benefits for a service or supply where: \u2022 Carrier 1 has implemented health case management and you or your dependent do not participate or cooperate; or \u2022 you or your dependent have not adhered to the treatment plan recommended by the attending physician with respect to the use of the service or supply. ",
+          "summary": "Carrier 1 may limit benefits if health case management is not followed or treatment plans are not adhered to.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "health case management",
+            "attending physician"
+          ],
+          "page": 44,
+          "sequence": 59,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 44,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Health Case Management Expense Benefit",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Health Case Management Expense Benefit",
+          "body": "Expenses associated with health case management may be paid for by Carrier 1 at its discretion. Expenses claimed under this provision must be pre-authorized by Carrier 1. ",
+          "summary": "Carrier 1 may cover health case management expenses if pre-authorized. Coverage is at Carrier 1's discretion.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "health case management"
+          ],
+          "page": 44,
+          "sequence": 60,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 44,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Designated Provider Limitation",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Designated Provider Limitation",
+          "body": "For a service or supply to which prior authorization applies or where Carrier 1 has recommended or approved health case management, Carrier 1 can require that a service or supply be purchased from or administered by a provider designated by Carrier 1, and: \u2022 limit the covered expense for a service or supply that was not purchased from or administered by a provider designated by Carrier 1 to the cost of the service or supply had it been purchased from or administered by the provider designated by Carrier 1; or \u2022 decline a claim for a service or supply that was not purchased from or administered by a provider designated by Carrier 1. ",
+          "summary": "Carrier 1 may require services from designated providers, limiting coverage or denying claims if not followed.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "service",
+            "supply",
+            "provider"
+          ],
+          "page": 44,
+          "sequence": 61,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 44,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Patient Assistance Program",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Patient Assistance Program",
+          "body": "A patient assistance program may provide financial, educational or other assistance to you or your dependents with respect to certain services or supplies. If you or your dependents are eligible for a patient assistance program, Carrier 1 can require you or your dependent to apply to and participate in such a program. Where financial assistance is available from a patient assistance program in which Carrier 1 requires participation, Carrier 1 can reduce the amount of a covered expense for a service or supply by the amount of financial assistance you or your dependent is entitled to receive for that service or supply. ",
+          "summary": "Carrier 1 may require participation in a patient assistance program, reducing covered expenses by the financial assistance received.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "patient assistance program",
+            "financial assistance"
+          ],
+          "page": 44,
+          "sequence": 62,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 44,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "How to Make a Claim",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> How to Make a Claim",
+          "body": "\u2022 ",
+          "summary": "The section provides instructions on the process for submitting a claim for employee benefits.",
+          "classification": "Procedural Information",
+          "key_entities": [
+            "claim",
+            "employee benefits"
+          ],
+          "page": 45,
+          "sequence": 63,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 45,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Out-of-country claims (including those for expenses)",
+          "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> How to Make a Claim -> Out-of-country claims (including those for expenses)",
+          "body": "should be submitted to Carrier 1 as soon as possible after the expense is incurred. It is very important that you send your claims to the Carrier 1 Out-of-Country Claims Department immediately as your Provincial or Territorial Medical Plan has very strict time limitations. Access My Carrier 1 at Work to obtain a personalized claim form or obtain form (Statement of Claim Out-of-Country Expenses form) from your employer. You must also obtain the Government Assignment form, and residents of British Columbia, Quebec and Newfoundland & Labrador must also obtain the Special Government Claim form. The Carrier 1 Out-of-Country Claims Department will forward the appropriate government forms to your attention when required. You should complete all applicable forms, making sure all required information is included. Attach all original receipts and forward the claim to the Carrier 1 Out-of-Country Claims Department. Be sure to keep a copy for your own records. The plan will pay all eligible claims including your Provincial or Territorial Medical Plan portion. Your Provincial or Territorial Medical Plan will then reimburse the plan for the government\u2019s share of the expenses. Out-of-country claims must be submitted within a certain time period that varies by province or territory. For the claims submission period applicable in your province or territory or for any other questions or for assistance in completing any of the forms, please contact Carrier 1\u2019s Out-of-Country Claims Department at  1-800-XXX-XXXX. \u2022 You may submit all Healthcare claims online . To use this online service you will need to be registered for My Carrier 1 at Work and signed up for direct deposit of claim payments with eDetails. For online claim submissions, your Explanation of Benefits will only be available online. Online claims must be submitted to Carrier 1 as soon as possible, but no later than 12 months after you incur the expense. You must retain your receipt for 12 months from the date you submit your claim to Carrier 1 as a record of the transaction, and you must submit it to Carrier 1 on request. \u2022 We also accept paper claims for all Healthcare expenses. Access My Carrier 1 at Work to obtain a personalized claim form or obtain form from your employer. Complete this form making sure it shows all required information. Attach your receipts to the claim form and return it to the Carrier 1 Benefit Payment Office as soon as possible, but no later than 15 months after you incur the expense. \u2022 For drug claims , your employer will provide you with a prescription drug identification card. Present your card to the pharmacist with your prescription. Before your prescription is filled, a Claims check will be done. Claims is a series of seven checks that are electronically done on your drug claim history for increased safety and compliance monitoring. This has been designed to improve the health and quality of life for you and your dependents. Checks done include drug interaction, therapeutic duplication and duration of therapy, allowing the pharmacist to react prior to the drug being dispensed. Depending on the outcome of the checks, the pharmacist may refuse to dispense the prescribed drug. ",
+          "summary": "Submit out-of-country claims to Carrier 1 promptly; follow specific procedures and deadlines for reimbursement.",
+          "classification": "Procedural Information",
+          "key_entities": [
+            "Carrier 1",
+            "Out-of-Country Claims Department",
+            "Provincial or Territorial Medical Plan",
+            "My Carrier 1 at Work",
+            "Statement of Claim Out-of-Country Expenses form",
+            "Government Assignment form",
+            "Special Government Claim form",
+            "1-800-XXX-XXXX",
+            "Healthcare claims",
+            "eDetails",
+            "Benefit Payment Office",
+            "prescription drug identification card",
+            "Claims check"
+          ],
+          "page": 45,
+          "sequence": 64,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "bold",
+            "indentation": 40,
+            "page": 45,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [
+        {
+          "name": "Repatriation Benefit",
+          "provisions": [
+            {
+              "heading": "Repatriation",
+              "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Repatriation",
+              "body": "If you die as the result of an accident that is at least 150 kilometres away from your home, Carrier 1 will pay up to $2,500 for the preparation and transportation of your body to the place of burial or cremation less any amounts paid under this plan's global medical assistance benefit. ",
+              "summary": "Carrier 1 covers up to $2,500 for body preparation and transport if death occurs 150 km from home, minus global medical assistance benefit.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "Carrier 1",
+                "$2,500",
+                "150 kilometres",
+                "global medical assistance benefit"
+              ],
+              "page": 20,
+              "sequence": 30,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 20,
+                "alignment": "left"
+              }
+            }
+          ],
+          "benefits": [],
+          "justification": "Benefit Type: Reimbursement, Triggering Event: Death, Insured Person: Employee, Coverage Start: Death occurring 150 km from home, Coverage Stop: Upon reimbursement of up to $2,500",
+          "processed": false
+        },
+        {
+          "name": "Educational Benefit for Dependent Children",
+          "provisions": [],
+          "benefits": [
+            {
+              "name": "Educational Benefit for Dependent Children - Tuition Coverage",
+              "provisions": [
+                {
+                  "heading": "Educational Benefit for Dependent Children",
+                  "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Educational Benefit for Dependent Children",
+                  "body": "If benefits are payable under this benefit provision for your death, Carrier 1 will pay the tuition fees for enrolling your dependent children as full- time students at a post-secondary institution. To qualify for an educational benefit, a dependent child must have been enrolled: - as a full-time student at a post-secondary institution at the time of the accident causing your death, or - as a full-time student at the secondary school level at the time of the accident causing your death and enrols as a full-time student at a post-secondary institution within 365 days after the accident. Carrier 1 will pay up to 5% of the Principal Sum, or $5,000, whichever is less, for each year of full-time post-secondary school enrolment. Carrier 1 will pay the educational benefit each year for a maximum of 4 consecutive years upon receipt of proof of full-time enrolment. ",
+                  "summary": "Carrier 1 covers tuition for dependent children post-secondary education if enrolled full-time at accident time, up to $5,000 annually for 4 years.",
+                  "classification": "Benefit Provisions",
+                  "key_entities": [
+                    "Carrier 1",
+                    "tuition fees",
+                    "dependent children",
+                    "post-secondary institution",
+                    "5%",
+                    "$5,000",
+                    "Principal Sum",
+                    "4 consecutive years",
+                    "365 days"
+                  ],
+                  "page": 20,
+                  "sequence": 31,
+                  "attributes": {
+                    "size": 9.96,
+                    "formatting": "Title Case, bold",
+                    "indentation": 0,
+                    "page": 20,
+                    "alignment": "left"
+                  }
+                },
+                {
+                  "heading": "Limitations",
+                  "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitations",
+                  "body": "No benefits will be paid for tuition expenses incurred before the accident causing your death, or room or board or other ordinary living, travelling, or clothing expenses. ",
+                  "summary": "No benefits for tuition, room, board, or living expenses incurred before the accident causing death.",
+                  "classification": "Benefit Provisions",
+                  "key_entities": [
+                    "tuition expenses",
+                    "room",
+                    "board",
+                    "living expenses",
+                    "accident",
+                    "death"
+                  ],
+                  "page": 21,
+                  "sequence": 32,
+                  "attributes": {
+                    "size": 9.96,
+                    "formatting": "Title Case, bold",
+                    "indentation": 0,
+                    "page": 21,
+                    "alignment": "left"
+                  }
+                },
+                {
+                  "heading": "Limitations",
+                  "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitations",
+                  "body": "No benefits will be paid for tuition expenses incurred before the accident, expenses incurred more than 2 years after the accident causing the injury, or room or board or other ordinary living, travelling, or clothing expenses. ",
+                  "summary": "No benefits for tuition before accident, expenses after 2 years, or ordinary living, travel, clothing costs.",
+                  "classification": "Benefit Provisions",
+                  "key_entities": [
+                    "tuition expenses",
+                    "accident",
+                    "2 years",
+                    "room",
+                    "board",
+                    "ordinary living expenses",
+                    "travelling expenses",
+                    "clothing expenses"
+                  ],
+                  "page": 22,
+                  "sequence": 38,
+                  "attributes": {
+                    "size": 9.96,
+                    "formatting": "Title Case, bold",
+                    "indentation": 0,
+                    "page": 22,
+                    "alignment": "left"
+                  }
+                }
+              ],
+              "benefits": [],
+              "justification": "Benefit Type: Reimbursement, Triggering Event: Death, Insured Person: Dependent Children, Coverage Start: Enrollment in post-secondary education within 365 days of accident, Coverage Stop: 4 consecutive years or $5,000 annually",
+              "processed": true
+            }
+          ],
+          "justification": "Benefit Type: Reimbursement, Triggering Event: Death, Insured Person: Dependent Children, Coverage Start: Enrollment in post-secondary education within 365 days of accident, Coverage Stop: 4 consecutive years or $5,000 annually",
+          "processed": true
+        },
+        {
+          "name": "Family Transportation Benefit",
+          "provisions": [
+            {
+              "heading": "Family Transportation Benefit",
+              "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Family Transportation Benefit",
+              "body": "If you are hospitalized more than 150 kilometres from your home as a result of an injury for which benefits are payable under this benefit provision, Carrier 1 will pay the actual expense incurred less any amount paid for the same expenses under this plan\u2019s global medical assistance benefit, up to $2,000, for transportation and lodging expenses for one family member to join you. Benefits for lodging are limited to moderate quality accommodation for the area of hospitalization. Telephone expenses and taxicab and car rental charges are included. Transportation expenses are limited to round trip economy class transportation. If a private vehicle is used, expenses are limited to $.44 per kilometre travelled. ",
+              "summary": "Carrier 1 covers up to $2,000 for family transportation and lodging if hospitalized over 150 km from home due to injury.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "Carrier 1",
+                "$2,000",
+                "150 kilometres",
+                "$.44 per kilometre"
+              ],
+              "page": 21,
+              "sequence": 33,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 21,
+                "alignment": "left"
+              }
+            }
+          ],
+          "benefits": [],
+          "justification": "Benefit Type: Reimbursement, Triggering Event: Injury, Insured Person: Family, Coverage Start: Hospitalization over 150 km from home, Coverage Stop: Upon reimbursement of up to $2,000",
+          "processed": false
+        },
+        {
+          "name": "Occupational Training Benefit for Spouses",
+          "provisions": [
+            {
+              "heading": "Occupational Training Benefit for Spouses",
+              "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Occupational Training Benefit for Spouses",
+              "body": "If benefits are payable under this benefit provision for your death, Carrier 1 will pay for expenses associated with your spouse\u2019s enrolment in an accredited occupational training program. The purpose of the training program must be to provide the spouse with at least the minimum qualifications required for employment in an occupation for which the spouse would not otherwise qualify. Carrier 1 will pay up to 10% of the Principal Sum, or $10,000, whichever is less. ",
+              "summary": "Carrier 1 covers spouse's occupational training expenses up to $10,000 or 10% of Principal Sum if benefits are payable for your death.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "Carrier 1",
+                "spouse",
+                "occupational training program",
+                "10%",
+                "$10,000",
+                "Principal Sum"
+              ],
+              "page": 22,
+              "sequence": 35,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 22,
+                "alignment": "left"
+              }
+            },
+            {
+              "heading": "Educational Benefit",
+              "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Educational Benefit",
+              "body": "If benefits are payable under this benefit provision for an injury that requires you to change occupations, Carrier 1 will pay the tuition fees for enrolling you as a student at a post-secondary institution for training in a new occupation. To qualify for an educational benefit, you must enrol at a post-secondary institution within 365 days after the accident. Carrier 1 will pay up to $10,000. ",
+              "summary": "Carrier 1 covers up to $10,000 tuition for post-secondary training if injury requires occupation change, enrollment within 365 days.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "Carrier 1",
+                "$10,000",
+                "365 days",
+                "post-secondary institution",
+                "educational benefit"
+              ],
+              "page": 22,
+              "sequence": 37,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 22,
+                "alignment": "left"
+              }
+            }
+          ],
+          "benefits": [],
+          "justification": "Benefit Type: Reimbursement, Triggering Event: Death, Insured Person: Spouse, Coverage Start: Upon death, Coverage Stop: $10,000 or 10% of Principal Sum",
+          "processed": false
+        },
+        {
+          "name": "Wheelchair Benefit",
+          "provisions": [
+            {
+              "heading": "Wheelchair Benefit",
+              "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Wheelchair Benefit",
+              "body": "If benefits are payable under this benefit provision for an injury that requires the use of a wheelchair for you to be ambulatory, Carrier 1 will pay for alterations to your principal residence to make it wheelchair accessible and habitable, and modifications to a motor vehicle you use to make it accessible to and driveable by you. Benefits for home alterations are payable only if the person or persons making the changes are experienced in home alterations for wheelchairs, and recommended by an organization recognized for providing support and assistance to wheelchair users. Benefits for vehicle modifications are payable only if the person or persons making the changes are experienced in vehicle modification for wheelchairs, and the modifications are approved by the provincial vehicle licensing authority. Carrier 1 will pay the actual expense incurred less any amount paid for the same expenses under this plan\u2019s healthcare benefit, up to $10,000 for all home and vehicle modifications combined. ",
+              "summary": "Carrier 1 covers up to $10,000 for wheelchair-related home and vehicle modifications, with specific conditions.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "Carrier 1",
+                "$10,000",
+                "home alterations",
+                "vehicle modifications",
+                "provincial vehicle licensing authority"
+              ],
+              "page": 22,
+              "sequence": 39,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 22,
+                "alignment": "left"
+              }
+            },
+            {
+              "heading": "Limitations",
+              "breadcrumb_heading": "Benefit Summary -> Optional Life Insurance -> Limitations",
+              "body": "No benefits will be paid for expenses incurred more than 365 days after the accident, or for subsequent alterations to your home or vehicle after an initial claim for benefits has been made under this wheelchair benefit provision. ",
+              "summary": "No benefits for expenses after 365 days post-accident or for home/vehicle alterations after initial wheelchair benefit claim.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "365 days",
+                "accident",
+                "home",
+                "vehicle",
+                "wheelchair benefit"
+              ],
+              "page": 23,
+              "sequence": 40,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 23,
+                "alignment": "left"
+              }
+            }
+          ],
+          "benefits": [],
+          "justification": "Benefit Type: Reimbursement, Triggering Event: Injury, Insured Person: Employee, Coverage Start: Home and vehicle modifications, Coverage Stop: $10,000",
+          "processed": false
+        }
+      ],
+      "justification": "Benefit Type: Lump Sum, Triggering Event: Death, Insured Person: Employee and Spouse, Coverage Start: Employment, Coverage Stop: Termination of employment or retirement",
+      "processed": true
+    },
+    {
+      "name": "Long Term Disability Income Benefits",
+      "provisions": [
+        {
+          "heading": "Long Term Disability Income Benefits",
+          "breadcrumb_heading": "Benefit Summary -> Long Term Disability Income Benefits",
+          "body": "Waiting Period 120 days Amount 66.7% of the first $2,500 of your monthly earnings plus 50% of the remainder to a maximum benefit of $3,500 or 85% of your pre-disability take-home pay, whichever is less ",
+          "summary": "120-day waiting period; 66.7% of first $2,500 monthly earnings plus 50% of remainder; max $3,500 or 85% pre-disability pay, whichever is less.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Waiting Period 120 days",
+            "66.7%",
+            "$2,500",
+            "50%",
+            "$3,500",
+            "85%",
+            "pre-disability take-home pay"
+          ],
+          "page": 9,
+          "sequence": 19,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 9,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [],
+      "justification": "Benefit Type: Income, Triggering Event: Disability, Insured Person: Employee, Coverage Start: After 120-day waiting period, Coverage Stop: Age 65 or recovery",
+      "processed": false
+    },
+    {
+      "name": "Accidental Death, Dismemberment and Specific Loss (AD&D) Insurance",
+      "provisions": [
+        {
+          "heading": "Employee Accidental Death, Dismemberment and Specific Loss (Principal Sum)",
+          "breadcrumb_heading": "Benefit Summary -> Employee Accidental Death, Dismemberment and Specific Loss (Principal Sum)",
+          "body": "An amount equal to your Basic Life Insurance ",
+          "summary": "The benefit amount is equal to your Basic Life Insurance coverage.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Basic Life Insurance"
+          ],
+          "page": 9,
+          "sequence": 18,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 9,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [],
+      "justification": "Benefit Type: Lump Sum, Triggering Event: Accidental Death or Dismemberment, Insured Person: Employee, Coverage Start: Employment, Coverage Stop: Termination of employment or retirement",
+      "processed": false
+    },
+    {
+      "name": "Survivor Benefits",
+      "provisions": [
+        {
+          "heading": "Survivor Benefits",
+          "breadcrumb_heading": "Benefit Summary -> Survivor Benefits",
+          "body": "If you die while your coverage is still in force, the health and dental benefits for your dependents will be continued for a period of 2 years or until they no longer qualify, whichever happens first. DEPENDENT COVERAGE Dependent means: \u2022 Your spouse, legal or common-law. A common-law spouse is a person who has been living with you in a conjugal relationship for at least 12 months. \u2022 Your unmarried children under age 21, or under age 25 if they are full-time students. Children under age 21 are not covered if they are working more than 30 hours a week, unless they are full-time students. Children who are incapable of supporting themselves because of physical or mental disorder are covered without age limit if the disorder begins before they turn 21, or while they are students under 25, and the disorder has been continuous since that time. ",
+          "summary": "Dependents receive health and dental benefits for 2 years after death, with specific eligibility criteria for spouses and children.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "health and dental benefits",
+            "2 years",
+            "spouse",
+            "common-law spouse",
+            "unmarried children under age 21",
+            "full-time students under age 25",
+            "physical or mental disorder"
+          ],
+          "page": 14,
+          "sequence": 24,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 14,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [],
+      "justification": "Benefit Type: Service, Triggering Event: Death of Employee, Insured Person: Dependents, Coverage Start: Upon death, Coverage Stop: 2 years after death",
+      "processed": false
+    },
+    {
+      "name": "Virtual Health Services",
+      "provisions": [
+        {
+          "heading": "Virtual Health Services",
+          "breadcrumb_heading": "Benefit Summary -> Virtual Health Services",
+          "body": "Virtual health services are available to you and your dependents by downloading the service provider\u2019s application specified by Carrier 1 from time to time. These services include the following: \u2022 access to virtual health services 24 hours a day, 7 days a week \u2022 unless prohibited by applicable laws, access to an unlimited number of consultations via telephone calls, text messaging and videoconferencing with medical professionals \u2022 prescriptions and prescription renewals, when medically needed \u2022 where diagnostic or laboratory tests are medically needed: - completion of necessary requisitions - results of the diagnostic or laboratory tests provided and accessible through the provider\u2019s application \u2022 access to specialists such as psychologists, dieticians and work and life coaches for an additional fee \u2022 access to self-guided internet-based cognitive behavioral therapy (iCBT) DENTALCARE A deductible may be applied before you are reimbursed. All expenses will be reimbursed at the level shown in the  Benefit Summary . Benefits may be subject to plan maximums and frequency limits. Check the Benefit Summary  for this information. The plan covers customary charges to the extent they do not exceed the dental fee guide level shown in the  Benefit Summary . Denturist fee guides are applicable when services are provided by a denturist. Dental hygienist fee guides are applicable when services are provided by a dental hygienist practising independently. All covered services and supplies must represent reasonable treatment. Treatment is considered reasonable if it is recognized by the Canadian Dental Association, it is proven to be effective, and it is of a form, frequency, and duration essential to the management of the person's dental health. To be considered reasonable, treatment must also be performed by a dentist or under a dentist\u2019s supervision, performed by a dental hygienist entitled by law to practise independently, or performed by a denturist. ",
+          "summary": "Virtual health services offer 24/7 access to consultations, prescriptions, specialists, and iCBT via Carrier 1's app, with additional fees for some services.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Virtual health services",
+            "Carrier 1",
+            "consultations",
+            "prescriptions",
+            "specialists",
+            "iCBT"
+          ],
+          "page": 48,
+          "sequence": 65,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "ALL CAPS, bold",
+            "indentation": 115,
+            "page": 48,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "How to Make a Claim",
+          "breadcrumb_heading": "Benefit Summary -> Virtual Health Services -> How to Make a Claim",
+          "body": "\u2022 Claims for expenses incurred in Canada  may be submitted online. Access My Carrier 1 at Work to obtain a personalized claim form or obtain form M445D from your employer and have your dental service provider complete the form. The completed claim form will contain the information necessary to enter the claim online. To use the online service you will need to be registered for My Carrier 1 at Work and signed up for direct deposit of claim payments with eDetails. For online claim submissions, your Explanation of Benefits will only be available online. Online claims must be submitted to Carrier 1 as soon as possible, You must retain your receipt for 12 months from the date you submit your claim to Carrier 1 as a record of the transaction, and you must submit it to Carrier 1 on request. \u2022 For all other Dentalcare claims , access My Carrier 1 at Work to obtain a personalized claim form or obtain form M445D from your employer. Have your dental service provider complete the form and return it to the Carrier 1 Benefit Payment Office as soon as possible, COORDINATION OF BENEFITS \u2022 Benefits for you or a dependent will be directly reduced by any amount payable under a government plan. If you or a dependent are entitled to benefits for the same expenses under another group plan or as both an employee and dependent under this plan or as a dependent of both parents under this plan, benefits will be co- ordinated so that the total benefits from all plans will not exceed expenses. \u2022 You and your spouse should first submit your own claims through your own group plan. Claims for dependent children should be submitted to the plan of the parent who has the earlier birth date in the calendar year (the year of birth is not considered). If you are separated or divorced, the plan which will pay benefits for your children will be determined in the following order: 1. the plan of the parent with custody of the child; 2. the plan of the spouse of the parent with custody of the child; 3. the plan of the parent without custody of the child; 4. the plan of the spouse of the parent without custody of the child You may submit a claim to the plan of the other spouse for any amount which is not paid by the first plan. DIAGNOSTIC AND TREATMENT SUPPORT SERVICES (Teladoc Medical Experts) This service is designed to allow access to the expertise of specialists, resources, information and clinical guidance. You, your dependents, parents and parents in-law (each a \u201cperson\u201d for the purpose of this service) can generally access this service. This service is made up of a unique step-by-step process that may help address questions or concerns about a physical or mental illness or condition. This may include confirming the diagnosis and suggesting the most effective treatment plan. ",
+          "summary": "Submit claims online via My Carrier 1 at Work; retain receipts for 12 months. Coordination of benefits and Teladoc Medical Experts support included.",
+          "classification": "Procedural Information",
+          "key_entities": [
+            "My Carrier 1 at Work",
+            "Carrier 1",
+            "form M445D",
+            "eDetails",
+            "Explanation of Benefits",
+            "Teladoc Medical Experts"
+          ],
+          "page": 53,
+          "sequence": 70,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 53,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "How it works",
+          "breadcrumb_heading": "Benefit Summary -> Virtual Health Services -> How it works",
+          "body": "\u2022 Access diagnostic and treatment support services by calling 1-877- 419-2378 toll-free or via teladoc.ca/canadalife/. \u2022 The person accessing the service will be connected with a member advocate who will be dedicated to the person\u2019s case and will provide support through the process. The member advocate will take the necessary medical history and answer the person\u2019s questions. Any information provided is not shared with either your employer or the administrator of your health plan. \u2022 Based on the information provided, the member advocate determines the optimal level of service required. \u2022 The member advocate may provide information, resources, guidance and advice individually tailored to meet the person\u2019s health needs, and can help identify individual community supports and resources available. \u2022 If it is appropriate, the member advocate may arrange for an indepth review of the person\u2019s medical file to assist in confirming the diagnosis and help develop a treatment plan. This review may include collecting, deconstructing and reconstructing medical records, pathology retesting and analyzing test results. A written report outlining the conclusions and recommendations of the specialists will be forwarded to the person accessing the service. Generally, this process takes several weeks. Timeframes may vary depending on the complexity of the case and amount of medical records to collect. \u2022 If the person decides to seek treatment by a different physician, a member of the Teladoc Medical Experts team can help identify a specialist qualified to meet the person\u2019s specific medical needs either in their geographic area or outside of Canada. \u2022 The member advocate may identify a Teladoc Medical Experts specialist suited to answer basic questions about health concerns and treatment options. Answers will be provided in a written report sent by email to the person accessing the service. ",
+          "summary": "Access diagnostic support via Teladoc; member advocate assists with medical history, diagnosis, and treatment plan. Specialists provide written reports. Contact: 1-877-419-2378.",
+          "classification": "Procedural Information",
+          "key_entities": [
+            "Teladoc",
+            "member advocate",
+            "Teladoc Medical Experts",
+            "1-877-419-2378",
+            "teladoc.ca/canadalife/"
+          ],
+          "page": 56,
+          "sequence": 71,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "bold",
+            "indentation": 0,
+            "page": 56,
+            "alignment": "left"
+          }
+        },
+        {
+          "heading": "Limitations",
+          "breadcrumb_heading": "Benefit Summary -> Virtual Health Services -> Limitations",
+          "body": "\u2022 Expenses incurred for travel and treatment are not covered by this service. \u2022 Access to this service may be restricted to persons for whom their physician has made a diagnosis of a physical or mental illness or condition for which there is objective evidence, or where a physical or mental illness or condition is suspected. These services are not insured services. Carrier 1 is not responsible for the provision of the services, their results, or any treatment received or requested in connection with the services. Carrier 1 and design and My Carrier 1 at Work are trademarks of The Carrier 1 Assurance Company. Any modification of this document without the express written consent of Carrier 1 is strictly prohibited. ",
+          "summary": "Travel and treatment expenses not covered; service access may require physician diagnosis. Carrier 1 not responsible for services or outcomes.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Carrier 1",
+            "The Carrier 1 Assurance Company",
+            "My Carrier 1 at Work"
+          ],
+          "page": 57,
+          "sequence": 72,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "Title Case, bold",
+            "indentation": 0,
+            "page": 57,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [
+        {
+          "name": "Basic Coverage",
+          "provisions": [
+            {
+              "heading": "Basic Coverage",
+              "breadcrumb_heading": "Benefit Summary -> Virtual Health Services -> Basic Coverage",
+              "body": "The following expenses will be covered: \u2022 Diagnostic services including: one complete oral examination every 36 months - limited oral examinations once every 9 months, except that only one limited oral examination is covered in any 12-month period that a complete oral examination is also performed - limited periodontal examinations once every 9 months - complete series of x-rays every 36 months - intra-oral x-rays to a maximum of 15 films every 36 months and a panoramic x-ray every 36 months. Services provided in the same 12 months as a complete series are not covered \u2022 Preventive services including: - polishing and topical application of fluoride each once every 9 months - scaling, limited to a maximum combined with periodontal root planing of 6 time units every 12 months A time unit is considered to be a 15-minute interval or any portion of a 15-minute interval - pit and fissure sealants on bicuspids and permanent molars every 60 months - space maintainers including appliances for the control of harmful habits - finishing restorations - interproximal disking - recontouring of teeth \u2022 Minor restorative services including: caries, trauma, and pain control amalgam and tooth-coloured fillings. Replacement fillings are covered only if the existing filling is at least 2 years old or the existing filling was not covered under this plan - retentive pins and prefabricated posts for fillings - prefabricated crowns for primary teeth \u2022 Endodontics. Root canal therapy for permanent teeth will be limited to one course of treatment per tooth. Repeat treatment is covered only if the original treatment fails after the first 18 months \u2022 Periodontal services including: - root planing, limited to a maximum combined with preventive scaling of 6 time units every 12 months - occlusal adjustment and equilibration, limited to a combined maximum of 4 time units every 12 months A time unit is considered to be a 15-minute interval or any portion of a 15-minute interval \u2022 Denture maintenance, including: - denture relines for dentures at least 6 months old, once every 36 months - denture rebases for dentures at least 2 years old, once every 36 months - resilient liner in relined or rebased dentures after the 3-month post-insertion care period has elapsed, once every 36 months \u2022 Oral surgery Adjunctive services ",
+              "summary": "Covers diagnostic, preventive, minor restorative, endodontics, periodontal services, denture maintenance, and oral surgery with specific limitations and time intervals.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "Diagnostic services",
+                "Preventive services",
+                "Minor restorative services",
+                "Endodontics",
+                "Periodontal services",
+                "Denture maintenance",
+                "Oral surgery",
+                "36 months",
+                "9 months",
+                "12 months",
+                "60 months",
+                "18 months",
+                "6 months",
+                "2 years",
+                "3-month post-insertion care period"
+              ],
+              "page": 49,
+              "sequence": 67,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 49,
+                "alignment": "left"
+              }
+            }
+          ],
+          "benefits": [],
+          "justification": "Benefit Type: Service, Triggering Event: Incurring a Qualifying Expense, Insured Person: Employee, Coverage Start: Employment, Coverage Stop: Termination of employment or retirement",
+          "processed": false
+        },
+        {
+          "name": "Accidental Dental Injury Coverage",
+          "provisions": [
+            {
+              "heading": "Accidental Dental Injury Coverage",
+              "breadcrumb_heading": "Benefit Summary -> Virtual Health Services -> Accidental Dental Injury Coverage",
+              "body": "\u2022 Treatment of injury to sound natural teeth. Treatment must start within 60 days after the accident unless delayed by a medical condition A sound tooth is any tooth that did not require restorative treatment immediately before the accident. A natural tooth is any tooth that has not been artificially replaced ",
+              "summary": "Covers treatment for injury to sound natural teeth, starting within 60 days post-accident unless medically delayed.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "sound natural teeth",
+                "60 days",
+                "accident"
+              ],
+              "page": 52,
+              "sequence": 68,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 52,
+                "alignment": "left"
+              }
+            },
+            {
+              "heading": "Limitations",
+              "breadcrumb_heading": "Benefit Summary -> Virtual Health Services -> Limitations",
+              "body": "No benefits are paid for: \u2022 Duplicate x-rays, custom fluoride appliances, any oral hygiene instruction and nutritional counselling \u2022 The following endodontic services - root canal therapy for primary teeth, isolation of teeth, enlargement of pulp chambers and endosseous intra coronal implants \u2022 The following periodontal services - desensitization, topical application of antimicrobial agents, subgingival periodontal irrigation, charges for post surgical treatment and periodontal re-evaluations \u2022 The following oral surgery services - implantology, surgical movement of teeth, services performed to remodel or recontour oral tissues (other than minor alveoloplasty, gingivoplasty and stomatoplasty) and alveoloplasty or gingivoplasty performed in conjunction with extractions \u2022 Hypnosis or acupuncture \u2022 Crowns (other than prefabricated crowns), bridgework, dentures or repairs to bridgework or dentures Orthodontic treatment \u2022 Accidental dental injury expenses for treatment performed more than 12 months after the accident, denture repair or replacement, or any orthodontic services \u2022 Expenses private plans are not permitted to cover by law \u2022 Services and supplies you are entitled to without charge by law or for which a charge is made only because you have insurance coverage \u2022 Services or supplies that do not represent reasonable treatment \u2022 Treatment performed for cosmetic purposes only \u2022 Congenital defects or developmental malformations in people 19 years of age or over \u2022 Temporomandibular joint disorders, vertical dimension correction or myofacial pain \u2022 Expenses arising from war, insurrection, or voluntary participation in a riot ",
+              "summary": "No benefits for duplicate x-rays, certain dental services, cosmetic treatments, congenital defects, TMJ disorders, war-related expenses, and treatments covered by law.",
+              "classification": "Benefit Provisions",
+              "key_entities": [
+                "Duplicate x-rays",
+                "Custom fluoride appliances",
+                "Oral hygiene instruction",
+                "Nutritional counselling",
+                "Endodontic services",
+                "Root canal therapy",
+                "Periodontal services",
+                "Oral surgery services",
+                "Hypnosis",
+                "Acupuncture",
+                "Crowns",
+                "Bridgework",
+                "Dentures",
+                "Orthodontic treatment",
+                "Accidental dental injury",
+                "Congenital defects",
+                "Temporomandibular joint disorders",
+                "War",
+                "Insurrection",
+                "Riot"
+              ],
+              "page": 52,
+              "sequence": 69,
+              "attributes": {
+                "size": 9.96,
+                "formatting": "Title Case, bold",
+                "indentation": 0,
+                "page": 52,
+                "alignment": "left"
+              }
+            }
+          ],
+          "benefits": [
+            {
+              "name": "Treatment Plan",
+              "provisions": [
+                {
+                  "heading": "Treatment Plan",
+                  "breadcrumb_heading": "Benefit Summary -> Virtual Health Services -> Treatment Plan",
+                  "body": "\u2022 Before incurring any large dental expenses, ask your dental service provider to complete a treatment plan and submit it to Carrier 1. Carrier 1 will calculate the benefits payable for the proposed treatment, so you will know in advance the approximate portion of the cost you will have to pay. ",
+                  "summary": "Submit a dental treatment plan to Carrier 1 to know benefits and costs beforehand.",
+                  "classification": "Procedural Information",
+                  "key_entities": [
+                    "dental expenses",
+                    "dental service provider",
+                    "treatment plan",
+                    "Carrier 1",
+                    "benefits payable"
+                  ],
+                  "page": 49,
+                  "sequence": 66,
+                  "attributes": {
+                    "size": 9.96,
+                    "formatting": "Title Case, bold",
+                    "indentation": 0,
+                    "page": 49,
+                    "alignment": "left"
+                  }
+                }
+              ],
+              "benefits": [],
+              "justification": "Benefit Type: Service, Triggering Event: Incurring a Qualifying Expense, Insured Person: Employee, Coverage Start: Submission of treatment plan, Coverage Stop: Approval or denial of treatment plan",
+              "processed": false
+            }
+          ],
+          "justification": "Benefit Type: Service, Triggering Event: Incurring a Qualifying Expense, Insured Person: Employee, Coverage Start: Employment, Coverage Stop: Termination of employment or retirement",
+          "processed": true
+        }
+      ],
+      "justification": "Benefit Type: Service, Triggering Event: Incurring a Qualifying Expense, Insured Person: Employee, Coverage Start: Employment, Coverage Stop: Termination of employment or retirement",
+      "processed": true
+    },
+    {
+      "name": "Global Medical Assistance Program",
+      "provisions": [
+        {
+          "heading": "Covered expenses will not exceed customary charges",
+          "breadcrumb_heading": "Benefit Summary -> Covered expenses will not exceed customary charges",
+          "body": "Deductibles In-Canada Prescription Drug Nil Expenses An amount equal to the dispensing fee portion of the drug charge All Other Expenses Reimbursement Levels Chronic Care and Global Medical Assistance expenses 100% In-Canada Prescription Drugs 80% All Other Expenses 90% Basic Expense Maximums $500 every 5 years Home Nursing Care $5,000 for a maximum of 12 months per condition Chronic Care $25 per day In-Canada Prescription Drugs Included Hearing Aids Custom-fitted Orthopedic Shoes and Custom-made Foot Orthotics $300 combined every 12 months Myoelectric Arms $10,000 per prosthesis External Breast Prosthesis 1 every 12 months 2 every 12 months Surgical Brassieres Mechanical or Hydraulic Patient 1 every 4 years Lifters $2,000 per lifter once every 5 years Outdoor Wheelchair Ramps 1 in a lifetime to a maximum of $2,000 Blood-glucose Monitoring Machines Continuous Glucose Monitoring Machines Including Sensors and Transmitters $4,000 each calendar year Transcutaneous Nerve Stimulators $700 lifetime Extremity Pumps for Lymphedema 1 in a lifetime to a maximum of $1,500 Custom-made Compression Hose 4 pairs each calendar year to a maximum of $250 Paramedical Expense Maximums Chiropractors, Podiatrists, Naturopaths, Osteopaths, Psychologists/Social Workers/ Psychotherapists, Physiotherapists, Dieticians, Speech Therapists, Massage Therapists, and Acupuncturists $500 per practitioner to a maximum of $1,000 combined each calendar year Visioncare Expense Maximums Eye Examinations - dependent children under age 22 1 every 12 months to a maximum of $50 every 12 months - all others 1 every 24 months to a maximum of $50 every 24 months Lifetime Healthcare Maximum Unlimited ",
+          "summary": "Details coverage percentages, expense maximums, and specific benefits like prescription drugs, home nursing, and vision care.",
+          "classification": "Benefit Provisions",
+          "key_entities": [
+            "Deductibles",
+            "In-Canada Prescription Drug",
+            "Chronic Care",
+            "Global Medical Assistance",
+            "Home Nursing Care",
+            "Hearing Aids",
+            "Orthopedic Shoes",
+            "Myoelectric Arms",
+            "Breast Prosthesis",
+            "Surgical Brassieres",
+            "Patient Lifters",
+            "Wheelchair Ramps",
+            "Blood-glucose Monitoring Machines",
+            "Glucose Monitoring Machines",
+            "Nerve Stimulators",
+            "Extremity Pumps",
+            "Compression Hose",
+            "Paramedical Expenses",
+            "Visioncare Expenses",
+            "Lifetime Healthcare Maximum"
+          ],
+          "page": 10,
+          "sequence": 21,
+          "attributes": {
+            "size": 9.96,
+            "formatting": "bold",
+            "indentation": 0,
+            "page": 10,
+            "alignment": "left"
+          }
+        }
+      ],
+      "benefits": [],
+      "justification": "Benefit Type: Service, Triggering Event: Medical Emergency, Insured Person: Employee, Coverage Start: Employment, Coverage Stop: Termination of employment or retirement",
+      "processed": false
+    }
+  ],
+  "justification": null,
+  "processed": true
+}

@@ -1,19 +1,20 @@
+// src/components/TutorialEncounter.tsx
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { VNScene } from './VNScene';
-import { VNChoiceScene } from './VNChoiceScene';
 import { AITextInputScene } from './AITextInputScene';
 import { EnhancedCombatV3 } from './EnhancedCombatV3';
 import { PostCombatScene } from './PostCombatScene';
-import { HowlerAudioManager } from './HowlerAudioManager';
+import { WebAudioManager } from '@/audio/WebAudioManager';
 import { MusicToggle } from './MusicToggle';
 import { generateReport, type Msg, type CombatData, type ReportJSON } from '../api';
 import { downloadReportAsPDF } from '../utils/pdf';
 
-type Phase = 
+type Phase =
   | 'awakening'
   | 'archivist_intro'
   | 'first_question'
+  | 'basin_response'
   | 'transition_to_combat'
   | 'combat_phase_1'
   | 'mid_battle_vn'
@@ -53,19 +54,15 @@ function renderList(title: string, items?: string[]) {
 
 // Archivist VN portraits - rotate between these during dialogue
 const ARCHIVIST_PORTRAITS = [
-  'https://64.media.tumblr.com/6ac9c73c28d6ce9ab4e74e7202871951/3f2885bda6ac220c-1d/s1280x1920/5400143058374ff9dad6debaf0434fbc7dc4caaf.png',
-  'https://aniyuki.com/wp-content/uploads/2022/06/aniyuki-xiao-png-16.png',
-  'https://www.pngall.com/wp-content/uploads/15/Xiao-PNG-Images.png'
+  '/assets/Archivist_Sprite1.png',
 ];
-const VN_BACKGROUND = 'https://64.media.tumblr.com/4cef6a87f522f8f2ca9e9aafd84fbaca/b38864c912b46d59-00/s1280x1920/e0a2f6bb50cb530ee6235c1fc75f8d86477c4120.jpg';
-const ENEMY_IMAGE = 'https://64.media.tumblr.com/tumblr_mcchojgkjR1rreqgwo1_500.gif';
-
-// 🎵 AUDIO SYSTEM
-// Music files should be placed in /public/audio/
-// See /AUDIO_SETUP.md for instructions
+const VN_BACKGROUND =
+  'https://64.media.tumblr.com/4cef6a87f522f8f2ca9e9aafd84fbaca/b38864c912b46d59-00/s1280x1920/e0a2f6bb50cb530ee6235c1fc75f8d86477c4120.jpg';
+const ENEMY_IMAGE =
+  'https://64.media.tumblr.com/tumblr_mcchojgkjR1rreqgwo1_500.gif';
 
 interface TutorialEncounterProps {
-  onComplete: (data: { choices: string[], finalState: TutorialState }) => void;
+  onComplete: (data: { choices: string[]; finalState: TutorialState }) => void;
 }
 
 export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
@@ -81,7 +78,6 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
   });
 
   const [musicEnabled, setMusicEnabled] = useState(true);
-  const [userInteracted, setUserInteracted] = useState(false);
 
 
 
@@ -90,11 +86,11 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
   };
 
   const handleChoice = (choiceId: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       playerChoices: [...prev.playerChoices, choiceId],
     }));
-    
+
     // Route based on current phase
     if (state.phase === 'first_question') {
       advancePhase('transition_to_combat');
@@ -102,109 +98,84 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
   };
 
   const handleMiniChoice = (choice: string) => {
-    // Track diagnostic data from mini-choices
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       playerChoices: [...prev.playerChoices, `pain_location_${choice}`],
     }));
   };
 
   const handleBattleAction = (actionString: string) => {
-    // Format: "action:damage:flareChange:clarityChange" or special minigame results
     const parts = actionString.split(':');
     const action = parts[0];
-    
+
     let newFlare = state.flare;
     let newClarity = state.clarity;
     let newEnemyHealth = state.enemyHealth;
 
+    const clamp = (x: number) => Math.min(100, Math.max(0, x));
+
     if (action.startsWith('ENEMY_')) {
-      // Enemy attack
       const flareIncrease = parseInt(parts[1]) || 0;
       const clarityChange = parseInt(parts[2]) || 0;
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareIncrease));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareIncrease);
+      newClarity = clamp(state.clarity + clarityChange);
       console.log('⚔️ Enemy attack:', action, `+${flareIncrease} Flare, ${clarityChange} Clarity`);
     } else if (action.startsWith('MINI_')) {
-      // Mini-decision
-      const flareIncrease = parseInt(parts[1]) || 0;
-      const clarityChange = parseInt(parts[2]) || 0;
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareIncrease));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
-      console.log('💭 Mini-decision:', action, `+${flareIncrease} Flare, ${clarityChange} Clarity`);
-    } else if (action.startsWith('BREATHING_')) {
-      // Breathing minigame result
       const flareChange = parseInt(parts[1]) || 0;
       const clarityChange = parseInt(parts[2]) || 0;
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
+      console.log('💭 Mini-decision:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
+    } else if (action.startsWith('BREATHING_')) {
+      const flareChange = parseInt(parts[1]) || 0;
+      const clarityChange = parseInt(parts[2]) || 0;
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
       console.log('🌬️ Breathing minigame:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
     } else if (action.startsWith('PAIN_MAPPING')) {
-      // Pain mapping minigame
       const flareChange = parseInt(parts[1]) || 0;
       const clarityChange = parseInt(parts[2]) || 0;
       const regions = parts[3] || '';
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
       console.log('🗺️ Pain mapping:', regions, `${flareChange} Flare, ${clarityChange} Clarity`);
     } else if (action.startsWith('FLARE_STORM')) {
-      // Flare storm minigame
       const flareChange = parseInt(parts[1]) || 0;
       const clarityChange = parseInt(parts[2]) || 0;
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
       console.log('🔥 Flare storm:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
     } else if (action.startsWith('MEMORY_')) {
-      // Memory fragment minigame
       const flareChange = parseInt(parts[1]) || 0;
       const clarityChange = parseInt(parts[2]) || 0;
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
       console.log('🧠 Memory fragment:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
     } else if (action.startsWith('REASSEMBLY_')) {
-      // Reassembly puzzle
       const flareChange = parseInt(parts[1]) || 0;
       const clarityChange = parseInt(parts[2]) || 0;
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
       console.log('🧩 Reassembly:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
     } else if (action.startsWith('AFFIRMATION_')) {
-      // Affirmation sequence
       const flareChange = parseInt(parts[1]) || 0;
       const clarityChange = parseInt(parts[2]) || 0;
-      
-      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
       console.log('✨ Affirmation:', action, `${flareChange} Flare, ${clarityChange} Clarity`);
     } else {
-      // Player action
+      // Player action with damage
       const damage = parseInt(parts[1]) || 0;
       const flareChange = parseInt(parts[2]) || 0;
       const clarityChange = parseInt(parts[3]) || 0;
-      
+
       newEnemyHealth = Math.max(0, state.enemyHealth - damage);
-      newFlare = Math.min(100, Math.max(0, state.flare + flareChange));
-      newClarity = Math.min(100, Math.max(0, state.clarity + clarityChange));
-      
+      newFlare = clamp(state.flare + flareChange);
+      newClarity = clamp(state.clarity + clarityChange);
+
       console.log('🎮 Player action:', action, `${damage} dmg, ${flareChange} Flare, ${clarityChange} Clarity`);
-      
-      // Track player choice
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         playerChoices: [...prev.playerChoices, action],
       }));
@@ -212,7 +183,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
 
     const newCombatTurns = state.combatTurns + 1;
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       flare: newFlare,
       clarity: newClarity,
@@ -274,15 +245,26 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
             placeholder="Describe when your pain began..."
             sceneId="tutorial_intro"
             onAdvance={(userInput, aiResponse) => {
-              setState(prev => ({
+              setState((prev) => ({
                 ...prev,
                 aiResponses: [
                   ...prev.aiResponses,
-                  { sceneId: 'tutorial_intro', userInput, aiResponse }
-                ]
+                  { sceneId: 'tutorial_intro', userInput, aiResponse },
+                ],
               }));
-              advancePhase('transition_to_combat');
+              advancePhase('basin_response');
             }}
+          />
+        );
+
+      case 'basin_response':
+        return (
+          <VNScene
+            backgroundImage={VN_BACKGROUND}
+            characterImages={ARCHIVIST_PORTRAITS}
+            characterName="The Archivist"
+            text="You put words to what had no name. The basin ripples in recognition."
+            onContinue={() => advancePhase('transition_to_combat')}
           />
         );
 
@@ -293,7 +275,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
             characterName="Narration"
             text="A shadow rises from the reflection. It moves as you move, clutching at its abdomen with mirrored pain. You realize the world is reacting to you. The Ache Beneath stands before you. The fight begins."
             onContinue={() => {
-              setState(prev => ({ ...prev, combatTurns: 0 }));
+              setState((prev) => ({ ...prev, combatTurns: 0 }));
               advancePhase('combat_phase_1');
             }}
           />
@@ -325,22 +307,22 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
             placeholder="Describe your experience with doctors..."
             sceneId="mid_battle_vn"
             playerData={{
-              combatActions: state.playerChoices.filter(c => 
+              combatActions: state.playerChoices.filter((c) =>
                 ['Soothe', 'Observe', 'Probe', 'Resist'].includes(c)
               ),
               flare: state.flare,
               clarity: state.clarity,
-              turnCount: state.combatTurns
+              turnCount: state.combatTurns,
             }}
             onAdvance={(userInput, aiResponse) => {
-              setState(prev => ({
+              setState((prev) => ({
                 ...prev,
                 aiResponses: [
                   ...prev.aiResponses,
-                  { sceneId: 'mid_battle_vn', userInput, aiResponse }
+                  { sceneId: 'mid_battle_vn', userInput, aiResponse },
                 ],
                 combatTurns: 0,
-                enemyHealth: 1
+                enemyHealth: 80,
               }));
               advancePhase('combat_phase_2');
             }}
@@ -476,25 +458,18 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
             animate={{ opacity: 1 }}
           >
             <div className="text-center px-4">
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8 }}
+              <h1 className="text-white text-4xl mb-6">To Be Continued...</h1>
+              <p className="text-white/70 text-lg mb-8 font-serif max-w-md mx-auto">
+                The path to the Lumen Archives awaits. But that is a journey for another day.
+              </p>
+              <button
+                onClick={() =>
+                  onComplete({ choices: state.playerChoices, finalState: state })
+                }
+                className="px-8 py-3 bg-[#c9a0dc] hover:bg-[#b88fcc] text-white rounded-xl transition-colors"
               >
-                <h1 className="text-white text-4xl mb-6">To Be Continued...</h1>
-                <p className="text-white/70 text-lg mb-8 font-serif max-w-md mx-auto">
-                  The path to the Lumen Archives awaits. But that is a journey for another day.
-                </p>
-                <button
-                  onClick={() => onComplete({
-                    choices: state.playerChoices,
-                    finalState: state
-                  })}
-                  className="px-8 py-3 bg-[#c9a0dc] hover:bg-[#b88fcc] text-white rounded-xl transition-colors"
-                >
-                  Return to Start
-                </button>
-              </motion.div>
+                Return to Start
+              </button>
             </div>
           </motion.div>
         );
@@ -504,6 +479,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
     }
   };
 
+  // Phase index for any progress UI
   const getPhaseNumber = (): number => {
     const phaseMap: Record<Phase, number> = {
       awakening: 0,
@@ -513,23 +489,26 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       transition_to_combat: 4,
       combat_phase_1: 5,
       mid_battle_vn: 6,
-      healers_question: 7,
-      combat_phase_2: 8,
-      victory_vn: 9,
-      power_reveal: 10,
+      combat_phase_2: 7,
+      victory_vn: 8,
+      power_reveal: 9,
+      archivist_final: 10,
       post_combat: 11,
       game_end: 12,
-      archivist_final: 11,
-      post_combat: 12,
-      game_end: 13,
     };
-    return phaseMap[state.phase] || 0;
+    return phaseMap[state.phase] ?? 0;
   };
 
-  const isCombatPhase = state.phase === 'combat_phase_1' || state.phase === 'combat_phase_2';
-  
-  // Determine which music track to play
-  const currentTrack = isCombatPhase ? 'combat' : 'vn';
+  // ---- MUSIC SELECTION ----
+  // Ache theme during the reconciliation/interlude moments
+  const achePhases: Set<Phase> = new Set([]);
+  const isAcheMoment = achePhases.has(state.phase);
+
+  // Combat music only for these
+  const combatPhases: Set<Phase> = new Set(['transition_to_combat', 'combat_phase_1', 'combat_phase_2', 'mid_battle_vn']);
+  const isCombatLike = combatPhases.has(state.phase);
+
+  const currentTrack = isAcheMoment ? 'ache' : isCombatLike ? 'combat' : 'vn';
 
   function buildConversationHistory(aiResponses: {
     sceneId: string; userInput: string; aiResponse: string;
@@ -653,13 +632,9 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
 
   return (
     <div>
-      {/* Howler.js Audio Manager - auto-detects user interaction */}
-      <HowlerAudioManager 
-        track={currentTrack}
-        volume={0.4}
-        enabled={musicEnabled}
-      />
-      
+      {/* One music manager for the whole tutorial screen */}
+      <WebAudioManager track={currentTrack} volume={0.4} enabled={musicEnabled} />
+
       {/* Music toggle */}
       <MusicToggle onToggle={setMusicEnabled} />
 
