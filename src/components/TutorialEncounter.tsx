@@ -74,7 +74,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
     playerChoices: [],
     aiResponses: [],
     combatTurns: 0,
-    enemyHealth: 1,
+    enemyHealth: 100,
   });
 
   const [musicEnabled, setMusicEnabled] = useState(true);
