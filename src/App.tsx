@@ -1,11 +1,15 @@
+// src/App.tsx
 import { useState } from 'react';
 import { StartScreen } from './components/StartScreen';
 import { TutorialEncounter } from './components/TutorialEncounter';
 import { TutorialOverlay } from './components/TutorialOverlay';
-import { AudioManager } from './components/AudioManager';
 import { HelpCircle } from 'lucide-react';
+import { AudioGate } from '@/audio/AudioGate';
+import { WebAudioManager } from '@/audio/WebAudioManager';
+import { ChapterOneCover } from './components/ChapterOneCover';
+import { ChapterOneEncounter } from './components/ChapterOneEncounter';
 
-type Screen = 'start' | 'tutorial';
+type Screen = 'start' | 'tutorial' | 'chapter1_cover' | 'chapter1_play';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('start');
@@ -13,8 +17,8 @@ export default function App() {
 
   const handleTutorialComplete = (data: any) => {
     console.log('Tutorial complete with data:', data);
-    // Return to start menu
-    setCurrentScreen('start');
+    //After the tutorial, go to the Chapter 1 "cover" screen
+    setCurrentScreen('chapter1_cover');
   };
 
   const handleStart = () => {
@@ -23,16 +27,15 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#1a1625] overflow-hidden">
-      {/* Background music - add your audio URL here */}
-      {/* <AudioManager bgmUrl="YOUR_AUDIO_URL_HERE" volume={0.3} /> */}
-      
-      {/* Mobile viewport container */}
+      {/* One-time, invisible: unlocks audio globally after first gesture */}
+      <AudioGate />
+
       <div className="mx-auto max-w-[375px] min-h-screen relative">
-        {/* Vignette effect */}
-        <div className="fixed inset-0 pointer-events-none z-30" style={{
-          background: 'radial-gradient(circle at center, transparent 40%, rgba(26, 22, 37, 0.6) 100%)'
-        }} />
-        {/* Help button - show during tutorial on combat screens */}
+        <div
+          className="fixed inset-0 pointer-events-none z-30"
+          style={{ background: 'radial-gradient(circle at center, transparent 40%, rgba(26, 22, 37, 0.6) 100%)' }}
+        />
+
         {currentScreen === 'tutorial' && (
           <button
             onClick={() => setShowTutorial(true)}
@@ -42,16 +45,28 @@ export default function App() {
           </button>
         )}
 
-        {/* Render current screen */}
         {currentScreen === 'start' && (
-          <StartScreen onStart={handleStart} />
+          <>
+            {/* Title music (starts at 20s via manager map) */}
+            <WebAudioManager track="title" volume={0.3} />
+            <StartScreen onStart={handleStart} />
+          </>
         )}
 
         {currentScreen === 'tutorial' && (
-          <TutorialEncounter onComplete={handleTutorialComplete} />
+          <>
+            <TutorialEncounter onComplete={handleTutorialComplete} />
+          </>
         )}
 
-        {/* Tutorial overlay */}
+        {currentScreen === 'chapter1_cover' && (
+          <ChapterOneCover onEnter={() => setCurrentScreen('chapter1_play')} />
+        )}
+
+        {currentScreen === 'chapter1_play' && (
+          <ChapterOneEncounter onComplete={() => setCurrentScreen('start')} />
+        )}
+
         <TutorialOverlay isVisible={showTutorial} onClose={() => setShowTutorial(false)} />
       </div>
     </div>
