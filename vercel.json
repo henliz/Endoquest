@@ -1,8 +1,7 @@
 {
   "rewrites": [
-    { "source": "/server", "destination": "https://endoquest.onrender.com/" },
-    { "source": "/server/(.*)", "destination": "https://endoquest.onrender.com/" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/", "destination": "https://endoquest.onrender.com/" },
+    { "source": "//(.*)", "destination": "https://endoquest.onrender.com/" },
   ]
 }
 
