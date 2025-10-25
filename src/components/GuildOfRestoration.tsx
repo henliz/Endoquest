@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ArrowLeft, FileText, Download, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { downloadBenefitsAsPDF } from "../utils/pdfBenefits";
 
 interface GuildOfRestorationProps {
   onBack: () => void;
@@ -23,7 +24,7 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
     fetch('http://localhost:3001/api/ai/benefits/guide', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ playerId: 'player-1' }) // Use actual player ID
+      body: JSON.stringify({ playerId: 'player-1' })
     })
       .then(res => res.json())
       .then(data => {
@@ -32,29 +33,54 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
       })
       .catch(err => {
         console.error('Failed to load benefits:', err);
-        // Keep your existing fallback benefits
-        setBenefits([/* your existing 3 benefits */]);
+        // Fallback example items if your API fails
+        setBenefits([
+          {
+            priority: 1,
+            title: 'Physiotherapy',
+            icon: '🧘‍♀️',
+            coverage: 'Up to $500/year, no referral required',
+            why: 'Helps pelvic floor tension and posture-related pain drivers.',
+            action: 'Search for a pelvic-health PT and book an assessment.'
+          },
+          {
+            priority: 2,
+            title: 'Mental Health Counselling',
+            icon: '🧠',
+            coverage: '$800/year combined with psychology/social work',
+            why: 'Builds coping strategies for flare cycles and sleep disruption.',
+            action: 'Find a counsellor who offers virtual appointments.'
+          },
+          {
+            priority: 3,
+            title: 'Registered Massage Therapy',
+            icon: '💆‍♀️',
+            coverage: '$300/year',
+            why: 'Short-term relief for myofascial pain and stress.',
+            action: 'Try a 45-minute session; ask about direct billing.'
+          }
+        ]);
         setLoading(false);
       });
   }, []);
 
   if (loading) {
-    return <div className="h-full flex items-center justify-center text-white/70">
-      Loading your personalized benefits...
-    </div>;
+    return (
+      <div className="h-full flex items-center justify-center text-white/70 w-full max-w-[420px] mx-auto px-6">
+        Loading your personalized benefits...
+      </div>
+    );
   }
-
-  // ... rest of your existing component
 
   return (
     <motion.div
-      className="h-full flex flex-col"
+      className="h-full flex flex-col min-h-0 w-full max-w-[420px] mx-auto"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
     >
-      {/* Header */}
-      <div className="p-6 border-b-2 border-[#c9a0dc]/30">
+      {/* Header (narrow, non-scrolling) */}
+      <div className="w-full max-w-[420px] mx-auto p-6 border-b-2 border-[#c9a0dc]/30 shrink-0">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-4"
@@ -71,8 +97,11 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      {/* Scrollable content (narrow) */}
+      <div
+        className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-6 w-full max-w-[420px] mx-auto"
+        style={{ maxHeight: 'calc(90vh - 160px)' }}
+      >
         <div className="space-y-6">
           {/* Introduction */}
           <div className="bg-white/5 rounded-lg p-6 border border-white/10">
@@ -96,7 +125,7 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
               className="bg-gradient-to-br from-white/5 to-white/10 rounded-lg p-6 border border-white/20"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.05 }}
             >
               <div className="flex items-start gap-4">
                 <div className="text-3xl">{benefit.icon}</div>
@@ -213,11 +242,11 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
         </div>
       </div>
 
-      {/* Action buttons */}
-      <div className="p-6 border-t-2 border-[#c9a0dc]/30 flex gap-3">
-       <button
-          className="flex-1 px-6 py-3 bg-purple-500/20..."
-          onClick={() => window.open('http://localhost:3001/api/benefits/guide.pdf', '_blank')}
+      {/* Footer actions (narrow, sticky) */}
+      <div className="w-full max-w-[420px] mx-auto sticky bottom-0 p-6 border-t-2 border-[#c9a0dc]/30 flex gap-3 shrink-0 bg-gradient-to-t from-[#1a1625]/95 to-transparent backdrop-blur">
+        <button
+          className="flex-1 px-6 py-3 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/50 rounded-xl text-white transition-colors flex items-center justify-center gap-2"
+          onClick={() => downloadBenefitsAsPDF(benefits)}
         >
           <Download className="w-4 h-4" />
           Save Guide
