@@ -2,8 +2,15 @@ import express from 'express';
 import OpenAI from 'openai';
 import { SYSTEM_PROMPT_BASE } from '../prompts/archivist-personality.js';
 import { buildScenePrompt, getSceneConfig, REPORT_GENERATION } from '../prompts/scene-structures.js';
+import { BenefitsPlanTools, executeToolCall, BENEFITS_TOOLS } from '../benefits/benefits-tools.js';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
 
 const router = express.Router();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -15,6 +22,184 @@ const campfireConversations = new Map();
 
 // Track conversation message count
 const conversationMetadata = new Map();
+
+// Benefits tools instance
+let benefitsTools = null;
+
+async function initBenefitsTools() {
+  if (!benefitsTools) {
+    const rulesetPath = join(__dirname, '../benefits/ruleset_cache.json');
+    const bookletPath = join(__dirname, '../benefits/booklet_cache.json');
+    benefitsTools = new BenefitsPlanTools(rulesetPath, bookletPath);
+    await benefitsTools.initialize();
+    console.log('✓ Benefits tools initialized');
+  }
+  return benefitsTools;
+}
+
+// Initialize on startup
+initBenefitsTools().catch(err => {
+  console.error('Failed to initialize benefits tools:', err);
+});
+
+const GUILD_SYSTEM_PROMPT = `You are the **Guild of Restoration's Chief Medical Coordinator**, translating a patient's journey through EndoQuest into real-world healthcare benefit recommendations from their employee benefits plan.
+
+## Your Role
+
+You analyze the player's dialogue for medical symptoms, pain patterns, emotional challenges, and life impacts, then match them to appropriate healthcare services covered by their benefits plan. You must actively use the provided tools to search the benefits plan and retrieve accurate coverage information.
+
+## Core Principles
+
+1. **Evidence-Based**: Only recommend services with proven efficacy for the condition
+2. **Actionable**: Each recommendation must have clear next steps the person can take
+3. **Accurate**: Always verify coverage details using the benefits plan tools before making recommendations
+4. **Holistic**: Address physical, mental, and systemic aspects of their experience
+5. **Empowering**: Frame recommendations as tools for self-advocacy, not just symptom management
+
+## Required Workflow
+
+### Step 1: Analyze the Conversation
+Extract from the player's dialogue:
+- **Pain patterns**: Location, quality, timing, severity, impact on daily life
+- **Emotional/psychological indicators**: Medical trauma, anxiety, depression, self-advocacy challenges, isolation
+- **Functional impacts**: Work, social activities, relationships, self-care capacity
+- **Healthcare journey clues**: Diagnostic delays, provider dismissiveness, failed treatments, lack of specialist access
+
+### Step 2: Identify Relevant Service Categories
+Map their symptoms and experiences to appropriate healthcare service types:
+
+**Physical/Rehabilitation Services:**
+- Physiotherapy (general, pelvic floor, pain management)
+- Massage therapy
+- Chiropractic care
+- Occupational therapy
+
+**Mental Health Services:**
+- Psychologist/counselor (chronic pain, trauma-informed, health anxiety)
+- Social worker
+- Psychiatrist
+
+**Nutritional Services:**
+- Registered dietitian
+- Nutritionist
+
+**Alternative/Complementary:**
+- Acupuncture
+- Naturopathy
+- Homeopathy
+
+**Specialist/Diagnostic:**
+- Second opinion services
+- Private diagnostic imaging
+- Specialist consultations
+
+**Support Services:**
+- Employee Assistance Program (EAP)
+- Healthcare navigation
+- Disability management
+
+### Step 3: Search the Benefits Plan
+For each relevant service type identified:
+
+1. **Start with structure**: Use \`get_benefit_structure\` to understand what benefits exist
+2. **Search by keywords**: Use \`search_keywords\` to find relevant benefits (e.g., ["physiotherapy", "massage"], ["psychologist", "mental health"], ["dietitian", "nutrition"])
+3. **Get details**: Use \`get_benefit_details\` to retrieve complete coverage information for each relevant benefit
+4. **Check general provisions**: Use \`get_general_provisions\` if you need to understand eligibility rules or definitions that apply to all benefits
+
+### Step 4: Generate Recommendations
+Create 3-5 prioritized recommendations in this exact structure:
+
+\`\`\`json
+{
+  "benefits": [
+    {
+      "priority": 1,
+      "title": "Exact Benefit Name from Plan",
+      "icon": "🔵",
+      "coverage": "Exact coverage from plan (e.g., '$500/year', '80% up to $1000', 'Unlimited')",
+      "why": "2-3 sentences linking their specific symptoms/experiences to this service and explaining the potential benefit",
+      "action": "Concrete first step (e.g., 'No referral needed - search for providers in your area', 'Contact EAP at [number] to book', 'Ask your doctor for a referral to')"
+    }
+  ]
+}
+\`\`\`
+
+## Priority Guidelines
+
+**Priority 1**: Immediate symptom relief, safety concerns, or diagnostic clarity
+**Priority 2**: Medium-term quality of life improvement
+**Priority 3**: Long-term management and holistic wellness
+**Priority 4-5**: Complementary approaches or preventive care
+
+## Icon Selection Guide
+
+- 🔵 Physical therapy, rehabilitation, body-focused services
+- 🟢 Mental health, counseling, psychological support
+- 🟡 Nutrition, diet, digestive health
+- 🟠 Alternative/complementary therapies
+- 🟣 Specialist consultations, diagnostic services, second opinions
+- ⚪ Workplace support, navigation, advocacy services
+
+## Writing Guidelines
+
+### The "Why" Field
+- Start with their specific symptom or challenge
+- Explain the connection to this service
+- Mention the potential benefit or outcome
+- Be compassionate but not patronizing
+- Avoid medical jargon unless necessary
+- Balance hope with realism
+
+### The "Action" Field
+- Give the immediate next step
+- Specify if referral is needed
+- Include contact methods when relevant
+- Remove barriers (e.g., "No referral needed")
+- Be specific about what to look for
+
+### The "Coverage" Field
+- Use the EXACT coverage language from the benefits plan
+- Include both percentage and maximum if applicable
+- Specify time period (per year, per visit, lifetime maximum)
+- Note if it's combined with other benefits
+
+## Critical Rules
+
+### Always Do:
+- ✅ Use tools to verify every coverage detail
+- ✅ Use exact benefit names from the plan
+- ✅ Provide specific, accurate coverage amounts
+- ✅ Link recommendations directly to their expressed symptoms/experiences
+- ✅ Return valid JSON in the exact format specified
+- ✅ Give 3-5 recommendations (3 minimum, 5 maximum)
+
+### Never Do:
+- ❌ Make up or guess coverage amounts
+- ❌ Recommend services not in the benefits plan
+- ❌ Promise cures or guaranteed outcomes
+- ❌ Suggest avoiding medical care
+- ❌ Blame the patient for their condition
+- ❌ Name specific doctors or clinics
+- ❌ Include explanations outside the JSON structure
+
+## Output Format
+
+Return ONLY a valid JSON object with a "benefits" array:
+
+\`\`\`json
+{
+  "benefits": [
+    {
+      "priority": 1,
+      "title": "Service Name",
+      "icon": "🔵",
+      "coverage": "$X/year",
+      "why": "Explanation",
+      "action": "Next step"
+    }
+  ]
+}
+\`\`\``;
 
 // POST /api/ai/campfire-chat - Campfire conversation endpoint
 // This is the ONLY interactive dialogue scene - all others are scripted VN sequences
@@ -374,6 +559,163 @@ router.delete('/campfire-conversation/:playerId', (req, res) => {
   campfireConversations.delete(playerId);
   conversationMetadata.delete(playerId);
   res.json({ message: 'Campfire conversation cleared' });
+});
+
+// POST /api/ai/benefits/guide - Generate Guild of Restoration benefits guide
+router.post('/benefits/guide', async (req, res) => {
+  try {
+    const { playerId } = req.body;
+
+    // Get conversation from storage
+    const conversationHistory = playerId ? campfireConversations.get(playerId) || [] : [];
+
+    // If no conversation, return fallback
+    if (conversationHistory.length === 0) {
+      return res.json({
+        title: "Guild of Restoration",
+        subtitle: "Benefits matched to your needs",
+        intro: "Start a conversation with the Archivist to receive personalized recommendations.",
+        benefits: [
+          {
+            priority: 1,
+            title: "Pelvic Floor Physiotherapy",
+            icon: "🔵",
+            coverage: "$500-$1,000/year",
+            why: "Pelvic, lower back, or radiating pain often involves pelvic floor dysfunction.",
+            action: "Book an initial assessment (usually no referral required)."
+          },
+          {
+            priority: 2,
+            title: "Mental Health Counseling",
+            icon: "🟢",
+            coverage: "$1,000-$5,000/year",
+            why: "Chronic pain and medical trauma benefit from psychological support.",
+            action: "Search for chronic pain–informed therapists."
+          },
+          {
+            priority: 3,
+            title: "Registered Dietitian",
+            icon: "🟡",
+            coverage: "Plan-dependent",
+            why: "Targeted nutrition can help manage inflammation.",
+            action: "Look for women's health RDs."
+          }
+        ],
+        contact: {
+          insurer: "Sun Life",
+          portal: "mysunlife.ca",
+          phone: "1-800-361-6212"
+        }
+      });
+    }
+
+    // Initialize tools
+    const tools = await initBenefitsTools();
+
+    // Format conversation
+    const transcript = conversationHistory
+      .map(m => `${m.role === 'user' ? 'Player' : 'Archivist'}: ${m.content}`)
+      .join('\n\n');
+
+    const userPrompt = `**Conversation Analysis Request**
+
+Analyze the following EndoQuest campfire conversation and generate 3-5 prioritized healthcare benefit recommendations.
+
+**Conversation History:**
+${transcript}
+
+**Instructions:**
+1. Identify key symptoms, pain patterns, and emotional themes
+2. Use the benefits plan tools to search for and retrieve relevant coverage information
+3. Map symptoms to appropriate healthcare services
+4. Prioritize by urgency and impact potential
+5. Generate JSON object with "benefits" array following the exact format specified
+
+Return ONLY the JSON object, no additional text.`;
+
+    // Multi-turn conversation with tool calling
+    const messages = [
+      { role: 'system', content: GUILD_SYSTEM_PROMPT },
+      { role: 'user', content: userPrompt }
+    ];
+
+    let attempts = 0;
+    const MAX_ATTEMPTS = 10;
+
+    while (attempts < MAX_ATTEMPTS) {
+      attempts++;
+
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        temperature: 0.7,
+        messages,
+        tools: BENEFITS_TOOLS,
+        tool_choice: 'auto'
+      });
+
+      const choice = completion.choices[0];
+      const message = choice.message;
+
+      messages.push(message);
+
+      // Check if done
+      if (choice.finish_reason === 'stop' || !message.tool_calls) {
+        try {
+          const content = message.content || '{}';
+          const parsed = JSON.parse(content);
+          const benefits = parsed.benefits || [];
+
+          if (Array.isArray(benefits) && benefits.length >= 3) {
+            return res.json({
+              title: "Guild of Restoration",
+              subtitle: "Benefits matched to your needs",
+              intro: "Based on your conversation, here are personalized benefit recommendations.",
+              benefits,
+              contact: {
+                insurer: "Sun Life",
+                portal: "mysunlife.ca",
+                phone: "1-800-361-6212"
+              },
+              generatedAt: new Date().toISOString()
+            });
+          }
+        } catch (e) {
+          console.error('Failed to parse AI response:', e);
+        }
+
+        // Parsing failed, return fallback
+        return res.json({
+          title: "Guild of Restoration",
+          benefits: [/* fallback benefits */]
+        });
+      }
+
+      // Execute tool calls
+      if (message.tool_calls && message.tool_calls.length > 0) {
+        console.log(`→ Guild: Executing ${message.tool_calls.length} tool call(s)`);
+
+        for (const toolCall of message.tool_calls) {
+          const toolResult = await executeToolCall(toolCall, tools);
+          messages.push(toolResult);
+          console.log(`  ✓ ${toolCall.function.name}`);
+        }
+      }
+    }
+
+    // Max attempts reached
+    console.warn('Max tool call attempts reached');
+    res.json({
+      title: "Guild of Restoration",
+      benefits: [/* fallback benefits */]
+    });
+
+  } catch (error) {
+    console.error('Guild generation error:', error);
+    res.status(500).json({
+      error: 'Failed to generate guide',
+      benefits: []
+    });
+  }
 });
 
 export default router;

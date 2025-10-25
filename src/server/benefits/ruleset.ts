@@ -1,6 +1,11 @@
+//To run, use this: npx ts-node --esm src/server/benefits/run-ruleset.ts
+
+
 import { OpenAI } from "openai";
-import "dotenv/config";
-import type { BookletSection } from "./booklet";
+import dotenv from "dotenv";
+import path from "node:path";
+dotenv.config({ path: path.resolve("src/server/.env") });
+import type { BookletSection } from "./booklet.ts";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 

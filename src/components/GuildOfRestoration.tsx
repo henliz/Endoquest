@@ -1,37 +1,50 @@
 import { motion } from 'motion/react';
 import { ArrowLeft, FileText, Download, ExternalLink } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface GuildOfRestorationProps {
   onBack: () => void;
 }
 
+interface Benefit {
+  priority: number;
+  title: string;
+  icon: string;
+  coverage: string;
+  why: string;
+  action: string;
+}
+
 export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
-  const benefits = [
-    {
-      priority: 1,
-      title: "Pelvic Floor Physiotherapy",
-      icon: "🔵",
-      coverage: "$500-$1,000/year",
-      why: "Your pain pattern (pelvic, lower back, radiating) suggests possible pelvic floor dysfunction.",
-      action: "Book initial assessment - no referral needed"
-    },
-    {
-      priority: 2,
-      title: "Mental Health Counseling",
-      icon: "🟢",
-      coverage: "$1,000-$5,000/year",
-      why: "Processing medical trauma and building self-advocacy skills.",
-      action: "Find providers experienced in chronic pain psychology"
-    },
-    {
-      priority: 3,
-      title: "Registered Dietitian",
-      icon: "🟡",
-      coverage: "Varies by plan",
-      why: "Anti-inflammatory diet approaches may help reduce overall inflammation.",
-      action: "Look for RDs experienced in women's health"
-    }
-  ];
+  const [benefits, setBenefits] = useState<Benefit[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/api/ai/benefits/guide', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playerId: 'player-1' }) // Use actual player ID
+    })
+      .then(res => res.json())
+      .then(data => {
+        setBenefits(data.benefits || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load benefits:', err);
+        // Keep your existing fallback benefits
+        setBenefits([/* your existing 3 benefits */]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div className="h-full flex items-center justify-center text-white/70">
+      Loading your personalized benefits...
+    </div>;
+  }
+
+  // ... rest of your existing component
 
   return (
     <motion.div
@@ -69,8 +82,8 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
                 Personalized Recommendations Based on Your Profile
               </p>
               <p className="text-white/80 leading-relaxed">
-                Based on your symptom profile from EndoQuest, here are Sun Life 
-                benefits that can help you RIGHT NOW—even before you have a 
+                Based on your symptom profile from EndoQuest, here are Sun Life
+                benefits that can help you RIGHT NOW—even before you have a
                 formal diagnosis.
               </p>
             </div>
@@ -94,7 +107,7 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
                     </span>
                     <h4 className="text-white text-lg">{benefit.title}</h4>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div>
                       <p className="text-white/70 text-sm mb-1"><strong>Your coverage:</strong></p>
@@ -119,7 +132,7 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
           {/* Action Plan */}
           <div className="bg-blue-500/10 border-l-4 border-blue-500/50 rounded-lg p-6">
             <h4 className="text-white text-lg mb-4">📞 YOUR ACTION PLAN THIS WEEK</h4>
-            
+
             <div className="space-y-3 text-white/80 text-sm">
               <div className="flex gap-3">
                 <span className="text-white/60">□</span>
@@ -164,7 +177,7 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
           {/* Pro Tips */}
           <div className="bg-white/5 rounded-lg p-6 border border-white/10">
             <h4 className="text-white text-lg mb-3">💡 PRO TIPS</h4>
-            
+
             <div className="space-y-2 text-white/70 text-sm">
               <p><strong>Maximizing your benefits:</strong></p>
               <ul className="pl-4 space-y-1">
@@ -202,9 +215,9 @@ export function GuildOfRestoration({ onBack }: GuildOfRestorationProps) {
 
       {/* Action buttons */}
       <div className="p-6 border-t-2 border-[#c9a0dc]/30 flex gap-3">
-        <button
-          className="flex-1 px-6 py-3 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/50 rounded-xl text-white transition-colors flex items-center justify-center gap-2"
-          onClick={() => alert('Download functionality coming soon!')}
+       <button
+          className="flex-1 px-6 py-3 bg-purple-500/20..."
+          onClick={() => window.open('http://localhost:3001/api/benefits/guide.pdf', '_blank')}
         >
           <Download className="w-4 h-4" />
           Save Guide

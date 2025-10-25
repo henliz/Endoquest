@@ -1,8 +1,12 @@
-import * as fs from "fs-extra";
+//To run this, use: npx ts-node --esm src/server/benefits/run-booklet.ts
+//This converts the booklet into json format
+
+import fs from "fs-extra";
+import { readFileSync } from "node:fs";
 import path from "path";
-import * as pdfjs from "pdfjs-dist";
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { OpenAI } from "openai";
-import "dotenv/config";
+import dotenv from "dotenv";
 
 export type BBox = [number, number, number, number];
 
@@ -53,6 +57,9 @@ export interface BookletCache {
   provisions: BookletSection[];
 }
 
+// Load API key from a fixed path: src/server/.env
+// (ensures it works regardless of the repo root CWD)
+dotenv.config({ path: path.resolve("src/server/.env") });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 function approxFontSize(transform: number[]) {
@@ -98,7 +105,7 @@ function determineAlignment(x1: number, x2: number, pageWidth: number, indent: n
 }
 
 async function extractPages(pdfPath: string): Promise<PageText[]> {
-  const data = new Uint8Array(fs.readFileSync(pdfPath));
+  const data = new Uint8Array(readFileSync(pdfPath));
   const loadingTask = (pdfjs as any).getDocument({ data });
   const doc = await loadingTask.promise;
   const results: PageText[] = [];
@@ -267,6 +274,8 @@ export class BenefitsBookletTS {
     const force = !!opts?.force;
     const summarize = !!opts?.summarize;
 
+    console.log(`→ Parsing: ${this.pdfPath} -> ${this.resultsDir}`);
+
     if (!force && await fs.pathExists(this.cacheFile())) {
       const cached = await fs.readJSON(this.cacheFile()) as BookletCache;
       this.sections = cached.provisions;
@@ -276,7 +285,9 @@ export class BenefitsBookletTS {
     }
 
     const pages = await extractPages(this.pdfPath);
+    console.log(`→ Extracted ${pages.length} page(s)`);
     this.sections = buildSections(pages);
+    console.log(`→ Built ${this.sections.length} section(s)`);
     this.reconstructHierarchy();
 
     if (summarize && process.env.OPENAI_API_KEY) {
@@ -284,6 +295,7 @@ export class BenefitsBookletTS {
     }
 
     const cache: BookletCache = { hierarchical: true, provisions: this.sections };
+    console.log(`→ Writing: ${this.cacheFile()}`);
     await fs.writeJSON(this.cacheFile(), cache, { spaces: 2 });
   }
 
