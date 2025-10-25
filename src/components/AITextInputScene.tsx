@@ -51,35 +51,49 @@ export function AITextInputScene({
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (input: string) => {
-    setUserInput(input);
-    setIsLoading(true);
-    setError(null);
+      setUserInput(input);
+      setIsLoading(true);
+      setError(null);
+    
+      try {
+        const res = await fetch(`${apiUrl}/ai/scene-response`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sceneId,            // required by your backend
+            userInput: input,   // required by your backend
+            playerData,         // include if your route expects it
+            // add any other required fields your 400s mention (e.g., playerId, turnCount, etc.)
+          }),
+        });
 
-    try {
-      const response = await sceneResponse({
-        sceneId,
-        userInput: input,
-        playerData,
-      });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || res.statusText);
 
-      if (!response.ok) {
-        throw new Error('Failed to get AI response');
+        // data.response is a string that sometimes has extra quotes — clean it:
+        let text = data.response;
+        if (typeof text === 'string') {
+          try {
+            const maybe = JSON.parse(text);          // if it's a JSON-encoded string
+            if (typeof maybe === 'string') text = maybe;
+          } catch {
+            /* not JSON-encoded; fall through */
+          }
+          text = text.replace(/^"([\s\S]*)"$/, '$1'); // strip single leading/trailing quotes
+        }
+
+        setAiResponse(text ?? '');
+        setPhase('response');
+      } catch (err) {
+        console.error('AI response error:', err);
+        setError('The Archivist seems distant... perhaps try again?');
+        setAiResponse('The archives ripple with your words. The world is listening.');
+        setPhase('response');
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      const data = await response.json();
-      setAiResponse(data.response);
-      setPhase('response');
-    } catch (err) {
-      console.error('AI response error:', err);
-      setError('The Archivist seems distant... perhaps try again?');
-
-      // Fallback response
-      setAiResponse('The archives ripple with your words. The world is listening.');
-      setPhase('response');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleContinue = () => {
     onAdvance(userInput, aiResponse);
