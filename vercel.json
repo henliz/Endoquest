@@ -1,8 +1,8 @@
 {
-  "version": 2,
-  "routes": [
-    { "src": "/server", "dest": "https://endoquest.onrender.com/" },
-    { "src": "/server/(.*)", "dest": "https://endoquest.onrender.com/" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/server", "destination": "https://endoquest.onrender.com/" },
+    { "source": "/server/(.*)", "destination": "https://endoquest.onrender.com/" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
+
