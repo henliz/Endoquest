@@ -3,6 +3,9 @@ import OpenAI from 'openai';
 import { SYSTEM_PROMPT_BASE } from '../prompts/archivist-personality.js';
 import { buildScenePrompt, getSceneConfig, REPORT_GENERATION } from '../prompts/scene-structures.js';
 
+import { fetchSnippets, fetchResources } from '../snowflake/client.js';
+import { inferTopicFromHistory } from '../snowflake/topics.js';
+
 const router = express.Router();
 
 // Initialize OpenAI client
@@ -15,6 +18,31 @@ const campfireConversations = new Map();
 
 // Track conversation message count
 const conversationMetadata = new Map();
+
+// GET /api/ai/ping - Health check endpoint
+router.get('/ping', (req, res) => {
+  res.json({ ok: true, time: new Date().toISOString() });
+});
+
+// Quick OpenAI connectivity check
+router.get('/test-openai', async (req, res) => {
+  try {
+    const r = await openai.models.list();
+    // Return a tiny payload so it’s fast & obvious
+    res.json({
+      ok: true,
+      count: r.data?.length ?? 0,
+      sample: r.data?.slice(0, 5).map(m => m.id) ?? []
+    });
+  } catch (e) {
+    console.error('test-openai error:', e);
+    res.status(500).json({
+      ok: false,
+      status: e?.status,
+      error: e?.message || String(e)
+    });
+  }
+});
 
 // POST /api/ai/campfire-chat - Campfire conversation endpoint
 // This is the ONLY interactive dialogue scene - all others are scripted VN sequences
@@ -284,77 +312,252 @@ router.post('/generate-vn-sequence', async (req, res) => {
 
 // POST /api/ai/generate-report - Generate one of the three diagnostic reports
 router.post('/generate-report', async (req, res) => {
+  const t0 = Date.now();
+  let debugOn = req.query.debug === '1' || req.headers['x-debug'] === '1';
+
   try {
-    const { playerId, reportType, conversationHistory, combatData } = req.body;
+    const {
+      reportType = 'Initial Diagnostic Summary',
+      conversationHistory = [],
+      combatData = {},
+      region = 'Ontario',
+      audience = 'physician' // 'physician' | 'home'
+    } = req.body;
 
-    if (!reportType || !['physical', 'emotional', 'pattern'].includes(reportType)) {
-      return res.status(400).json({ error: 'Invalid report type. Must be: physical, emotional, or pattern' });
+    // 1) Pull Snowflake context (non-fatal)
+    let evidence = [], localResources = [];
+    const tSnow0 = Date.now();
+    try {
+      [evidence, localResources] = await Promise.all([
+        fetchSnippets('endometriosis', 3),
+        fetchResources(region, 3),
+      ]);
+    } catch (e) {
+      console.warn('Snowflake fetch failed:', e);
+    }
+    const tSnow = Date.now() - tSnow0;
+
+    // 2) Compose prompt (save for debug)
+    const isPhysician = audience === 'physician';
+
+    let reportPrompt = `You are the Archivist, generating a ${isPhysician ? '"clinician-facing" formal report' : '"patient-facing" gentle summary'} for a player who just completed the EndoQuest VN/RPG scene.
+    Audience: ${isPhysician ? 'Physician/clinician' : 'Patient/home support'}
+    Region: ${region}
+
+    Return ONLY a JSON object matching this schema:
+
+    {
+      "title": string,
+      "patient_summary": string,
+      "findings": string[],
+      "red_flags": string[],
+      "likely_considerations": string[],
+      "suggested_next_steps": string[],
+      "self_management_tips": string[],
+      "resources": [{ "name": string, "url": string|null, "phone": string|null, "tags": string|null }]
     }
 
-    // Get detailed report structure from scene-structures
-    const reportConfig = REPORT_GENERATION.reportTypes[reportType];
-    
-    // Build comprehensive report generation prompt
-    let reportPrompt = `You are the Archivist, generating a ${reportConfig.name} for a traveler in EndoQuest.\n\n`;
-    reportPrompt += `**Purpose:** ${reportConfig.purpose}\n\n`;
-    reportPrompt += `**Mandatory Elements:**\n${reportConfig.mandatoryElements.map(e => `- ${e}`).join('\n')}\n\n`;
-    reportPrompt += `**Structure:**\n${reportConfig.structure.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\n`;
-    reportPrompt += `**Tone:** ${reportConfig.tone}\n`;
-    reportPrompt += `**Length:** ${reportConfig.outputFormat}\n\n`;
-    reportPrompt += `**Prohibitions:**\n${reportConfig.prohibitions.map(p => `- ${p}`).join('\n')}\n\n`;
-    
-    reportPrompt += `**Example Opening:**\n"${reportConfig.exampleOpening}"\n\n`;
-    
-    reportPrompt += `---\n\n`;
-    
-    if (conversationHistory && conversationHistory.length > 0) {
-      reportPrompt += `**Campfire Conversation:**\n`;
-      conversationHistory.forEach(msg => {
-        reportPrompt += `${msg.role === 'user' ? 'Traveler' : 'Archivist'}: ${msg.content}\n\n`;
-      });
+    Style & Constraints:
+    ${isPhysician ? `- Professional, concise, and clinically useful; write as a brief to a GP/OBGYN.
+    - No definitive diagnosis; frame as "considerations".
+    - Prefer neutral medical language (e.g., "reports", "denies", "pattern suggests").
+    - Organize "findings" to read like problem list bullets.
+    - "Red_flags": escalation/safety items (urgent care criteria).` : `- Supportive, plain language, gentle tone.
+    - No diagnosis; frame as "may be related" and "could try".
+    - Prioritize actionable self-care and pacing ideas in "self_management_tips".
+    - "Red_flags": phrase as "seek urgent care if..." in clear language.
+    - Avoid jargon; if unavoidable, add a short parenthetical explanation.`}
+
+    - Use Canadian/Ontario framing if region is Ontario.
+    `;
+
+    if (evidence?.length) {
+      reportPrompt += `\nTrusted Knowledge:\n`;
+      for (const e of evidence) {
+        reportPrompt += `- ${e.SUBTOPIC}: ${e.TEXT} (source: ${e.SOURCE})\n`;
+      }
+    }
+    if (localResources?.length) {
+      reportPrompt += `\nSupport Nearby (${region}):\n`;
+      for (const r of localResources) {
+        reportPrompt += `- ${r.NAME}${r.PHONE ? ` (${r.PHONE})` : ''} — ${r.URL} [${r.TAGS}]\n`;
+      }
+    }
+
+    const convoSlice = conversationHistory.slice(-8);
+    if (convoSlice.length) {
+      reportPrompt += `\nConversation Highlights:\n`;
+      for (const msg of convoSlice) {
+        reportPrompt += `- ${msg.role}: ${msg.content}\n`;
+      }
+    }
+
+    if (combatData && (combatData.turnCount !== undefined || combatData.combatActions)) {
+      reportPrompt += `\nGameplay Signals:\n`;
+      if (combatData.turnCount !== undefined) reportPrompt += `- Combat turns: ${combatData.turnCount}\n`;
+      if (combatData.combatActions?.length) reportPrompt += `- Actions: ${combatData.combatActions.join(', ')}\n`;
+    }
+
+    // Titles that match the audience (the UI still reads 'title')
+    if (isPhysician) {
+      reportPrompt += `\nSet "title" to "Initial Diagnostic Summary".\n`;
     } else {
-      reportPrompt += `**Note:** Limited conversation data. Create a gentle, brief chronicle that acknowledges you don't have a full picture yet, while still validating their journey.\n\n`;
+      reportPrompt += `\nSet "title" to "Wayside Comforts — Home Support Summary".\n`;
     }
-    
-    if (combatData) {
-      reportPrompt += `**Combat Choices:**\n${JSON.stringify(combatData, null, 2)}\n\n`;
+
+
+    reportPrompt += `\nReturn only the JSON object.`;
+
+
+    // 3) OpenAI call with timeout
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
+
+    const completion = await openai.chat.completions.create(
+      {
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: reportPrompt },
+          { role: 'user', content: 'Generate the JSON report now.' }
+        ],
+        temperature: 0.4,
+        max_tokens: 900
+      },
+      { signal: controller.signal }
+    );
+    clearTimeout(timer);
+
+    const raw = completion.choices?.[0]?.message?.content ?? '{}';
+    const usage = completion.usage || null;
+    const model = completion.model || 'unknown';
+
+    // 4) Parse (be forgiving)
+    let reportJson;
+    try {
+      reportJson = JSON.parse(raw);
+    } catch {
+      const m = raw.match(/\{[\s\S]*\}$/);
+      reportJson = m ? JSON.parse(m[0]) : {
+        title: isPhysician ? 'Initial Diagnostic Summary' : 'Wayside Comforts — Home Support Summary',
+        patient_summary: raw
+      };
     }
-    
-    reportPrompt += `---\n\n`;
-    reportPrompt += `Write the ${reportConfig.name} now. Use the Archivist's voice. Be specific with details they've shared. Follow the structure but write flowing paragraphs. ${reportConfig.outputFormat}.`;
 
-    const messages = [
-      { role: 'system', content: SYSTEM_PROMPT_BASE },
-      { role: 'user', content: reportPrompt }
-    ];
+    // 5) Normalize resources to include Snowflake ones if model omitted
+    if (!Array.isArray(reportJson.resources)) reportJson.resources = [];
+    for (const r of localResources) {
+      reportJson.resources.push({
+        name: r.NAME,
+        url: r.URL || null,
+        phone: r.PHONE || null,
+        tags: r.TAGS || null
+      });
+    }
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: messages,
-      temperature: 0.7,
-      max_tokens: 700
-    });
+    // 5b) Normalize + DEDUPE resources (by name|url|phone, case-insensitive)
+    const norm = (s) => (typeof s === 'string' ? s.trim() : s || null);
+    const toKey = (r) =>
+      `${(r.name || '').toLowerCase().trim()}|${(r.url || '').toLowerCase().trim()}|${(r.phone || '').trim()}`;
 
-    const report = completion.choices[0].message.content;
-    const wordCount = report.split(/\s+/).length;
+    if (!Array.isArray(reportJson.resources)) reportJson.resources = [];
+    reportJson.resources = reportJson.resources
+      .filter(Boolean)
+      .map(r => ({
+        name: norm(r.name),
+        url: norm(r.url),
+        phone: norm(r.phone),
+        tags: norm(r.tags)
+      }))
+      .filter(r => r.name); // require a name
 
-    res.json({
+    {
+      const seen = new Set();
+      reportJson.resources = reportJson.resources.filter(r => {
+        const k = toKey(r);
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+    }
+
+    // 5c) De-dupe string arrays too (case-insensitive)
+    const dedupeStrings = (arr) => {
+      if (!Array.isArray(arr)) return [];
+      const seen = new Set();
+      const out = [];
+      for (const s of arr) {
+        const t = String(s || '').trim();
+        const k = t.toLowerCase();
+        if (!t || seen.has(k)) continue;
+        seen.add(k);
+        out.push(t);
+      }
+      return out;
+    };
+
+    reportJson.findings               = dedupeStrings(reportJson.findings).slice(0, 5);
+    reportJson.red_flags              = dedupeStrings(reportJson.red_flags).slice(0, 3);
+    reportJson.likely_considerations  = dedupeStrings(reportJson.likely_considerations).slice(0, 4);
+    reportJson.suggested_next_steps   = dedupeStrings(reportJson.suggested_next_steps).slice(0, 5);
+    reportJson.self_management_tips   = dedupeStrings(reportJson.self_management_tips).slice(0, 5);
+
+    const cap = (arr, n=5) => Array.isArray(arr) ? arr.slice(0,n) : [];
+    reportJson.findings = cap(reportJson.findings);
+    reportJson.red_flags = cap(reportJson.red_flags, 3);
+    reportJson.likely_considerations = cap(reportJson.likely_considerations, 4);
+    reportJson.suggested_next_steps = cap(reportJson.suggested_next_steps);
+    reportJson.self_management_tips = cap(reportJson.self_management_tips);
+
+    const totalMs = Date.now() - t0;
+
+    // Always log a brief server-side line
+    console.log(`[generate-report] ok type=${reportType} evid=${evidence?.length||0} res=${localResources?.length||0} convo=${convoSlice.length} turns=${combatData?.turnCount ?? '-'} ms=${totalMs} (snowflake ${tSnow}ms)`);
+
+    // Build response
+    const payload = {
+      ok: true,
       reportType,
-      reportName: reportConfig.name,
-      report,
+      region,
+      report: reportJson,
+      snowflakeOk: !!(evidence?.length || localResources?.length),
       generatedAt: new Date().toISOString(),
-      wordCount,
-      expectedLength: reportConfig.outputFormat
-    });
+    };
 
-  } catch (error) {
-    console.error('Report Generation Error:', error);
-    res.status(500).json({ 
-      error: 'Failed to generate report',
-      fallback: "I'm still gathering the threads of your story. Some patterns take time to weave together..."
+    if (debugOn) {
+      payload.debug = {
+        model,
+        usage,
+        timings: { totalMs, tSnowflakeMs: tSnow },
+        prompt: reportPrompt,
+        audience,
+        used: {
+          conversationHistory: convoSlice,
+          combatData,
+          evidenceCount: evidence?.length || 0,
+          resourcesCount: localResources?.length || 0,
+          // include samples so you can eyeball
+          evidenceSample: (evidence || []).slice(0, 2),
+          resourcesSample: (localResources || []).slice(0, 2),
+        },
+        rawModelText: raw
+      };
+    }
+
+    return res.json(payload);
+
+  } catch (err) {
+    const isAbort = err?.name === 'AbortError';
+    console.error('Generate Report Error:', err);
+    return res.status(isAbort ? 504 : 500).json({
+      ok: false,
+      error: err?.message || String(err),
+      fallback: "I couldn't complete the report just now. Please try again."
     });
   }
 });
+
+
+
 
 // GET /api/ai/campfire-conversation/:playerId - Retrieve campfire conversation history
 router.get('/campfire-conversation/:playerId', (req, res) => {
@@ -374,6 +577,18 @@ router.delete('/campfire-conversation/:playerId', (req, res) => {
   campfireConversations.delete(playerId);
   conversationMetadata.delete(playerId);
   res.json({ message: 'Campfire conversation cleared' });
+});
+
+// GET /api/ai/test-snowflake - quick connectivity check
+router.get('/test-snowflake', async (req, res) => {
+  try {
+    const evidence  = await fetchSnippets('endometriosis', 3);
+    const resources = await fetchResources('Ontario', 3);
+    res.json({ ok: true, evidence, resources });
+  } catch (e) {
+    console.error('test-snowflake error:', e);
+    res.status(500).json({ ok: false, error: String(e) });
+  }
 });
 
 export default router;

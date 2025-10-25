@@ -1,20 +1,39 @@
+// HealersChronicle.tsx
 import { motion } from 'motion/react';
 import { ArrowLeft, Download, Scroll } from 'lucide-react';
+import type { ReportJSON } from '../api';
+import { downloadReportAsPDF } from '../utils/pdf';
+
+import SourceSerifSemibold from "./fonts/SourceSerif4-SemiBold-base64";
+import SourceSerifRegular from "./fonts/SourceSerif4-Regular-base64";
 
 interface HealersChronicleProps {
   onBack: () => void;
+  report?: ReportJSON | null;
 }
 
-export function HealersChronicle({ onBack }: HealersChronicleProps) {
+export function HealersChronicle({ onBack, report }: HealersChronicleProps) {
+  // Loading / empty state (narrow)
+  if (!report) {
+    return (
+      <motion.div
+        className="h-full flex flex-col items-center justify-center text-white/70 px-6 w-full max-w-[420px] mx-auto"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+      >
+        <div className="text-sm">Preparing clinical summary…</div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
-      className="h-full flex flex-col"
+      className="h-full flex flex-col min-h-0 w-full max-w-[420px] mx-auto"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
     >
-      {/* Header */}
-      <div className="p-6 border-b-2 border-[#c9a0dc]/30">
+      {/* Header (keep narrow) */}
+      <div className="w-full max-w-[420px] mx-auto p-6 border-b-2 border-[#c9a0dc]/30 shrink-0">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-4"
@@ -25,210 +44,154 @@ export function HealersChronicle({ onBack }: HealersChronicleProps) {
         <div className="flex items-center gap-3">
           <Scroll className="w-8 h-8 text-blue-400" />
           <div>
-            <h2 className="text-white text-xl">The Healer's Chronicle</h2>
+            <h2 className="text-white text-xl">The Healer&apos;s Chronicle</h2>
             <p className="text-white/60 text-sm">Clinical symptom summary</p>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6 font-mono text-sm">
-        <div className="bg-white/5 rounded-lg p-6 border border-white/10">
+      {/* Scrollable content (narrow) */}
+      <div
+        className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-6 w-full max-w-[420px] mx-auto"
+        style={{ maxHeight: 'calc(90vh - 160px)' }}
+      >
+        <div
+          className="bg-white/5 rounded-lg p-6 border border-white/10 w-full"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           <div className="text-white/90 space-y-4 whitespace-pre-wrap font-serif">
-            {/* Clinical Header */}
             <div className="border-b border-white/20 pb-4 mb-4">
-              <h3 className="text-lg mb-2">ENDOQUEST SYMPTOM SCREENING REPORT</h3>
-              <p className="text-xs text-white/60">Narrative-Based Pain & Coping Assessment</p>
-            </div>
-
-            {/* Patient Info */}
-            <div className="mb-6">
-              <p className="text-white/70 text-xs mb-2">PATIENT INFORMATION</p>
-              <p className="text-white/80 text-xs">Generated: October 23, 2025, 14:32 EST</p>
-              <p className="text-white/80 text-xs">Assessment Duration: 18 minutes, 47 seconds</p>
-              <p className="text-white/80 text-xs">Assessment ID: EQ-2025-1023-4782</p>
-            </div>
-
-            {/* Important Notice */}
-            <div className="bg-yellow-500/10 border-l-4 border-yellow-500/50 p-4 mb-6">
-              <p className="text-yellow-200/90 text-xs leading-relaxed">
-                <strong>IMPORTANT NOTICE:</strong><br />
-                This report summarizes patient-reported symptoms collected through 
-                a validated narrative assessment tool. It is NOT a diagnostic test. 
-                Clinical correlation and physical examination are required.
+              <h3 className="text-lg mb-2 uppercase tracking-wide">
+                {report.title || 'EndoQuest Symptom Screening Report'}
+              </h3>
+              <p className="text-xs text-white/60">
+                Narrative-Based Pain &amp; Coping Assessment
               </p>
             </div>
 
-            {/* Symptom Severity */}
-            <div className="mb-6">
-              <h4 className="text-white/90 mb-3 pb-2 border-b border-white/20">SYMPTOM SEVERITY INDICATORS</h4>
-              
-              <div className="space-y-3">
-                <div>
-                  <p className="text-white/70 text-xs mb-1">Pain Intensity Profile:</p>
-                  <div className="pl-4 text-white/80 text-xs space-y-1">
-                    <p>├─ Peak pain level during assessment: <strong>85/100</strong> (Severe)</p>
-                    <p>├─ Average pain baseline: <strong>52/100</strong> (Moderate)</p>
-                    <p>├─ Pain escalation pattern: <strong>Rapid</strong> (spike episodes noted)</p>
-                    <p>├─ Crisis threshold reached: <strong>Yes</strong> (1 episode)</p>
-                    <p>└─ Pain management intervention: Required breathing regulation</p>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-white/70 text-xs mb-1">Pain Characteristics:</p>
-                  <div className="pl-4 text-white/80 text-xs space-y-1">
-                    <p>☑ Described as "deep ache" (visceral quality)</p>
-                    <p>☑ Radiating pattern noted</p>
-                    <p>☑ Exacerbated by stress/emotional triggers</p>
-                    <p>☐ Sharp/stabbing quality</p>
-                    <p>☑ Diffuse localization difficulty</p>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-white/70 text-xs mb-1">Pain Localization (Patient-Identified):</p>
-                  <div className="pl-4 text-white/80 text-xs space-y-1">
-                    <p>- PRIMARY: Lower abdomen (pelvic region)</p>
-                    <p>- SECONDARY: Lower back (lumbosacral)</p>
-                    <p>- TERTIARY: Diffuse ("everywhere") - suggests central sensitization</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Psychosocial Assessment */}
-            <div className="mb-6">
-              <h4 className="text-white/90 mb-3 pb-2 border-b border-white/20">PSYCHOSOCIAL & COPING ASSESSMENT</h4>
-              
-              <div className="space-y-3">
-                <div className="bg-orange-500/10 border-l-4 border-orange-500/50 p-3">
-                  <p className="text-orange-200/90 text-xs">
-                    <strong>⚠ SIGNIFICANT:</strong> Evidence of prior medical dismissal<br />
-                    "Do you remember doctors who didn't listen?"<br />
-                    → Patient response: ENDORSED (affirmative)<br />
-                    → Clinical significance: May indicate diagnostic delay
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-white/70 text-xs mb-2">Coping Strategy Profile:</p>
-                  <div className="pl-4 text-white/80 text-xs space-y-1">
-                    <p className="mb-2">Based on 23 decision points across 4 encounter types:</p>
-                    <p><strong>Active Investigation: 45%</strong> (PRIMARY STRATEGY)</p>
-                    <p className="pl-4">├─ Asks questions about symptoms</p>
-                    <p className="pl-4">├─ Seeks pattern understanding</p>
-                    <p className="pl-4">└─ Engaged in self-education</p>
-                    <p className="mt-2"><strong>Self-Soothing Behaviors: 30%</strong></p>
-                    <p className="pl-4">├─ Prioritizes immediate pain relief</p>
-                    <p className="pl-4">└─ Uses distraction/comfort measures</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Differential Diagnosis */}
-            <div className="mb-6">
-              <h4 className="text-white/90 mb-3 pb-2 border-b border-white/20">DIFFERENTIAL DIAGNOSIS CONSIDERATIONS</h4>
-              
-              <div className="space-y-3">
-                <div>
-                  <p className="text-white/80 text-xs mb-2"><strong>Primary Concern: ENDOMETRIOSIS</strong></p>
-                  <div className="pl-4 text-white/70 text-xs space-y-1">
-                    <p>Supporting factors:</p>
-                    <p>├─ Chronic pelvic pain ({'>'}6 months)</p>
-                    <p>├─ Lower back radiation pattern</p>
-                    <p>├─ Years of diagnostic delay</p>
-                    <p>├─ Pain severity requiring intervention</p>
-                    <p>└─ Age-appropriate demographic (22F)</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Recommendations */}
-            <div className="mb-6">
-              <h4 className="text-white/90 mb-3 pb-2 border-b border-white/20">RECOMMENDED CLINICAL WORKUP</h4>
-              
-              <div className="space-y-3">
-                <div>
-                  <p className="text-white/70 text-xs mb-2"><strong>IMMEDIATE (Within 2 weeks):</strong></p>
-                  <div className="pl-4 text-white/80 text-xs space-y-1">
-                    <p>□ Complete history & physical examination</p>
-                    <p className="pl-4 text-white/60">Focus: Pelvic exam, abdominal palpation, trigger points</p>
-                    <p>□ Menstrual cycle correlation</p>
-                    <p>□ Pain diary implementation</p>
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-white/70 text-xs mb-2"><strong>SPECIALIST REFERRAL:</strong></p>
-                  <div className="pl-4 text-white/80 text-xs space-y-1">
-                    <p>□ Gynecology consultation</p>
-                    <p className="pl-4 text-white/60">Indication: Chronic pelvic pain, suspected endometriosis</p>
-                    <p>□ Pelvic floor physiotherapy</p>
-                    <p>□ Mental health services</p>
-                    <p className="pl-4 text-white/60">Note: Addressing legitimate trauma from prior dismissal</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Provider Communication */}
-            <div className="mb-6">
-              <h4 className="text-white/90 mb-3 pb-2 border-b border-white/20">PROVIDER COMMUNICATION RECOMMENDATIONS</h4>
-              
-              <div className="bg-blue-500/10 border-l-4 border-blue-500/50 p-4 space-y-2">
-                <p className="text-blue-200/90 text-xs">This patient demonstrates:</p>
-                <p className="text-blue-200/80 text-xs pl-4">✓ High health literacy</p>
-                <p className="text-blue-200/80 text-xs pl-4">✓ Active information-seeking</p>
-                <p className="text-blue-200/80 text-xs pl-4">✓ Prior negative healthcare experiences</p>
-                
-                <p className="text-blue-200/90 text-xs mt-3"><strong>EFFECTIVE APPROACHES:</strong></p>
-                <p className="text-blue-200/80 text-xs pl-4">- Validate symptom severity EARLY in visit</p>
-                <p className="text-blue-200/80 text-xs pl-4">- Avoid minimizing language</p>
-                <p className="text-blue-200/80 text-xs pl-4">- Provide explicit plan even if diagnosis uncertain</p>
-              </div>
-            </div>
-
-            {/* Methodology */}
-            <div className="mb-4">
-              <h4 className="text-white/90 mb-3 pb-2 border-b border-white/20">METHODOLOGY NOTE</h4>
-              
-              <p className="text-white/70 text-xs leading-relaxed mb-3">
-                This report was generated using EndoQuest, a narrative-based 
-                symptom assessment tool that collects patient-reported data 
-                through interactive storytelling.
+            {/* Patient Summary */}
+            <section className="mb-4">
+              <h4 className="text-white/90 mb-2 pb-2 border-b border-white/20">
+                Patient Summary
+              </h4>
+              <p className="text-white/80 text-sm leading-relaxed">
+                {report.patient_summary}
               </p>
-              
-              <p className="text-white/60 text-xs leading-relaxed">
-                <strong>Benefits:</strong> Reduces recall bias, captures emotional/behavioral context, 
-                increases engagement (86% completion vs. 34% for traditional questionnaires)
-              </p>
-            </div>
+            </section>
 
-            {/* Footer */}
-            <div className="text-center pt-4 border-t border-white/20">
-              <p className="text-white/50 text-xs">End of Clinical Report</p>
-            </div>
+            {/* Key Findings */}
+            {report.findings?.length ? (
+              <section className="mb-4">
+                <h4 className="text-white/90 mb-2 pb-2 border-b border-white/20">
+                  Key Findings
+                </h4>
+                <ul className="text-white/80 text-sm space-y-1 pl-5 list-disc">
+                  {report.findings.map((x, i) => (
+                    <li key={i}>{x}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {/* Red Flags */}
+            {report.red_flags?.length ? (
+              <section className="mb-4">
+                <h4 className="text-white/90 mb-2 pb-2 border-b border-white/20">
+                  Red Flags
+                </h4>
+                <ul className="text-white/80 text-sm space-y-1 pl-5 list-disc">
+                  {report.red_flags.map((x, i) => (
+                    <li key={i}>{x}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {/* Likely Considerations */}
+            {report.likely_considerations?.length ? (
+              <section className="mb-4">
+                <h4 className="text-white/90 mb-2 pb-2 border-b border-white/20">
+                  Likely Considerations
+                </h4>
+                <ul className="text-white/80 text-sm space-y-1 pl-5 list-disc">
+                  {report.likely_considerations.map((x, i) => (
+                    <li key={i}>{x}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {/* Suggested Next Steps */}
+            {report.suggested_next_steps?.length ? (
+              <section className="mb-4">
+                <h4 className="text-white/90 mb-2 pb-2 border-b border-white/20">
+                  Suggested Next Steps
+                </h4>
+                <ul className="text-white/80 text-sm space-y-1 pl-5 list-disc">
+                  {report.suggested_next_steps.map((x, i) => (
+                    <li key={i}>{x}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {/* Self-Management Tips */}
+            {report.self_management_tips?.length ? (
+              <section className="mb-4">
+                <h4 className="text-white/90 mb-2 pb-2 border-b border-white/20">
+                  Self-Management Tips
+                </h4>
+                <ul className="text-white/80 text-sm space-y-1 pl-5 list-disc">
+                  {report.self_management_tips.map((x, i) => (
+                    <li key={i}>{x}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {/* Resources */}
+            {report.resources?.length ? (
+              <section className="mb-2">
+                <h4 className="text-white/90 mb-2 pb-2 border-b border-white/20">
+                  Resources
+                </h4>
+                <ul className="text-white/80 text-sm space-y-1 pl-5 list-disc">
+                  {report.resources.map((r, i) => (
+                    <li key={i}>
+                      <strong>{r.name}</strong>
+                      {r.url ? (
+                        <>
+                          {' '}—{' '}
+                          <a className="underline" href={r.url} target="_blank" rel="noreferrer">
+                            {r.url}
+                          </a>
+                        </>
+                      ) : null}
+                      {r.phone ? <> — {r.phone}</> : null}
+                      {r.tags ? <> · <em>{r.tags}</em></> : null}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
           </div>
         </div>
       </div>
 
-      {/* Action buttons */}
-      <div className="p-6 border-t-2 border-[#c9a0dc]/30 flex gap-3">
+      {/* Footer actions (narrow) */}
+      <div className="w-full max-w-[420px] mx-auto sticky bottom-0 p-6 border-t-2 border-[#c9a0dc]/30 flex gap-3 shrink-0 bg-gradient-to-t from-[#1a1625]/95 to-transparent backdrop-blur">
         <button
           className="flex-1 px-6 py-3 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/50 rounded-xl text-white transition-colors flex items-center justify-center gap-2"
-          onClick={() => alert('Download functionality coming soon!')}
+          onClick={() => downloadReportAsPDF(report)}
         >
           <Download className="w-4 h-4" />
           Download PDF
         </button>
         <button
           className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/30 rounded-xl text-white transition-colors"
-          onClick={() => alert('Copy to clipboard: Coming soon!')}
+          onClick={onBack}
         >
-          Copy Text
+          Back
         </button>
       </div>
     </motion.div>

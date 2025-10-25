@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TextInputVNScene } from './TextInputVNScene';
 import { VNScene } from './VNScene';
 import { AnimatePresence } from 'motion/react';
+import { sceneResponse } from '../api';
 
 interface AITextInputSceneProps {
   backgroundImage?: string;
@@ -41,7 +42,7 @@ export function AITextInputScene({
   sceneId,
   playerData,
   onAdvance,
-  apiUrl = 'http://localhost:3001'
+  apiUrl = '/api'
 }: AITextInputSceneProps) {
   const [phase, setPhase] = useState<'input' | 'response'>('input');
   const [aiResponse, setAiResponse] = useState('');
@@ -55,14 +56,10 @@ export function AITextInputScene({
     setError(null);
 
     try {
-      const response = await fetch(`${apiUrl}/api/ai/scene-response`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sceneId,
-          userInput: input,
-          playerData
-        })
+      const response = await sceneResponse({
+        sceneId,
+        userInput: input,
+        playerData,
       });
 
       if (!response.ok) {

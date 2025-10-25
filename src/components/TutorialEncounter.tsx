@@ -7,6 +7,8 @@ import { EnhancedCombatV3 } from './EnhancedCombatV3';
 import { PostCombatScene } from './PostCombatScene';
 import { HowlerAudioManager } from './HowlerAudioManager';
 import { MusicToggle } from './MusicToggle';
+import { generateReport, type Msg, type CombatData, type ReportJSON } from '../api';
+import { downloadReportAsPDF } from '../utils/pdf';
 
 type Phase = 
   | 'awakening'
@@ -37,6 +39,18 @@ interface TutorialState {
   enemyHealth: number;
 }
 
+function renderList(title: string, items?: string[]) {
+  if (!items || !items.length) return null;
+  return (
+    <section className="mb-4">
+      <h2 className="font-semibold mb-1">{title}</h2>
+      <ul className="list-disc pl-6 space-y-1">
+        {items.map((x, i) => <li key={i}>{x}</li>)}
+      </ul>
+    </section>
+  );
+}
+
 // Archivist VN portraits - rotate between these during dialogue
 const ARCHIVIST_PORTRAITS = [
   'https://64.media.tumblr.com/6ac9c73c28d6ce9ab4e74e7202871951/3f2885bda6ac220c-1d/s1280x1920/5400143058374ff9dad6debaf0434fbc7dc4caaf.png',
@@ -63,11 +77,13 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
     playerChoices: [],
     aiResponses: [],
     combatTurns: 0,
-    enemyHealth: 100,
+    enemyHealth: 1,
   });
 
   const [musicEnabled, setMusicEnabled] = useState(true);
   const [userInteracted, setUserInteracted] = useState(false);
+
+
 
   const advancePhase = (nextPhase: Phase) => {
     setState(prev => ({ ...prev, phase: nextPhase }));
@@ -81,7 +97,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
     
     // Route based on current phase
     if (state.phase === 'first_question') {
-      advancePhase('basin_response');
+      advancePhase('transition_to_combat');
     }
   };
 
@@ -216,6 +232,15 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
     }
   };
 
+  const [reportText, setReportText] = useState<string | null>(null);
+  const [reportKind, setReportKind] = useState<'physical' | 'emotional' | 'pattern' | null>(null);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
+  const [reportPhysician, setReportPhysician] = useState<ReportJSON | null>(null);
+  const [reportHome, setReportHome] = useState<ReportJSON | null>(null);
+
+
+
   const renderPhase = () => {
     switch (state.phase) {
       case 'awakening':
@@ -315,7 +340,7 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
                   { sceneId: 'mid_battle_vn', userInput, aiResponse }
                 ],
                 combatTurns: 0,
-                enemyHealth: 80
+                enemyHealth: 1
               }));
               advancePhase('combat_phase_2');
             }}
@@ -371,11 +396,77 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
         );
 
       case 'post_combat':
-        return (
-          <PostCombatScene 
-            onContinue={() => advancePhase('game_end')}
-          />
-        );
+          return (
+            <div className="relative min-h-screen">
+              {/* The end card */}
+              <PostCombatScene
+                onContinue={() => advancePhase('game_end')}
+                reportPhysician={reportPhysician}
+                reportHome={reportHome}
+                requestReport={handleGenerateReport}
+                reportLoading={reportLoading}
+                reportError={reportError}
+              />
+
+
+
+              {/* Your controls overlay ON TOP of the card
+              <div className="absolute inset-0 z-[999] pointer-events-none flex items-end justify-center p-6">
+                <div className="pointer-events-auto flex flex-wrap gap-3
+                                rounded-xl border border-white/15 bg-black/50 backdrop-blur px-4 py-3">
+                  <button
+                    disabled={reportLoading}
+                    onClick={() => handleGenerateReport('physical')}
+                    className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white"
+                  >
+                    {reportLoading && reportKind === 'physical' ? 'Generating…' : 'Generate Physical'}
+                  </button>
+                  <button
+                    disabled={reportLoading}
+                    onClick={() => handleGenerateReport('emotional')}
+                    className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white"
+                  >
+                    {reportLoading && reportKind === 'emotional' ? 'Generating…' : 'Generate Emotional'}
+                  </button>
+                  <button
+                    disabled={reportLoading}
+                    onClick={() => handleGenerateReport('pattern')}
+                    className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white"
+                  >
+                    {reportLoading && reportKind === 'pattern' ? 'Generating…' : 'Generate Pattern'}
+                  </button>
+                </div>
+              </div> */}
+
+              {/* Optional: show the generated report as a centered top modal
+              {reportText && (
+                <div className="absolute inset-0 z-[1000] flex items-center justify-center p-6">
+                  <div className="max-w-lg w-full rounded-2xl border border-white/15
+                                  bg-[#1b1425]/90 backdrop-blur p-6 text-white shadow-2xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xl font-semibold">
+                        {reportKind === 'physical'  && 'Doctor Scroll Fragment — Physical Chronicle'}
+                        {reportKind === 'emotional' && 'Doctor Scroll Fragment — Emotional Chronicle'}
+                        {reportKind === 'pattern'   && 'Doctor Scroll Fragment — Pattern Chronicle'}
+                      </h3>
+                      <div className="text-white/60 text-sm">DIAGNOSTIC FRAGMENT</div>
+                    </div>
+                    <p className="whitespace-pre-wrap leading-relaxed text-white/90">{reportText}</p>
+                    <div className="mt-4 flex gap-2">
+                      <button className="px-3 py-2 rounded bg-white/10 hover:bg-white/20"
+                              onClick={() => setReportText(null)}>
+                        Generate different
+                      </button>
+                      <button className="px-3 py-2 rounded bg-emerald-600 hover:bg-emerald-500"
+                              onClick={() => advancePhase('game_end')}>
+                        Continue Journey
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )} */}
+            </div>
+          );
 
       case 'game_end':
         return (
@@ -440,6 +531,126 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
   // Determine which music track to play
   const currentTrack = isCombatPhase ? 'combat' : 'vn';
 
+  function buildConversationHistory(aiResponses: {
+    sceneId: string; userInput: string; aiResponse: string;
+  }[]) {
+    return aiResponses.flatMap(r => ([
+      { role: 'user' as const,      content: r.userInput },
+      { role: 'assistant' as const, content: r.aiResponse },
+    ]));
+  }
+
+  async function handleGenerateReport(audience: 'physician' | 'home' = 'physician') {
+    console.log('🧪 Generating report for audience:', audience);
+    setReportLoading(true);
+    setReportError(null);
+    setReportKind(null); // optional: you can keep/remove this now
+
+    try {
+      // Pick a title that matches the audience (the backend also sets title, this just aligns UI)
+      const reportType = audience === 'home'
+        ? 'Wayside Comforts — Home Support Summary'
+        : 'Initial Diagnostic Summary';
+
+
+      const history: Msg[] = buildConversationHistory(state.aiResponses);
+
+      const combat: CombatData = {
+        turnCount: state.combatTurns,
+        combatActions: state.playerChoices,
+      };
+
+      const resp = await generateReport(
+        {
+          reportType,
+          region: 'Ontario',
+          conversationHistory: history,
+          combatData: combat,
+          audience, // << important
+        },
+        true // debug
+      );
+
+      if (resp.debug) {
+        console.groupCollapsed('🧪 Report Debug');
+        console.log('Model:', resp.debug.model);
+        console.log('Usage:', resp.debug.usage);
+        console.log('Timings:', resp.debug.timings);
+        console.log('Used conversation history:', resp.debug.used.conversationHistory);
+        console.log('Used combat data:', resp.debug.used.combatData);
+        console.log('Snowflake evidence count:', resp.debug.used.evidenceCount, resp.debug.used.evidenceSample);
+        console.log('Local resources count:', resp.debug.used.resourcesCount, resp.debug.used.resourcesSample);
+        console.log('Final prompt:', resp.debug.prompt);
+        console.log('Raw model text:', resp.debug.rawModelText);
+        console.groupEnd();
+      }
+
+      if (audience === 'physician') {
+        setReportPhysician(resp.report);
+      } else {
+        setReportHome(resp.report);
+      }
+      setReportText(null);
+    } catch (e: any) {
+      console.error(e);
+      setReportError(e?.message ?? 'Failed to generate report');
+    } finally {
+      setReportLoading(false);
+    }
+  }
+
+
+  // async function requestReport(audience: 'physician' | 'home' = 'physician') {
+  //   console.log('🧪 Generating report for audience:', audience);
+  //   setReportLoading(true);
+  //   setReportError(null);
+  //   try {
+  //     const history: Msg[] = buildConversationHistory(state.aiResponses);
+
+  //     const combat: CombatData = {
+  //       turnCount: state.combatTurns,
+  //       combatActions: state.playerChoices,
+  //     };
+
+  //     const reportType =
+  //       audience === 'physician' ? 'Initial Diagnostic Summary' : 'Home Self-Care Summary';
+
+  //     const resp = await generateReport(
+  //       {
+  //         reportType,
+  //         region: 'Ontario',
+  //         conversationHistory: history,
+  //         combatData: combat,
+  //         audience, // <<< important
+  //       },
+  //       true
+  //     );
+
+  //     if (resp.debug) {
+  //       console.groupCollapsed('🧪 Report Debug');
+  //       console.log('Model:', resp.debug.model);
+  //       console.log('Usage:', resp.debug.usage);
+  //       console.log('Timings:', resp.debug.timings);
+  //       console.log('Used conversation history:', resp.debug.used.conversationHistory);
+  //       console.log('Used combat data:', resp.debug.used.combatData);
+  //       console.log('Evidence sample:', resp.debug.used.evidenceSample);
+  //       console.log('Resources sample:', resp.debug.used.resourcesSample);
+  //       console.log('Final prompt:', resp.debug.prompt);
+  //       console.groupEnd();
+  //     }
+
+  //     setReportJson(resp.report);
+  //     setReportText(null);
+  //   } catch (e: any) {
+  //     console.error(e);
+  //     setReportError(e?.message ?? 'Failed to generate report');
+  //   } finally {
+  //     setReportLoading(false);
+  //   }
+  // }
+
+
+
   return (
     <div>
       {/* Howler.js Audio Manager - auto-detects user interaction */}
@@ -451,11 +662,51 @@ export function TutorialEncounter({ onComplete }: TutorialEncounterProps) {
       
       {/* Music toggle */}
       <MusicToggle onToggle={setMusicEnabled} />
-      
-
 
       {/* Phase content */}
       {renderPhase()}
+
+      {/* status toasts */}
+      {/* {reportLoading && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[1000]
+                        rounded bg-black/70 text-white px-4 py-2">
+          Generating your report…
+        </div>
+      )}
+      {reportError && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[1000]
+                        rounded bg-red-600 text-white px-4 py-2">
+          {reportError}
+        </div>
+      )} */}
+
+      {/* structured report overlay */}
+      {/* {reportJson && (
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center p-6">
+          <div id="report-root" className="max-w-3xl w-full rounded-2xl border border-white/15
+                          bg-white text-black shadow-2xl p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xl font-semibold">{reportJson.title}</h3>
+              <button
+                className="text-sm text-gray-600 hover:text-gray-900"
+                onClick={() => setReportJson(null)}
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="mt-4 flex gap-2 justify-end">
+              <button
+                className="px-3 py-2 rounded bg-black text-white"
+                onClick={() => downloadReportAsPDF(reportJson)}
+              >
+                Download PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )} */}
+
     </div>
   );
 }
